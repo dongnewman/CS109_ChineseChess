@@ -5,13 +5,19 @@ import javax.swing.JFrame;
 import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 // Menu GUI 控制的核心和源头！！！
 
 public class Menu {
+    // 公开的静态标签引用，供其它类（例如 MenuListener）以受控方式更新显示文本
+    public static JLabel label;
     JFrame frame;
 
     public Menu() {
+        // 将实例化的 JLabel 赋给静态字段（避免在外部使用局部变量引用）
+        label = new JLabel("Welcome to Chinese Chess");
         frame = new JFrame("Chinese Chess");
 
         // 处理关闭窗口行为
@@ -37,8 +43,22 @@ public class Menu {
 
         
         
-
+        frame.add(label);
         frame.setVisible(true);
+    }
+
+    /**
+     * 线程安全地设置菜单界面上的状态文本（在 EDT 上执行）。
+     * 如果标签尚未初始化，则此调用会被忽略。
+     */
+    public static void setStatusText(final String text) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            if (label != null) label.setText(text);
+        } else {
+            SwingUtilities.invokeLater(() -> {
+                if (label != null) label.setText(text);
+            });
+        }
     }
 }
 

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import main.java.com.GUI.LeaveCheck;
+import main.java.com.GUI.Menu;
 
 /**
  * 为菜单栏中的菜单项注册监听器（占位实现）。
@@ -92,6 +93,8 @@ public class MenuListener {
 
 	private static void handlePreferences() {
 		System.out.println("TODO: handlePreferences() - 偏好设置");
+        // 使用 Menu 提供的线程安全方法来更新界面文本
+        Menu.setStatusText("TODO: handlePreferences() - 偏好设置");
 	}
 
 	private static void handleViewProfile() {
