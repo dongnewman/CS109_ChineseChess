@@ -19,6 +19,8 @@ public class Menu {
         // 将实例化的 JLabel 赋给静态字段（避免在外部使用局部变量引用）
         label = new JLabel("Welcome to Chinese Chess");
         frame = new JFrame("Chinese Chess");
+        frame.setSize(800, 600);
+        frame.setLayout(new FlowLayout());
 
         // 处理关闭窗口行为
         // 拦截默认关闭行为，委托给 LeaveCheck 处理
@@ -33,16 +35,26 @@ public class Menu {
         });
 
 
-    // 初始化菜单栏（传入 frame 以便菜单中的“离开”项能委托统一的退出逻辑）
-    // 查看：MenuBarInit.java
-    frame.setJMenuBar(new javax.swing.JMenuBar());
-    MenuBarInit.initMenuBar(frame.getJMenuBar(), frame);
-
-        frame.setSize(800, 600);
-        frame.setLayout(new FlowLayout());
+        // 初始化菜单栏（传入 frame 以便菜单中的“离开”项能委托统一的退出逻辑）
+        // 查看：MenuBarInit.java
+        frame.setJMenuBar(new javax.swing.JMenuBar());
+        MenuBarInit.initMenuBar(frame.getJMenuBar(), frame);
 
         
+
+        // 菜单生成完毕
+        // 开始生成正文部分
         
+
+
+
+
+
+
+
+
+
+
         frame.add(label);
         frame.setVisible(true);
     }

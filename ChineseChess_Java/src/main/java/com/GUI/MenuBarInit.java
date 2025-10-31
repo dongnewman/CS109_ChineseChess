@@ -84,6 +84,10 @@ public class MenuBarInit {
 
         jmb.add(jmExit);
 
+        
+
+
+
         // 统一在 MenuListener 中注册菜单项的监听器（占位实现）
         MenuListener.registerListeners(jmb, parentFrame);
     }
