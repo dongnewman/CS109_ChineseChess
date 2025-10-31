@@ -209,7 +209,7 @@ public class MenuListener {
 	private static void handleHelpContents() {
 		new DoHelp();
 		System.gc();
-		System.out.println("TODO: handleHelpContents() - 帮助内容");
+		//System.out.println("TODO: handleHelpContents() - 帮助内容");
 	}
 
 	private static void handleAbout() {
