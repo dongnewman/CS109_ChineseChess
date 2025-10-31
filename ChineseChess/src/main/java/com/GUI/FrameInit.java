@@ -65,6 +65,9 @@ public class FrameInit {
         btns.add(loginBtn);
         btns.add(regBtn);
         btns.add(guestBtn);
+        
+            // 启动对话默认按钮设为登录，按 Enter 将触发登录按钮
+            dialog.getRootPane().setDefaultButton(loginBtn);
 
         dialog.add(btns, BorderLayout.CENTER);
     }

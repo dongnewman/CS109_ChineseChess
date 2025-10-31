@@ -74,9 +74,9 @@ public class DoAccountDelete {
 		label.setBorder(BorderFactory.createEmptyBorder(8, 8, 0, 8));
 		dialog.add(label, BorderLayout.NORTH);
 
-		JPasswordField pwdField = new JPasswordField();
-		pwdField.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
-		dialog.add(pwdField, BorderLayout.CENTER);
+	JPasswordField pwdField = new JPasswordField();
+	pwdField.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+	dialog.add(pwdField, BorderLayout.CENTER);
 
 		JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 8));
 		JButton confirm = new JButton("确认");
@@ -106,9 +106,14 @@ public class DoAccountDelete {
 			}
 		});
 
-		bottom.add(confirm);
-		bottom.add(cancelBtn);
-		dialog.add(bottom, BorderLayout.SOUTH);
+	bottom.add(confirm);
+	bottom.add(cancelBtn);
+	// 在密码框按 Enter 等同点击确认（放在 confirm 创建后）
+	pwdField.addActionListener(e -> confirm.doClick());
+	dialog.add(bottom, BorderLayout.SOUTH);
+
+	// 将确认按钮作为默认按钮（按 Enter 将触发 confirm）
+	dialog.getRootPane().setDefaultButton(confirm);
 
 		// 显示模态对话框并阻塞直到用户关闭
 		dialog.setVisible(true);

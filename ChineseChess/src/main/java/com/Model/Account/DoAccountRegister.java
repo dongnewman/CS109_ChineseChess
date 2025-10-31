@@ -51,24 +51,32 @@ public class DoAccountRegister {
         center.add(new JLabel("username:"), gbc);
         gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 1.0;
         usernameField = new JTextField();
+    // 在 username 按 Enter 跳到 email
+    usernameField.addActionListener(e -> emailField.requestFocusInWindow());
         center.add(usernameField, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
         center.add(new JLabel("email:"), gbc);
         gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1.0;
         emailField = new JTextField();
+    // 在 email 按 Enter 跳到 password
+    emailField.addActionListener(e -> passwordField.requestFocusInWindow());
         center.add(emailField, gbc);
 
     gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
     center.add(new JLabel("password:"), gbc);
     gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1.0;
     passwordField = new JPasswordField();
+    // 在 password 按 Enter 跳到 confirm password
+    passwordField.addActionListener(e -> passwordConfirmField.requestFocusInWindow());
     center.add(passwordField, gbc);
 
     gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0;
     center.add(new JLabel("confirm:"), gbc);
     gbc.gridx = 1; gbc.gridy = 3; gbc.weightx = 1.0;
     passwordConfirmField = new JPasswordField();
+    // 在 confirm password 按 Enter 触发注册确认
+    passwordConfirmField.addActionListener(e -> onConfirm());
     center.add(passwordConfirmField, gbc);
 
         dialog.add(center, BorderLayout.CENTER);
@@ -94,6 +102,8 @@ public class DoAccountRegister {
         bottom.add(confirm);
         bottom.add(cancel);
         dialog.add(bottom, BorderLayout.SOUTH);
+    // 将确认按钮设为默认按钮，按 Enter 时触发注册确认
+    dialog.getRootPane().setDefaultButton(confirm);
     }
 
     /**

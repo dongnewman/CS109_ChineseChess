@@ -52,6 +52,8 @@ public class DoAccountLook {
         close.addActionListener(e -> frame.dispose());
         bottom.add(close);
         frame.add(bottom, BorderLayout.SOUTH);
+    // 将关闭按钮设为默认按钮，按 Enter 时也能关闭窗口
+    frame.getRootPane().setDefaultButton(close);
     }
 
     /** 显示独立窗口（无父窗口） */

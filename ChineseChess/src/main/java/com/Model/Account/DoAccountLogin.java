@@ -36,9 +36,13 @@ public class DoAccountLogin {
         center.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
         center.add(new JLabel("用户名:"));
         usernameField = new JTextField();
+    // 在用户名框按 Enter 将焦点移到密码框
+    usernameField.addActionListener(e -> passwordField.requestFocusInWindow());
         center.add(usernameField);
         center.add(new JLabel("密码:"));
         passwordField = new JPasswordField();
+    // 在密码框按 Enter 触发确认登录
+    passwordField.addActionListener(e -> onConfirm());
         center.add(passwordField);
 
         dialog.add(center, BorderLayout.CENTER);
@@ -60,6 +64,8 @@ public class DoAccountLogin {
         bottom.add(ok);
         bottom.add(cancel);
         dialog.add(bottom, BorderLayout.SOUTH);
+    // 将确认按钮设为默认按钮，按 Enter 时触发登录确认
+    dialog.getRootPane().setDefaultButton(ok);
     }
 
     public boolean showDialog() {
