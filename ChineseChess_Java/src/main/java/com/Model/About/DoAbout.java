@@ -1,4 +1,4 @@
-package main.java.com.Model.Help;
+package main.java.com.Model.About;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -6,6 +6,13 @@ import javax.swing.JButton;
 import java.awt.BorderLayout;
 import javax.swing.SwingUtilities;
 
+
+/**
+ * 显示关于信息的模态对话框。
+ *
+ * 使用示例:
+ *   new DoAbout();
+ */
 public class DoAbout {
     public DoAbout(){
         SwingUtilities.invokeLater(new Runnable () {

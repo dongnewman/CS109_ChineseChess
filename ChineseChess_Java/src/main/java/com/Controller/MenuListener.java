@@ -16,7 +16,9 @@ import main.java.com.Model.Account.AccountSession;
 import main.java.com.Model.Account.DoAccountDelete;
 import main.java.com.Model.Account.DoAccountLook;
 // Help 相关处理器
-import main.java.com.Model.Help.DoAbout;
+import main.java.com.Model.Help.DoHelp;
+// About 相关处理器
+import main.java.com.Model.About.DoAbout;
 
 
 /**
@@ -205,6 +207,8 @@ public class MenuListener {
 	}
 
 	private static void handleHelpContents() {
+		new DoHelp();
+		System.gc();
 		System.out.println("TODO: handleHelpContents() - 帮助内容");
 	}
 
@@ -215,7 +219,6 @@ public class MenuListener {
 	}
 
 	private static void handleExit(JFrame parentFrame) {
-		// 保持原有退出逻辑的一致性
 		LeaveCheck.handleWindowClosing(parentFrame);
 	}
 }
