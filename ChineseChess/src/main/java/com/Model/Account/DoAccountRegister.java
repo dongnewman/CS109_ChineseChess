@@ -10,30 +10,35 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * 注册对话框。改为模态 JDialog，并提供 showDialog() 返回注册结果。
+ */
 public class DoAccountRegister {
-    // 账号注册的 Swing 窗口实现
 
-    private JFrame frame;
+    private JDialog dialog;
     private JTextField usernameField;
     private JTextField emailField;
+
+    // 注册结果
+    private boolean registered = false;
+    private String registeredUsername = null;
+    private String registeredEmail = null;
 
     public DoAccountRegister() {
         initUI();
     }
 
     private void initUI() {
-        frame = new JFrame("注册");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 200);
-        frame.setLocationRelativeTo(null);
-        frame.setLayout(new BorderLayout(8, 8));
+        dialog = new JDialog((Frame) null, "注册", true); // modal
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.setSize(400, 200);
+        dialog.setLocationRelativeTo(null);
+        dialog.setLayout(new BorderLayout(8, 8));
 
-        // 顶部标题
         JLabel title = new JLabel("欢迎注册！", SwingConstants.CENTER);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 18f));
-        frame.add(title, BorderLayout.NORTH);
+        dialog.add(title, BorderLayout.NORTH);
 
-        // 中央输入区域
         JPanel center = new JPanel();
         center.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -52,9 +57,8 @@ public class DoAccountRegister {
         emailField = new JTextField();
         center.add(emailField, gbc);
 
-        frame.add(center, BorderLayout.CENTER);
+        dialog.add(center, BorderLayout.CENTER);
 
-        // 底部按钮
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
         JButton confirm = new JButton("确认");
         JButton cancel = new JButton("取消");
@@ -75,14 +79,23 @@ public class DoAccountRegister {
 
         bottom.add(confirm);
         bottom.add(cancel);
-        frame.add(bottom, BorderLayout.SOUTH);
+        dialog.add(bottom, BorderLayout.SOUTH);
+    }
 
-        frame.setVisible(true);
+    /**
+     * 显示模态对话框并阻塞直到用户关闭。返回是否成功注册。
+     */
+    public boolean showDialog() {
+        registered = false;
+        registeredUsername = null;
+        registeredEmail = null;
+        dialog.setVisible(true); // modal, blocks until disposed
+        return registered;
     }
 
     private void onCancel() {
-        frame.dispose();
-        System.exit(0);
+        registered = false;
+        dialog.dispose();
     }
 
     private void onConfirm() {
@@ -90,11 +103,10 @@ public class DoAccountRegister {
         String email = emailField.getText() == null ? "" : emailField.getText().trim();
 
         if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "username 不能为空", "输入错误", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(dialog, "username 不能为空", "输入错误", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 构造简单 JSON 字符串并保存到 accounts/<username>.json
         String json = toJson(username, email);
 
         try {
@@ -105,18 +117,35 @@ public class DoAccountRegister {
             String safeFileName = sanitizeFileName(username) + ".json";
             Path out = dir.resolve(safeFileName);
             Files.write(out, json.getBytes(StandardCharsets.UTF_8));
-            JOptionPane.showMessageDialog(frame, "注册信息已保存：" + out.toString(), "成功", JOptionPane.INFORMATION_MESSAGE);
-            frame.dispose();
-            System.exit(0);
+
+            // 额外：写入用户主目录下的 .chinesechess/account.json 以便 InitAll 能读取
+            try {
+                Path homeAccountDir = Paths.get(System.getProperty("user.home"), ".chinesechess");
+                if (!Files.exists(homeAccountDir)) {
+                    Files.createDirectories(homeAccountDir);
+                }
+                Path homeAccountFile = homeAccountDir.resolve("account.json");
+                Files.write(homeAccountFile, json.getBytes(StandardCharsets.UTF_8));
+            } catch (Exception ignore) {
+                // 写不到 home 目录不是致命问题，继续
+            }
+
+            JOptionPane.showMessageDialog(dialog, "注册信息已保存：" + out.toString(), "成功", JOptionPane.INFORMATION_MESSAGE);
+
+            // 设置结果并关闭对话框
+            registered = true;
+            registeredUsername = username;
+            registeredEmail = email;
+            dialog.dispose();
         } catch (IOException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(frame, "保存文件失败：" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(dialog, "保存文件失败：" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private String toJson(String username, String email) {
-        // 简单的 JSON 序列化（转义基本字符）
         return "{" +
+                "\"loggedIn\":true," +
                 "\"username\":\"" + escapeJson(username) + "\"," +
                 "\"email\":\"" + escapeJson(email) + "\"" +
                 "}";
@@ -149,5 +178,12 @@ public class DoAccountRegister {
         return name.replaceAll("[\\/:*?\"<>|]", "_");
     }
 
-    // 该类不再包含 main 方法；应由应用程序中的其他组件调用
+    public String getRegisteredUsername() {
+        return registeredUsername;
+    }
+
+    public String getRegisteredEmail() {
+        return registeredEmail;
+    }
+
 }

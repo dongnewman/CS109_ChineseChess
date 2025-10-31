@@ -54,10 +54,27 @@ public class InitAll {
 
             // 处理用户选择
             if (choice[0] == 0) {
-                // 创建账户：打开注册窗口（在 EDT 上异步打开该对话框）
-                SwingUtilities.invokeLater(() -> {
-                    new main.java.com.Model.Account.DoAccountRegister();
-                });
+                // 创建账户：同步弹出模态注册对话框并等待完成
+                try {
+                    SwingUtilities.invokeAndWait(() -> {
+                        main.java.com.Model.Account.DoAccountRegister dlg = new main.java.com.Model.Account.DoAccountRegister();
+                        boolean ok = dlg.showDialog();
+                        if (ok) {
+                            // 注册成功：更新 AccountSession
+                            String username = dlg.getRegisteredUsername();
+                            String email = dlg.getRegisteredEmail();
+                            String json = "{" +
+                                    "\"loggedIn\":true," +
+                                    "\"username\":\"" + username.replace("\"", "\\\"") + "\"," +
+                                    "\"email\":\"" + (email == null ? "" : email.replace("\"", "\\\"")) + "\"" +
+                                    "}";
+                            AccountSession.setFromJson(json);
+                        }
+                    });
+                } catch (Exception e) {
+                    // 如果弹窗失败，则继续保持未登录
+                    AccountSession.clear();
+                }
             } else if (choice[0] == 1) {
                 // 以游客身份继续：设置会话为游客
                 AccountSession.clear();
