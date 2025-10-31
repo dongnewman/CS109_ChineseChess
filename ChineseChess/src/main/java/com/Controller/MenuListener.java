@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import main.java.com.GUI.LeaveCheck;
 import main.java.com.GUI.Menu;
 import main.java.com.Model.Account.DoAccountRegister;
+import main.java.com.Model.Account.AccountSession;
 
 /**
  * 为菜单栏中的菜单项注册监听器（占位实现）。
@@ -55,7 +56,7 @@ public class MenuListener {
 								handleRegister();
 								break;
 							case "注销":
-								handleLogout();
+								handleLogout(parentFrame);
 								break;
 							case "删除账号":
 								handleDeleteAccount();
@@ -110,15 +111,30 @@ public class MenuListener {
 		// 打开模态注册对话框（当前已在 EDT 上），阻塞直到对话框关闭
 		try {
 			DoAccountRegister dlg = new DoAccountRegister();
-			dlg.showDialog();
-			// 注册后可进一步处理 dlg.getRegisteredUsername() 等信息
+			boolean ok = dlg.showDialog();
+			if (ok) {
+				String username = dlg.getRegisteredUsername();
+				String email = dlg.getRegisteredEmail();
+				String json = "{" +
+						"\"loggedIn\":true," +
+						"\"username\":\"" + (username == null ? "" : username.replace("\"", "\\\"")) + "\"," +
+						"\"email\":\"" + (email == null ? "" : email.replace("\"", "\\\"")) + "\"" +
+						"}";
+				AccountSession.setFromJson(json);
+				Menu.setStatusText("已登录: " + username);
+			}
 		} catch (Exception e) {
 			System.out.println("打开注册对话框失败: " + e.getMessage());
 		}
 	}
 
-	private static void handleLogout() {
-		System.out.println("TODO: handleLogout() - 注销");
+	private static void handleLogout(javax.swing.JFrame parentFrame) {
+		// 统一注销逻辑委托给 AccountLogout
+			try {
+			main.java.com.Model.Account.DoAccountLogout.performLogout(parentFrame);
+		} catch (Exception e) {
+			System.out.println("注销失败: " + e.getMessage());
+		}
 	}
 
 	private static void handleDeleteAccount() {

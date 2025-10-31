@@ -3,5 +3,7 @@ D:\006-Programing\CS109_ChinaChess\ChineseChess\src\main\java\com\Controller\Men
 D:\006-Programing\CS109_ChinaChess\ChineseChess\src\main\java\com\GUI\LeaveCheck.java
 D:\006-Programing\CS109_ChinaChess\ChineseChess\src\main\java\com\GUI\Menu.java
 D:\006-Programing\CS109_ChinaChess\ChineseChess\src\main\java\com\GUI\MenuBarInit.java
+D:\006-Programing\CS109_ChinaChess\ChineseChess\src\main\java\com\Model\Account\AccountLogout.java
 D:\006-Programing\CS109_ChinaChess\ChineseChess\src\main\java\com\Model\Account\AccountSession.java
+D:\006-Programing\CS109_ChinaChess\ChineseChess\src\main\java\com\Model\Account\DoAccountLogout.java
 D:\006-Programing\CS109_ChinaChess\ChineseChess\src\main\java\com\Model\Account\DoAccountRegister.java
