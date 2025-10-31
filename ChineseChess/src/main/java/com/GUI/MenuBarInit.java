@@ -35,6 +35,7 @@ public class MenuBarInit {
         jmAccount.add(jmAccountLogin);
         jmAccount.add(jmAccountRegister);
         jmAccount.add(jmAccountLogout);
+        jmAccount.addSeparator();
         jmAccount.add(jmAccountDelete);
 
 
@@ -63,11 +64,17 @@ public class MenuBarInit {
         // 创建“帮助”菜单及其子菜单项
         JMenu jmHelp = new JMenu("帮助");
         JMenuItem jmHelpContents = new JMenuItem("帮助内容");
-        JMenuItem jmHelpAbout = new JMenuItem("关于");
         jmHelp.add(jmHelpContents);
-        jmHelp.add(jmHelpAbout);
 
         jmb.add(jmHelp);
+
+
+        // 创建“关于”菜单及其子菜单项
+        JMenu jmAbout = new JMenu("关于");
+        JMenuItem jmAboutInfo = new JMenuItem("关于本软件");
+        jmAbout.add(jmAboutInfo);
+        
+        jmb.add(jmAbout);
 
 
         // 创建“退出”菜单及其子菜单项

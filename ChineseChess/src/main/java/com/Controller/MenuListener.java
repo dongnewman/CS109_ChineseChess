@@ -15,6 +15,9 @@ import main.java.com.Model.Account.DoAccountRegister;
 import main.java.com.Model.Account.AccountSession;
 import main.java.com.Model.Account.DoAccountDelete;
 import main.java.com.Model.Account.DoAccountLook;
+// Help 相关处理器
+import main.java.com.Model.Help.DoAbout;
+
 
 /**
  * 为菜单栏中的菜单项注册监听器（占位实现）。
@@ -36,54 +39,59 @@ public class MenuListener {
 				JMenuItem item = menu.getItem(j);
 				if (item == null) continue; // 可能是分隔符
 
-				// 使用菜单文本作为 action command，便于识别
+				// 使用菜单文本作为 action command（保留原行为）
 				final String cmd = item.getText();
 				item.setActionCommand(cmd);
 
-				// 注册占位监听器
+				// 注册占位监听器：先将文本映射为 MenuAction 枚举，再基于枚举分发处理器
 				item.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// 根据命令分发到具体的处理器（目前为占位实现）
 						String command = e.getActionCommand();
-						switch (command) {
-							case "偏好设置":
+						MenuAction action = MenuAction.fromText(command);
+						if (action == null) {
+							System.out.println("菜单项 '" + command + "' 被触发 — 未实现");
+							return;
+						}
+
+						switch (action) {
+							case PREFERENCES:
 								handlePreferences();
 								break;
-							case "查看资料":
+							case VIEW_PROFILE:
 								handleViewProfile();
 								break;
-							case "登录":
+							case LOGIN:
 								handleLogin();
 								break;
-							case "注册":
+							case REGISTER:
 								handleRegister();
 								break;
-							case "注销":
+							case LOGOUT:
 								handleLogout(parentFrame);
 								break;
-							case "删除账号":
+							case DELETE_ACCOUNT:
 								handleDeleteAccount();
 								break;
-							case "新游戏":
+							case NEW_GAME:
 								handleNewGame();
 								break;
-							case "加载游戏":
+							case LOAD_GAME:
 								handleLoadGame();
 								break;
-							case "查看记录":
+							case VIEW_RECORD:
 								handleViewRecord();
 								break;
-							case "删除记录":
+							case DELETE_RECORD:
 								handleDeleteRecord();
 								break;
-							case "帮助内容":
+							case HELP_CONTENTS:
 								handleHelpContents();
 								break;
-							case "关于":
+							case ABOUT:
 								handleAbout();
 								break;
-							case "离开":
+							case LEAVE:
 								handleExit(parentFrame);
 								break;
 							default:
@@ -201,7 +209,9 @@ public class MenuListener {
 	}
 
 	private static void handleAbout() {
-		System.out.println("TODO: handleAbout() - 关于");
+        new DoAbout();
+        System.gc();
+		// System.out.println("TODO: handleAbout() - 关于");
 	}
 
 	private static void handleExit(JFrame parentFrame) {
