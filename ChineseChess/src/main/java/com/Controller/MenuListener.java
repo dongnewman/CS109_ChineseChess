@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 
 import main.java.com.GUI.LeaveCheck;
 import main.java.com.GUI.Menu;
+import main.java.com.Model.Account.DoAccountRegister;
+import javax.swing.SwingUtilities;
 
 /**
  * 为菜单栏中的菜单项注册监听器（占位实现）。
@@ -106,7 +108,13 @@ public class MenuListener {
 	}
 
 	private static void handleRegister() {
-		System.out.println("TODO: handleRegister() - 注册");
+		// 打开注册对话框（在 EDT 上）
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new DoAccountRegister();
+			}
+		});
 	}
 
 	private static void handleLogout() {
