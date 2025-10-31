@@ -4,8 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import main.java.com.Controller.MenuListener;
 
 public class MenuBarInit {
     /**
@@ -73,15 +73,11 @@ public class MenuBarInit {
         // 创建“退出”菜单及其子菜单项
         JMenu jmExit = new JMenu("退出");
         JMenuItem jmExitLeave = new JMenuItem("离开");
-        // 将菜单项的行为委托到 LeaveCheck，使用与窗口右上角 X 相同的逻辑
-        jmExitLeave.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                LeaveCheck.handleWindowClosing(parentFrame);
-            }
-        });
         jmExit.add(jmExitLeave);
 
         jmb.add(jmExit);
+
+        // 统一在 MenuListener 中注册菜单项的监听器（占位实现）
+        MenuListener.registerListeners(jmb, parentFrame);
     }
 }
