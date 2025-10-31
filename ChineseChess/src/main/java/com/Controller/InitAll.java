@@ -20,9 +20,12 @@ public class InitAll {
         } catch (Exception e) {
             // 如果弹窗失败，继续以未登录状态进入主界面
             AccountSession.clear();
+        } finally {
+            System.gc();
+            new Menu();
         }
 
         // 启动主界面
-        new Menu();
+        
     }
 }
