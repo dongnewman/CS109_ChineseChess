@@ -10,12 +10,12 @@ public class AccountSession {
     private static boolean loggedIn = false;
 
     
-    // 基础账号信息（示例字段）
-    public static String username = null;
-    public static String email = null;
+    // 基础账号信息（示例字段） - 私有，仅通过 getter/setter 访问
+    private static String username = null;
+    private static String email = null;
 
     // 原始 JSON 内容（若需要调试或进一步解析）
-    public static String rawJson = null;
+    private static String rawJson = null;
 
     public static void clear() {
         setLoggedIn(false);
@@ -25,7 +25,7 @@ public class AccountSession {
     }
 
     public static void setFromJson(String json) {
-        rawJson = json;
+        setRawJson(json);
         if (json == null) {
             clear();
             return;
@@ -37,8 +37,8 @@ public class AccountSession {
     setLoggedIn(lowered.contains("\"loggedin\"") && lowered.contains("true"));
 
         // 提取 username 和 email 的值（如果存在）
-        username = extractString(json, "username");
-        email = extractString(json, "email");
+        setUsername(extractString(json, "username"));
+        setEmail(extractString(json, "email"));
     }
 
     private static String extractString(String json, String key) {
@@ -61,5 +61,30 @@ public class AccountSession {
 
     public static void setLoggedIn(boolean value) {
         loggedIn = value;
+    }
+
+    // Getters / Setters for username, email, rawJson
+    public static String getUsername() {
+        return username;
+    }
+
+    public static void setUsername(String u) {
+        username = u;
+    }
+
+    public static String getEmail() {
+        return email;
+    }
+
+    public static void setEmail(String e) {
+        email = e;
+    }
+
+    public static String getRawJson() {
+        return rawJson;
+    }
+
+    public static void setRawJson(String r) {
+        rawJson = r;
     }
 }

@@ -104,7 +104,16 @@ public class MenuListener {
 	}
 
 	private static void handleLogin() {
-		System.out.println("TODO: handleLogin() - 登录");
+		try {
+			main.java.com.Model.Account.DoAccountLogin dlg = new main.java.com.Model.Account.DoAccountLogin();
+			boolean ok = dlg.showDialog();
+			if (ok) {
+				String user = dlg.getLoggedUsername();
+				if (user != null) Menu.setStatusText("已登录: " + user);
+			}
+		} catch (Exception e) {
+			System.out.println("打开登录对话框失败: " + e.getMessage());
+		}
 	}
 
 	private static void handleRegister() {
@@ -114,14 +123,22 @@ public class MenuListener {
 			boolean ok = dlg.showDialog();
 			if (ok) {
 				String username = dlg.getRegisteredUsername();
-				String email = dlg.getRegisteredEmail();
-				String json = "{" +
-						"\"loggedIn\":true," +
-						"\"username\":\"" + (username == null ? "" : username.replace("\"", "\\\"")) + "\"," +
-						"\"email\":\"" + (email == null ? "" : email.replace("\"", "\\\"")) + "\"" +
-						"}";
-				AccountSession.setFromJson(json);
-				Menu.setStatusText("已登录: " + username);
+				// 尝试读取 accounts/<username>.json（注册器已写入包含 password 的文件）
+				try {
+					java.nio.file.Path p = java.nio.file.Paths.get("accounts", username.replaceAll("[\\/:*?\"<>|]", "_") + ".json");
+					if (java.nio.file.Files.exists(p)) {
+						String json = new String(java.nio.file.Files.readAllBytes(p), java.nio.charset.StandardCharsets.UTF_8);
+						AccountSession.setFromJson(json);
+					} else {
+						AccountSession.setUsername(username);
+						AccountSession.setLoggedIn(true);
+					}
+					Menu.setStatusText("已登录: " + username);
+				} catch (Exception ex) {
+					AccountSession.setUsername(username);
+					AccountSession.setLoggedIn(true);
+					Menu.setStatusText("已登录: " + username);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("打开注册对话框失败: " + e.getMessage());

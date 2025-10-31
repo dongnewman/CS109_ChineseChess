@@ -18,6 +18,8 @@ public class DoAccountRegister {
     private JDialog dialog;
     private JTextField usernameField;
     private JTextField emailField;
+    private JPasswordField passwordField;
+    private JPasswordField passwordConfirmField;
 
     // 注册结果
     private boolean registered = false;
@@ -31,7 +33,7 @@ public class DoAccountRegister {
     private void initUI() {
         dialog = new JDialog((Frame) null, "注册", true); // modal
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        dialog.setSize(400, 200);
+    dialog.setSize(420, 300);
         dialog.setLocationRelativeTo(null);
         dialog.setLayout(new BorderLayout(8, 8));
 
@@ -56,6 +58,18 @@ public class DoAccountRegister {
         gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1.0;
         emailField = new JTextField();
         center.add(emailField, gbc);
+
+    gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
+    center.add(new JLabel("password:"), gbc);
+    gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1.0;
+    passwordField = new JPasswordField();
+    center.add(passwordField, gbc);
+
+    gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0;
+    center.add(new JLabel("confirm:"), gbc);
+    gbc.gridx = 1; gbc.gridy = 3; gbc.weightx = 1.0;
+    passwordConfirmField = new JPasswordField();
+    center.add(passwordConfirmField, gbc);
 
         dialog.add(center, BorderLayout.CENTER);
 
@@ -101,13 +115,30 @@ public class DoAccountRegister {
     private void onConfirm() {
         String username = usernameField.getText() == null ? "" : usernameField.getText().trim();
         String email = emailField.getText() == null ? "" : emailField.getText().trim();
+        char[] pwd = passwordField.getPassword();
+        char[] pwd2 = passwordConfirmField.getPassword();
 
         if (username.isEmpty()) {
             JOptionPane.showMessageDialog(dialog, "username 不能为空", "输入错误", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        String json = toJson(username, email);
+        if (pwd == null || pwd.length == 0) {
+            JOptionPane.showMessageDialog(dialog, "password 不能为空", "输入错误", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!java.util.Arrays.equals(pwd, pwd2)) {
+            JOptionPane.showMessageDialog(dialog, "两次输入的密码不一致", "输入错误", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+    String password = new String(pwd);
+    // clear password arrays asap
+    java.util.Arrays.fill(pwd, '\0');
+    java.util.Arrays.fill(pwd2, '\0');
+
+    String json = toJson(username, email, password);
 
         try {
             Path dir = Paths.get("accounts");
@@ -118,24 +149,18 @@ public class DoAccountRegister {
             Path out = dir.resolve(safeFileName);
             Files.write(out, json.getBytes(StandardCharsets.UTF_8));
 
-            // 额外：写入用户主目录下的 .chinesechess/account.json 以便 InitAll 能读取
-            try {
-                Path homeAccountDir = Paths.get(System.getProperty("user.home"), ".chinesechess");
-                if (!Files.exists(homeAccountDir)) {
-                    Files.createDirectories(homeAccountDir);
-                }
-                Path homeAccountFile = homeAccountDir.resolve("account.json");
-                Files.write(homeAccountFile, json.getBytes(StandardCharsets.UTF_8));
-            } catch (Exception ignore) {
-                // 写不到 home 目录不是致命问题，继续
-            }
-
             JOptionPane.showMessageDialog(dialog, "注册信息已保存：" + out.toString(), "成功", JOptionPane.INFORMATION_MESSAGE);
 
-            // 设置结果并关闭对话框
+            // 不将 loggedIn 状态写入磁盘（程序启动时不自动登录）
+            // 但在当前运行时会话中将用户置为已登录状态
             registered = true;
             registeredUsername = username;
             registeredEmail = email;
+            // 设置内存会话（不会写回磁盘）
+            AccountSession.setUsername(username);
+            AccountSession.setEmail(email);
+            AccountSession.setLoggedIn(true);
+
             dialog.dispose();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -143,11 +168,15 @@ public class DoAccountRegister {
         }
     }
 
-    private String toJson(String username, String email) {
+    /**
+     * 生成用于磁盘存储的 JSON：不将 loggedIn 设置为 true，避免自动登录
+     */
+    private String toJson(String username, String email, String password) {
         return "{" +
-                "\"loggedIn\":true," +
+                "\"loggedIn\":false," +
                 "\"username\":\"" + escapeJson(username) + "\"," +
-                "\"email\":\"" + escapeJson(email) + "\"" +
+                "\"email\":\"" + escapeJson(email) + "\"," +
+                "\"password\":\"" + escapeJson(password) + "\"" +
                 "}";
     }
 
