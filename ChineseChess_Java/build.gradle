@@ -1,0 +1,68 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'eclipse'
+}
+
+group = 'com.chinesechess'
+version = '1.0.0'
+
+java {
+    toolchain {
+        // 改为使用 Java 21
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+
+    // 明确设置兼容级别以改善 IDE 生成的设置
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+// Eclipse 插件配置：生成 .classpath 时设置 JDT 的 source/target
+eclipse {
+    jdt {
+        sourceCompatibility = '21'
+        targetCompatibility = '21'
+    }
+    classpath {
+        // 让 Eclipse 使用默认的 JRE 容器（用户在 Eclipse 中需配置 JDK 21 或以上）
+        containers = ['org.eclipse.jdt.launching.JRE_CONTAINER']
+    }
+}
+
+application {
+    // 主类位于默认包：`Main`
+    // Gradle 7+ 使用 mainClass, 兼容性保留 mainClassName
+    // 指定主类（Main 在项目根的默认包）
+    mainClass = 'Main'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // 保持最小依赖；添加测试依赖
+    testImplementation 'junit:junit:4.13.2'
+}
+
+sourceSets {
+    main {
+        java {
+            // 采用标准 Gradle 源集，仅使用标准的 src/main/java
+            // 移除额外的 'main/java' 以避免在输出里产生冗余的路径前缀（导致类加载问题）
+            srcDirs = ['src/main/java']
+        }
+    }
+}
+
+// 生成包含依赖的可执行 jar（fat jar），便于快速运行
+jar {
+    manifest {
+        attributes('Main-Class': 'Main')
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

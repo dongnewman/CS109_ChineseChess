@@ -1,4 +1,4 @@
-package main.java.com.Model.Account;
+package com.Model.Account;
 
 /**
  * 公共的会话信息类（简易实现）。

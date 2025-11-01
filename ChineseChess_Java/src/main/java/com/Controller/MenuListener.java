@@ -1,4 +1,4 @@
-package main.java.com.Controller;
+package com.Controller;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -8,17 +8,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 // GUI 相关处理器
-import main.java.com.GUI.LeaveCheck;
-import main.java.com.GUI.Menu;
+import com.GUI.LeaveCheck;
+import com.GUI.Menu;
 // Account 相关处理器
-import main.java.com.Model.Account.DoAccountRegister;
-import main.java.com.Model.Account.AccountSession;
-import main.java.com.Model.Account.DoAccountDelete;
-import main.java.com.Model.Account.DoAccountLook;
+import com.Model.Account.DoAccountRegister;
+import com.Model.Account.AccountSession;
+import com.Model.Account.DoAccountDelete;
+import com.Model.Account.DoAccountLook;
 // Help 相关处理器
-import main.java.com.Model.Help.DoHelp;
+import com.Model.Help.DoHelp;
 // About 相关处理器
-import main.java.com.Model.About.DoAbout;
+import com.Model.About.DoAbout;
 
 
 /**
@@ -129,7 +129,7 @@ public class MenuListener {
 
 	private static void handleLogin() {
 		try {
-			main.java.com.Model.Account.DoAccountLogin dlg = new main.java.com.Model.Account.DoAccountLogin();
+			com.Model.Account.DoAccountLogin dlg = new com.Model.Account.DoAccountLogin();
 			boolean ok = dlg.showDialog();
 			if (ok) {
 				String user = dlg.getLoggedUsername();
@@ -174,7 +174,7 @@ public class MenuListener {
 	private static void handleLogout(javax.swing.JFrame parentFrame) {
 		// 统一注销逻辑委托给 AccountLogout
 			try {
-			main.java.com.Model.Account.DoAccountLogout.performLogout(parentFrame);
+			com.Model.Account.DoAccountLogout.performLogout(parentFrame);
 		} catch (Exception e) {
 			System.out.println("注销失败: " + e.getMessage());
 		}

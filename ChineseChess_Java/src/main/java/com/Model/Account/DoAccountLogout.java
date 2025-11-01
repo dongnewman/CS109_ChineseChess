@@ -1,6 +1,6 @@
-package main.java.com.Model.Account;
+package com.Model.Account;
 
-import main.java.com.GUI.Menu;
+import com.GUI.Menu;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

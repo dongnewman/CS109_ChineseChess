@@ -1,4 +1,4 @@
-package main.java.com.Model.Account;
+package com.Model.Account;
 
 import javax.swing.*;
 import java.awt.*;

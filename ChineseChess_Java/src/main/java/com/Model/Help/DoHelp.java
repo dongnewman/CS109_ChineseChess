@@ -1,4 +1,4 @@
-package main.java.com.Model.Help;
+package com.Model.Help;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

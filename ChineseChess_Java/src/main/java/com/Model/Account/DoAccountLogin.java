@@ -1,4 +1,4 @@
-package main.java.com.Model.Account;
+package com.Model.Account;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,7 +141,7 @@ public class DoAccountLogin {
 
         loggedIn = true;
         loggedUsername = username;
-        try { main.java.com.GUI.Menu.setStatusText("已登录: " + username); } catch (Exception ignore) {}
+        try { com.GUI.Menu.setStatusText("已登录: " + username); } catch (Exception ignore) {}
         dialog.dispose();
     }
 

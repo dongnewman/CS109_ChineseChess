@@ -1,4 +1,4 @@
-package main.java.com.Model.About;
+package com.Model.About;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;

@@ -1,7 +1,7 @@
-package main.java.com.Controller;
+package com.Controller;
 
-import main.java.com.GUI.Menu;
-import main.java.com.Model.Account.AccountSession;
+import com.GUI.Menu;
+import com.Model.Account.AccountSession;
 
 import javax.swing.SwingUtilities;
 
@@ -14,7 +14,7 @@ public class InitAll {
 
         try {
             SwingUtilities.invokeAndWait(() -> {
-                main.java.com.GUI.FrameInit f = new main.java.com.GUI.FrameInit();
+                com.GUI.FrameInit f = new com.GUI.FrameInit();
                 f.show();
             });
         } catch (Exception e) {

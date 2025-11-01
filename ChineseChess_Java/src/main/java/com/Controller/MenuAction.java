@@ -1,4 +1,4 @@
-package main.java.com.Controller;
+package com.Controller;
 
 /**
  * 枚举化的菜单行为标识，避免在 MenuListener 中直接使用字符串匹配。

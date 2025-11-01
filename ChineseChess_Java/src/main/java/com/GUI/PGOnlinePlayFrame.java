@@ -1,4 +1,4 @@
-package main.java.com.GUI;
+package com.GUI;
 
 
 /**

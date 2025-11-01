@@ -1,8 +1,8 @@
-package main.java.com.GUI;
+package com.GUI;
 
-import main.java.com.Model.Account.DoAccountLogin;
-import main.java.com.Model.Account.DoAccountRegister;
-import main.java.com.Model.Account.AccountSession;
+import com.Model.Account.DoAccountLogin;
+import com.Model.Account.DoAccountRegister;
+import com.Model.Account.AccountSession;
 
 import javax.swing.*;
 import java.awt.*;

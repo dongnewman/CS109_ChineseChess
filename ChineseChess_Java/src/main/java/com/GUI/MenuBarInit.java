@@ -1,11 +1,11 @@
-package main.java.com.GUI;
+package com.GUI;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import main.java.com.Controller.MenuListener;
+import com.Controller.MenuListener;
 
 public class MenuBarInit {
     /**

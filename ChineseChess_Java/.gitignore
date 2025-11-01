@@ -1,0 +1,11 @@
+/.gradle/
+/build/
+/.idea/
+*.iml
+gradle-wrapper.jar
+gradlew
+gradlew.bat
+out/
+# OS
+Thumbs.db
+.DS_Store

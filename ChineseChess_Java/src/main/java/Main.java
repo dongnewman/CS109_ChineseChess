@@ -1,4 +1,4 @@
-import main.java.com.Controller.InitAll;
+import com.Controller.InitAll;
 
 public class Main {
     
