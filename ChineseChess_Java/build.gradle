@@ -31,10 +31,10 @@ eclipse {
 }
 
 application {
-    // 主类位于默认包：`Main`
+    // 主类使用包名：`com.chinesechess.Main`
     // Gradle 7+ 使用 mainClass, 兼容性保留 mainClassName
-    // 指定主类（Main 在项目根的默认包）
-    mainClass = 'Main'
+    // 指定主类为完整类名
+    mainClass = 'com.chinesechess.Main'
 }
 
 repositories {
@@ -59,7 +59,7 @@ sourceSets {
 // 生成包含依赖的可执行 jar（fat jar），便于快速运行
 jar {
     manifest {
-        attributes('Main-Class': 'Main')
+            attributes('Main-Class': 'com.chinesechess.Main')
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
