@@ -6,6 +6,8 @@ import com.Model.Account.AccountSession;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * 启动时的初始选择窗口：登录 / 注册 / 游客继续
@@ -17,6 +19,16 @@ public class FrameInit {
     public FrameInit() {
         dialog = new JDialog((Frame) null, "欢迎", true);
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        
+        
+        // 当用户通过窗口关闭按钮关闭对话框时，退出程序
+        dialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // 直接退出应用
+                System.exit(0);
+            }
+        });
         dialog.setSize(360, 160);
         dialog.setLocationRelativeTo(null);
         dialog.setLayout(new BorderLayout(8,8));
