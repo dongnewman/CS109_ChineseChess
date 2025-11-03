@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InitPieces {
-    private int[][] piecesData = {
+    private final int[][] piecesData = {
         // 黑子 第一排 (坐标从1开始)
         {1, 1, 0}, {1, 2, 1}, {1, 3, 2}, {1, 4, 3}, {1, 5, 4}, 
         {1, 6, 3}, {1, 7, 2}, {1, 8, 1}, {1, 9, 0},
