@@ -14,8 +14,6 @@ import javax.imageio.ImageIO;
 
 
 import com.Model.InGame.CountdownTimer;
-import com.GUI.Piece.InitPieces;
-import java.util.List;
 
 
 /**
@@ -73,15 +71,10 @@ public class GameFrame {
         final int pw = plateWidth;
         final int ph = plateHeight;
 
+    // 初始化棋子实例（将在 plate 的 paintComponent 中绘制），使用 Pieces 工厂（传入资源名和格位）
+    final Pieces blackJiang = new Pieces("piece-black-jiang", 5, 1);
 
-
-    // 初始化所有棋子
-    InitPieces initPieces = new InitPieces();
-    List<Pieces> allPieces = initPieces.initAllPieces();
-
-
-    
-    JPanel plate = new JPanel() {
+        JPanel plate = new JPanel() {
             @Override
             public Dimension getPreferredSize() {
                 return new Dimension(pw, ph);
@@ -94,9 +87,9 @@ public class GameFrame {
                     // 绘制图片：按原始像素大小绘制，不拉伸
                     g.drawImage(boardImage, 0, 0, pw, ph, this);
                 }
-                // 绘制所有棋子
-                for (Pieces piece : allPieces) {
-                    piece.paint(g);
+                // 绘制棋子（通过 Pieces 实例）
+                if (blackJiang != null) {
+                    blackJiang.paint(g);
                 }
             }
         };
@@ -162,6 +155,3 @@ public class GameFrame {
         });
     }
 }
-
-
-
