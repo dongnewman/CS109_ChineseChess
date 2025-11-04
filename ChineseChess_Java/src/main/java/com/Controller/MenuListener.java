@@ -125,8 +125,6 @@ public class MenuListener {
         DoAccountLook dal = new DoAccountLook();
         dal.showDialog();
         System.gc();
-
-        //System.out.println("TODO: handleViewProfile() - 查看资料");
 	}
 
 	private static void handleLogin() {
@@ -187,13 +185,12 @@ public class MenuListener {
         DoAccountDelete dad = new DoAccountDelete();
         dad.showDialog();
         System.gc();
-		// System.out.println("TODO: handleDeleteAccount() - 删除账号");
+		
 	}
 
 
     // 游戏栏
 	private static void handleNewGame() {
-		// System.out.println("TODO: handleNewGame() - 新游戏");
 		try {
 			InitGame initGame = new InitGame();
 		} catch (Exception e) {
@@ -205,6 +202,8 @@ public class MenuListener {
 		System.out.println("TODO: handleLoadGame() - 加载游戏");
 	}
 
+
+	// 记录栏
 	private static void handleViewRecord() {
 		System.out.println("TODO: handleViewRecord() - 查看记录");
 	}
@@ -216,13 +215,11 @@ public class MenuListener {
 	private static void handleHelpContents() {
 		new DoHelp();
 		System.gc();
-		//System.out.println("TODO: handleHelpContents() - 帮助内容");
 	}
 
 	private static void handleAbout() {
         new DoAbout();
         System.gc();
-		// System.out.println("TODO: handleAbout() - 关于");
 	}
 
 	private static void handleExit(JFrame parentFrame) {
