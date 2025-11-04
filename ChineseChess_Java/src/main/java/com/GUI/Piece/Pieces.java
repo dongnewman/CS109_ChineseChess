@@ -24,17 +24,15 @@ public class Pieces {
      * 2) classpath 根下的 /{name}.png（便于打包后运行）。
      * 示例: new Pieces("piece-black-jiang", 5, 1)
      */
-    public Pieces(String file_path, int col, int row) {
-        // 支持用户传入带或不带扩展名的名称
-        this.file_path = file_path;
-        String baseName = file_path;
-        if (baseName.contains("\\")) {
-            baseName = baseName.substring(baseName.lastIndexOf("\\") + 1);
+    public Pieces(String pieceBaseName, int col, int row) {
+        // pieceBaseName 期望形式: "pieces/piece-black-jiang" 或带扩展名
+        String baseName = pieceBaseName;
+        // 如果带扩展名，移除
+        if (baseName.endsWith(".png") || baseName.endsWith(".jpg")) {
+            baseName = baseName.substring(0, baseName.lastIndexOf('.'));
         }
-        if (baseName.contains("/")) {
-            baseName = baseName.substring(baseName.lastIndexOf("/") + 1);
-        }
-        String resourcePath = "/" + baseName;
+        String resourcePath = "/" + baseName + ".png"; // classpath 形式
+        this.file_path = "src" + File.separator + "main" + File.separator + "resources" + File.separator + baseName.replace('/', File.separatorChar) + ".png";
 
         // 先尝试从源码目录读取（开发时）
         try {

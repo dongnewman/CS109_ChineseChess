@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 import com.Model.InGame.CountdownTimer;
 import com.GUI.Piece.InitPieces;
-import java.util.List;
+import com.GUI.Piece.PiecesSession;
 
 
 /**
@@ -75,9 +75,13 @@ public class GameFrame {
 
 
 
-    // 初始化所有棋子
+    // 初始化所有棋子（放入 PiecesSession）
     InitPieces initPieces = new InitPieces();
-    List<Pieces> allPieces = initPieces.initAllPieces();
+    final PiecesSession piecesSession = new PiecesSession();
+    boolean ok = initPieces.initAllPieces(piecesSession);
+    if (!ok) {
+        System.err.println("Warning: 初始化棋子失败");
+    }
 
 
     
@@ -94,9 +98,12 @@ public class GameFrame {
                     // 绘制图片：按原始像素大小绘制，不拉伸
                     g.drawImage(boardImage, 0, 0, pw, ph, this);
                 }
-                // 绘制所有棋子
-                for (Pieces piece : allPieces) {
-                    piece.paint(g);
+                // 从 PiecesSession 中逐格绘制棋子（使用 1-based 索引：行 1..10，列 1..9）
+                for (int r = 1; r <= 10; r++) {
+                    for (int c = 1; c <= 9; c++) {
+                        Pieces p = piecesSession.getPiece(r, c);
+                        if (p != null) p.paint(g);
+                    }
                 }
             }
         };

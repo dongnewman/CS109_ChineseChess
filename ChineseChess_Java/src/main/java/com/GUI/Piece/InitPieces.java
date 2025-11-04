@@ -1,8 +1,5 @@
 package com.GUI.Piece;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class InitPieces {
     private final int[][] piecesData = {
         // 黑子 第一排 (坐标从1开始)
@@ -20,36 +17,47 @@ public class InitPieces {
         {7, 1, 13}, {7, 3, 13}, {7, 5, 13}, {7, 7, 13}, {7, 9, 13}
     };
 
-    private final String[] piecesFilePaths = {
-        "src\\main\\resources\\pieces\\piece-black-che.png",
-        "src\\main\\resources\\pieces\\piece-black-ma.png",
-        "src\\main\\resources\\pieces\\piece-black-xiang.png",
-        "src\\main\\resources\\pieces\\piece-black-shi.png",
-        "src\\main\\resources\\pieces\\piece-black-jiang.png",
-        "src\\main\\resources\\pieces\\piece-black-pao.png",
-        "src\\main\\resources\\pieces\\piece-black-zu.png",
+    private final String[] piecesBaseNames = {
+        "pieces/piece-black-che",
+        "pieces/piece-black-ma",
+        "pieces/piece-black-xiang",
+        "pieces/piece-black-shi",
+        "pieces/piece-black-jiang",
+        "pieces/piece-black-pao",
+        "pieces/piece-black-zu",
 
-        "src\\main\\resources\\pieces\\piece-red-che.png",
-        "src\\main\\resources\\pieces\\piece-red-ma.png",
-        "src\\main\\resources\\pieces\\piece-red-xiang.png",
-        "src\\main\\resources\\pieces\\piece-red-shi.png",
-        "src\\main\\resources\\pieces\\piece-red-shuai.png",
-        "src\\main\\resources\\pieces\\piece-red-pao.png",
-        "src\\main\\resources\\pieces\\piece-red-bing.png"
+        "pieces/piece-red-che",
+        "pieces/piece-red-ma",
+        "pieces/piece-red-xiang",
+        "pieces/piece-red-shi",
+        "pieces/piece-red-shuai",
+        "pieces/piece-red-pao",
+        "pieces/piece-red-bing"
     };
 
-    public List<Pieces> initAllPieces() {
-        List<Pieces> piecesList = new ArrayList<>();
-        for (int[] data : piecesData) {
-            int row = data[0];      // 行（1~10）
-            int col = data[1];      // 列（1~9）
-            int typeIndex = data[2]; // 类型索引（0~6 黑，7~13 红）
+    /**
+     * 初始化所有棋子并放入传入的 PiecesSession 中。
+     * 返回 true 表示初始化成功，false 表示失败（例如 session 为 null 或发生异常）。
+     */
+    public boolean initAllPieces(PiecesSession session) {
+        if (session == null) return false;
+        try {
+            for (int[] data : piecesData) {
+                int row = data[0];      // 行（1~10）
+                int col = data[1];      // 列（1~9）
+                int typeIndex = data[2]; // 类型索引（0~6 黑，7~13 红）
 
-            String imagePath = piecesFilePaths[typeIndex];
-            Pieces piece = new Pieces(imagePath, col, row);
-            piecesList.add(piece);
+                String baseName = piecesBaseNames[typeIndex];
+                // Pieces 构造器期望传入 baseName（如 "pieces/piece-black-jiang"），以及 col,row
+                Pieces piece = new Pieces(baseName, col, row);
+                // piecesSession 使用 0-based 索引
+                session.setPiece(row, col, piece);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        return piecesList;
     }
 
 }
