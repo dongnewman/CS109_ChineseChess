@@ -19,6 +19,8 @@ import com.Model.Account.DoAccountLook;
 import com.Model.Help.DoHelp;
 // About 相关处理器
 import com.Model.About.DoAbout;
+// Game 相关处理器
+import com.Controller.InitGame;
 
 
 /**
@@ -191,7 +193,12 @@ public class MenuListener {
 
     // 游戏栏
 	private static void handleNewGame() {
-		System.out.println("TODO: handleNewGame() - 新游戏");
+		// System.out.println("TODO: handleNewGame() - 新游戏");
+		try {
+			InitGame initGame = new InitGame();
+		} catch (Exception e) {
+			System.out.println("新游戏初始化失败: " + e.getMessage());
+		}
 	}
 
 	private static void handleLoadGame() {

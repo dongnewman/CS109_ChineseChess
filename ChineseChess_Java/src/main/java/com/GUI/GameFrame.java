@@ -15,7 +15,6 @@ import javax.imageio.ImageIO;
 
 import com.Model.InGame.CountdownTimer;
 import com.GUI.Piece.InitPieces;
-import com.GUI.Piece.MovePiece;
 import com.GUI.Piece.PiecesSession;
 
 
@@ -84,6 +83,14 @@ public class GameFrame {
         System.err.println("Warning: 初始化棋子失败");
     }
 
+    // 全局注册，便于其它地方访问
+    try {
+        Class<?> inGameObjectsClass = Class.forName("com.Controller.InGameObjects");
+        inGameObjectsClass.getField("piecesSession").set(null, piecesSession);
+    } catch (Exception e) {
+        System.err.println("无法注册InGameObjects.piecesSession: " + e.getMessage());
+    }
+
 
     
     JPanel plate = new JPanel() {
@@ -109,6 +116,19 @@ public class GameFrame {
             }
         };
 
+
+
+    // 注册plate到InGameObjects，便于全局访问
+    try {
+        Class<?> inGameObjectsClass = Class.forName("com.Controller.InGameObjects");
+        inGameObjectsClass.getField("plate").set(null, plate);
+    } catch (Exception e) {
+        System.err.println("无法注册InGameObjects.plate: " + e.getMessage());
+    }
+    // 通知其它线程界面已初始化完成
+    
+
+
     // 将棋盘放入一个 JLayeredPane，以便把计时器覆盖显示在右上角
     // 将棋盘与计时器放在不同的 panel 中，centerPanel 负责承载棋盘（CENTER）和计时器（EAST）
     JPanel centerPanel = new JPanel(new BorderLayout());
@@ -127,6 +147,8 @@ public class GameFrame {
                 System.out.println("Plate clicked at: x=" + x + ", y=" + y);
             }
         });
+
+
 
     // 在 centerContainer 的右上角放置倒计时模块（绝对定位）
     // 使用 CountdownTimer（避免与 Swing Timer 冲突）
@@ -150,6 +172,8 @@ public class GameFrame {
     JLabel label = new JLabel("欢迎来到中国象棋游戏!", SwingConstants.CENTER);
     GameFrame.add(label, BorderLayout.EAST);
 
+
+
     // 使用 pack 让基于 preferredSize 的组件确定初始大小，然后将宽度调整为棋盘宽度的 1.5 倍
     GameFrame.pack();
     int frameWidth = (int) Math.round(plateWidth * 1.5);
@@ -160,33 +184,29 @@ public class GameFrame {
 
 
     GameFrame.setVisible(true);
+    
 
-    final MovePiece movePiece = new MovePiece(plate);
-    Timer demoTimer = new Timer(1000, e -> {
-        Graphics graphics = plate.getGraphics();
-        try {
-            if (graphics != null) {
-                movePiece.Move(graphics, piecesSession, 7, 5, 6, 5);
-            }
-        } finally {
-            if (graphics != null) {
-                graphics.dispose();
-            }
-        }
-        ((Timer) e.getSource()).stop();
-    });
-    demoTimer.setRepeats(false);
-    demoTimer.start();
-
+    // 通知其它线程界面已初始化完成
+    try {
+        Class<?> inGameObjectsClass = Class.forName("com.Controller.InGameObjects");
+        java.util.concurrent.CountDownLatch latch = (java.util.concurrent.CountDownLatch) inGameObjectsClass.getField("uiReadyLatch").get(null);
+        latch.countDown();
+    } catch (Exception e) {
+        System.err.println("无法countDown InGameObjects.uiReadyLatch: " + e.getMessage());
     }
 
-    public static void main(String[] args) {
-        // 启动游戏界面
-        SwingUtilities.invokeLater(() -> {
-            new GameFrame();
-        });
+    
     }
 }
+
+// test using
+//     public static void main(String[] args) {
+//         // 启动游戏界面
+//         SwingUtilities.invokeLater(() -> {
+//             new GameFrame();
+//         });
+//     }
+// }
 
 
 

@@ -1,36 +1,68 @@
 package com.GUI.Piece;
 
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Point;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class MovePiece {
 
-    private final JComponent boardComponent;
+    private static final long ANIMATION_DURATION_MS = 500L;
+    private static final int FPS = 60;
 
-    public MovePiece(JComponent boardComponent) {
+    private final JComponent boardComponent;
+    private PiecesSession session;
+
+    public MovePiece(JComponent boardComponent, PiecesSession session) {
         this.boardComponent = boardComponent;
+        this.session = session;
     }
 
-    public boolean Move(Graphics g, PiecesSession session, int fromRow, int fromCol, int toRow, int toCol) {
+    public MovePiece(JComponent boardComponent) {
+        this(boardComponent, null);
+    }
+
+    public void setSession(PiecesSession session) {
+        this.session = session;
+    }
+
+    public boolean move(int fromRow, int fromCol, int toRow, int toCol) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            return moveInternal(fromRow, fromCol, toRow, toCol);
+        }
+
+        final boolean[] resultHolder = new boolean[1];
+        try {
+            SwingUtilities.invokeAndWait(() -> resultHolder[0] = moveInternal(fromRow, fromCol, toRow, toCol));
+            return resultHolder[0];
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            return false;
+        } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean moveInternal(int fromRow, int fromCol, int toRow, int toCol) {
         if (boardComponent == null) {
-            System.err.println("MovePiece.Move: board component is not set.");
+            System.err.println("MovePiece.move: board component is not set.");
             return false;
         }
         if (session == null) {
-            System.err.println("MovePiece.Move: session is null.");
+            System.err.println("MovePiece.move: session is null.");
             return false;
         }
 
         Pieces piece = session.getPiece(fromRow, fromCol);
         if (piece == null) {
-            System.err.println("MovePiece.Move: no piece at the source position.");
+            System.err.println("MovePiece.move: no piece at the source position.");
             return false;
         }
 
@@ -40,20 +72,19 @@ public class MovePiece {
         final int endY = Pieces.rowToY(toRow);
 
         if (piece.getImage() == null || piece.getWidth() == 0 || piece.getHeight() == 0) {
-            System.err.println("MovePiece.Move: piece image is not available for animation.");
+            System.err.println("MovePiece.move: piece image is not available for animation.");
             return false;
         }
 
         Component rootComponent = SwingUtilities.getRoot(boardComponent);
-        if (!(rootComponent instanceof javax.swing.RootPaneContainer)) {
-            System.err.println("MovePiece.Move: unable to resolve root pane container for animation.");
+        if (!(rootComponent instanceof RootPaneContainer container)) {
+            System.err.println("MovePiece.move: unable to resolve root pane container for animation.");
             return false;
         }
 
-        javax.swing.RootPaneContainer container = (javax.swing.RootPaneContainer) rootComponent;
         JLayeredPane layeredPane = container.getLayeredPane();
         if (layeredPane == null) {
-            System.err.println("MovePiece.Move: layered pane is null.");
+            System.err.println("MovePiece.move: layered pane is null.");
             return false;
         }
 
@@ -77,15 +108,13 @@ public class MovePiece {
         session.setPiece(fromRow, fromCol, null);
         boardComponent.repaint();
 
-        final long animationDuration = 500L;
-        final int fps = 60;
-        final int delay = Math.max(5, 1000 / fps);
+        final int delay = Math.max(5, 1000 / FPS);
         final long startTime = System.currentTimeMillis();
 
         Timer timer = new Timer(delay, null);
         timer.addActionListener(e -> {
             long elapsed = System.currentTimeMillis() - startTime;
-            double progress = Math.min(1.0, elapsed / (double) animationDuration);
+            double progress = Math.min(1.0, elapsed / (double) ANIMATION_DURATION_MS);
             int currentX = (int) Math.round(startX + (endX - startX) * progress);
             int currentY = (int) Math.round(startY + (endY - startY) * progress);
 
@@ -96,7 +125,7 @@ public class MovePiece {
             if (progress >= 1.0) {
                 timer.stop();
                 layeredPane.remove(movingLabel);
-                 layeredPane.revalidate();
+                layeredPane.revalidate();
                 layeredPane.repaint(drawX, drawY, pieceWidth, pieceHeight);
 
                 piece.setCenterPosition(endX, endY);
@@ -110,5 +139,4 @@ public class MovePiece {
 
         return true;
     }
-
 }
