@@ -7,6 +7,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Pieces {
+    private static final int CELL_SIZE = 77;
+    private static final int OFFSET_X = 39;
+    private static final int OFFSET_Y = 55;
+
     private String file_path;
     private BufferedImage image;
     // 中心坐标（以像素为单位）
@@ -64,12 +68,8 @@ public class Pieces {
             System.err.println("Pieces: failed to load image for '" + baseName + "' from '" + this.file_path + "' or classpath " + resourcePath);
         }
 
-        // 计算中心点（与旧逻辑兼容）
-        this.centerX = 77 * (col - 1) + 39;
-        this.centerY = 77 * (row - 1) + 55;
-        // 计算绘制用左上角坐标
-        this.drawX = this.centerX - width / 2;
-        this.drawY = this.centerY - height / 2;
+        // 计算中心点并更新绘制坐标
+        setBoardPositionInternal(col, row);
     }
 
     // 绘制方法：在棋盘的 paintComponent 中由外部传入 Graphics 调用
@@ -79,4 +79,52 @@ public class Pieces {
         }
     }
 
+    public void setCenterPosition(int x, int y) {
+        this.centerX = x;
+        this.centerY = y;
+        updateDrawCoordinates();
+    }
+
+    public void setBoardPosition(int col, int row) {
+        setBoardPositionInternal(col, row);
+    }
+
+    public int getCenterX() {
+        return centerX;
+    }
+
+    public int getCenterY() {
+        return centerY;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    private void updateDrawCoordinates() {
+        this.drawX = centerX - width / 2;
+        this.drawY = centerY - height / 2;
+    }
+
+    private void setBoardPositionInternal(int col, int row) {
+        this.centerX = columnToX(col);
+        this.centerY = rowToY(row);
+        updateDrawCoordinates();
+    }
+
+    public static int columnToX(int column) {
+        return (column - 1) * CELL_SIZE + OFFSET_X;
+    }
+
+    public static int rowToY(int row) {
+        return (row - 1) * CELL_SIZE + OFFSET_Y;
+    }
 }

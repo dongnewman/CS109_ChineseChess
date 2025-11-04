@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import com.Model.InGame.CountdownTimer;
 import com.GUI.Piece.InitPieces;
+import com.GUI.Piece.MovePiece;
 import com.GUI.Piece.PiecesSession;
 
 
@@ -159,6 +160,23 @@ public class GameFrame {
 
 
     GameFrame.setVisible(true);
+
+    final MovePiece movePiece = new MovePiece(plate);
+    Timer demoTimer = new Timer(1000, e -> {
+        Graphics graphics = plate.getGraphics();
+        try {
+            if (graphics != null) {
+                movePiece.Move(graphics, piecesSession, 7, 5, 6, 5);
+            }
+        } finally {
+            if (graphics != null) {
+                graphics.dispose();
+            }
+        }
+        ((Timer) e.getSource()).stop();
+    });
+    demoTimer.setRepeats(false);
+    demoTimer.start();
 
     }
 
