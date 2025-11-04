@@ -137,6 +137,7 @@ public class MovePiece {
         timer.setRepeats(true);
         timer.start();
 
+        System.gc();
         return true;
     }
 }
