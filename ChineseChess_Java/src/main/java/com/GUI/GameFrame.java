@@ -36,7 +36,6 @@ public class GameFrame {
     JFrame GameFrame = new JFrame();
     GameFrame.setLayout(new BorderLayout());
     GameFrame.setTitle("Chinese Chess Game");
-    GameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         
         try{
@@ -145,6 +144,15 @@ public class GameFrame {
                 int x = e.getX();
                 int y = e.getY();
                 System.out.println("Plate clicked at: x=" + x + ", y=" + y);
+            }
+        });
+
+        GameFrame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                System.out.println("Frame clicked at: x=" + x + ", y=" + y);
             }
         });
 

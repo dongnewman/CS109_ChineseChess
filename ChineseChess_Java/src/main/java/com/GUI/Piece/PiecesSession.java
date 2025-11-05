@@ -5,6 +5,12 @@ public class PiecesSession {
     // 为了简单性，数组多留一行/列（索引 0 未使用）
     private Pieces[][] piecesArray = new Pieces[11][10];
 
+    // 被吃掉的棋子存放处
+    private Pieces[] BlackRemovedPieces = new Pieces[16];
+    private Pieces[] RedRemovedPieces = new Pieces[16];
+    private int blackRemovedCount = 0;
+    private int redRemovedCount = 0;
+
     /**
      * 将棋子放入 session，索引为 1-based（row:1..10, col:1..9）。
      * 如果索引越界则忽略并打印错误。
@@ -25,5 +31,20 @@ public class PiecesSession {
             return null;
         }
         return piecesArray[row][col];
+    }
+
+
+
+    // 记录被吃掉的棋子
+    public int addRemovedPiece(Pieces piece, boolean isBlack) {
+        if (isBlack) {
+            if (blackRemovedCount >= 16) return -1;
+            BlackRemovedPieces[blackRemovedCount++] = piece;
+            return blackRemovedCount - 1;
+        } else {
+            if (redRemovedCount >= 16) return -1;
+            RedRemovedPieces[redRemovedCount++] = piece;
+            return redRemovedCount - 1;
+        }
     }
 }
