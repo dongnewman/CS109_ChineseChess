@@ -14,8 +14,13 @@ import javax.imageio.ImageIO;
 
 
 import com.Model.InGame.CountdownTimer;
+import com.Controller.InGameObjects;
 import com.GUI.Piece.InitPieces;
 import com.GUI.Piece.PiecesSession;
+import com.GUI.Box.BlueBox;
+import com.GUI.Box.BoxSession;
+import com.GUI.Box.RedBox;
+
 
 
 /**
@@ -91,7 +96,19 @@ public class GameFrame {
     }
 
 
-    
+    // 初始化 BlueBoxSession 和 RedBoxSession
+    BoxSession blueBoxSession = new BoxSession();
+    BoxSession redBoxSession = new BoxSession();
+
+    // 全局注册，便于其它地方访问
+    try {
+        Class<?> inGameObjectsClass = Class.forName("com.Controller.InGameObjects");
+        inGameObjectsClass.getField("blueBoxSession").set(null, blueBoxSession);
+        inGameObjectsClass.getField("redBoxSession").set(null, redBoxSession);
+    } catch (Exception e) {
+        System.err.println("无法注册InGameObjects.boxSession: " + e.getMessage());
+    }
+
     JPanel plate = new JPanel() {
             @Override
             public Dimension getPreferredSize() {
@@ -110,6 +127,20 @@ public class GameFrame {
                     for (int c = 1; c <= 9; c++) {
                         Pieces p = piecesSession.getPiece(r, c);
                         if (p != null) p.paint(g);
+                    }
+                }
+                // 绘制 BlueBox（使用 1-based 索引：行 1..10，列 1..9）
+                for(int r = 1; r <= 10; r++) {
+                    for(int c = 1; c <= 9; c++) {
+                        BlueBox blueBox = (BlueBox) InGameObjects.blueBoxSession.getBoxAt(r, c);
+                        if (blueBox != null) blueBox.paint(g);
+                    }
+                }
+                // 绘制 RedBox（使用 1-based 索引：行 1..10，列 1..9）
+                for(int r = 1; r <= 10; r++) {
+                    for(int c = 1; c <= 9; c++) {
+                        RedBox redBox = (RedBox) InGameObjects.redBoxSession.getRedBoxAt(r, c);
+                        if (redBox != null) redBox.paint(g);
                     }
                 }
             }

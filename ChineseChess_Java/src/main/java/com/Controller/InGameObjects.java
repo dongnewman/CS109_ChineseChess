@@ -2,10 +2,13 @@ package com.Controller;
 
 import com.GUI.Piece.PiecesSession;
 import javax.swing.JComponent;
+import com.GUI.Box.BoxSession;
 
 public class InGameObjects {
 	public static PiecesSession piecesSession;
 	public static JComponent plate;
+	public static BoxSession blueBoxSession;
+	public static BoxSession redBoxSession;
 	// 用于同步等待界面初始化
 	public static final java.util.concurrent.CountDownLatch uiReadyLatch = new java.util.concurrent.CountDownLatch(1);
 }

@@ -23,19 +23,24 @@ public class InitGame {
     // 等待界面完全初始化
     InGameObjects.uiReadyLatch.await();
 
-    movePiece = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
-    movePiece.move(7, 5, 6, 5);
-    movePiece.move(3, 2, 4, 2);
-    movePiece.move(10, 9, 9, 9);
+    // // Test
+    // movePiece = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
+    // movePiece.move(7, 5, 6, 5);
+    // movePiece.move(3, 2, 4, 2);
+    // movePiece.move(10, 9, 9, 9);
 
-    // 这里可以添加更多的棋子移动示例
+    // removePiece = new RemovePiece(InGameObjects.piecesSession);
+    // removePiece.remove(1, 1, true); // 移除黑色棋子
+    // removePiece.remove(1,2, true);
+    // removePiece.remove(1, 3, true);
+    // removePiece.remove(10, 1, false);
+    // removePiece.remove(10,2, false);
+    // removePiece.remove(10, 3, false);
 
-    removePiece = new RemovePiece(InGameObjects.piecesSession);
-    removePiece.remove(1, 1, true); // 移除黑色棋子
-    removePiece.remove(1,2, true);
-    removePiece.remove(1, 3, true);
-    removePiece.remove(10, 1, false);
-    removePiece.remove(10,2, false);
-    removePiece.remove(10, 3, false);
-}
+    // InGameObjects.blueBoxSession.setBlueBox(4, 5);
+    // InGameObjects.redBoxSession.setRedBox(5, 5);
+
+    // InGameObjects.blueBoxSession.removeBlueBox(4, 5);
+    // InGameObjects.redBoxSession.removeRedBox(5, 5);
+    }
 }

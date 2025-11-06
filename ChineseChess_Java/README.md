@@ -21,3 +21,11 @@ public boolean remove(int row, int col, boolean isBlack)
 removePiece.remove(1, 1, true);
 // 移除红方棋子（假设10,1有棋子）
 removePiece.remove(10, 1, false);
+
+如何显示红框蓝框？
+// 显示
+InGameObjects.blueBoxSession.setBlueBox(4, 5);
+InGameObjects.redBoxSession.setRedBox(5, 5);
+// 移除
+InGameObjects.blueBoxSession.removeBlueBox(4, 5);
+InGameObjects.redBoxSession.removeRedBox(5, 5);
