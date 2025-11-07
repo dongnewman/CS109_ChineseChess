@@ -26,13 +26,13 @@ public class InitGame {
 
         GameClick gameclick = new GameClick(InGameObjects.plate);
         new Thread(() -> {
-        int count = 0;
-        while(count < 5) {
-            int[] result = gameclick.waitForClick();
-            System.out.println("In InitGame: Clicked at row: " + result[0] + ", col: " + result[1]);
-            count++;
-        }
-    }).start();
+            int count = 0;
+            while(count < 5) {
+                int[] result = gameclick.waitForClick();
+                System.out.println("In InitGame: Clicked at row: " + result[0] + ", col: " + result[1]);
+                count++;
+            }
+        }).start();
 
     //  Test
     //     movePiece = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
@@ -48,8 +48,8 @@ public class InitGame {
     //     removePiece.remove(10,2, false);
     //     removePiece.remove(10, 3, false);
 
-        InGameObjects.blueBoxSession.setBlueBox(4, 5);
-        InGameObjects.redBoxSession.setRedBox(5, 5);
+        // InGameObjects.blueBoxSession.setBlueBox(4, 5);
+        // InGameObjects.redBoxSession.setRedBox(5, 5);
 
     //     InGameObjects.blueBoxSession.removeBlueBox(4, 5);
     //     InGameObjects.redBoxSession.removeRedBox(5, 5);

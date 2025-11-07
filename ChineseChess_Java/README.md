@@ -53,5 +53,12 @@ InGameObjects.redBoxSession.removeRedBox(5, 5);
  4. 提供 waitForClick() 方法，阻塞直到有新的点击坐标返回。
  
  用法示例：
- GameClick gameClick = new GameClick(plateComponent);
- int[] pos = gameClick.waitForClick(); // pos[0]: 行, pos[1]: 列
+         new Thread(() -> {
+            int count = 0;
+            while(count < 5) {
+                int[] result = gameclick.waitForClick();
+                System.out.println("In InitGame: Clicked at row: " + result[0] + ", col: " + result[1]);
+                count++;
+            }
+        }).start();
+要新建一个线程，才能保证其它东西不被阻塞
