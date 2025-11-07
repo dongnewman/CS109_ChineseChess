@@ -169,23 +169,23 @@ public class GameFrame {
     centerPanel.add(plate, BorderLayout.CENTER);
 
         // 点击棋盘时把相对像素坐标输出到控制台（模块：点击取坐标）
-        plate.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
-                System.out.println("Plate clicked at: x=" + x + ", y=" + y);
-            }
-        });
+        // plate.addMouseListener(new MouseAdapter() {
+        //     @Override
+        //     public void mouseClicked(MouseEvent e) {
+        //         int x = e.getX();
+        //         int y = e.getY();
+        //         System.out.println("Plate clicked at: x=" + x + ", y=" + y);
+        //     }
+        // });
 
-        GameFrame.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
-                System.out.println("Frame clicked at: x=" + x + ", y=" + y);
-            }
-        });
+        // GameFrame.addMouseListener(new MouseAdapter() {
+        //     @Override
+        //     public void mouseClicked(MouseEvent e) {
+        //         int x = e.getX();
+        //         int y = e.getY();
+        //         System.out.println("Frame clicked at: x=" + x + ", y=" + y);
+        //     }
+        // });
 
 
 
