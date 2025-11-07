@@ -2,6 +2,7 @@
 如何移动棋子？
 示例：在程序其他地方实现三个棋子的移动动画
 // 导入相关包
+```java
 import com.Controller.InGameObjects;
 import com.GUI.Piece.MovePiece;
 
@@ -9,19 +10,13 @@ MovePiece movePiece = new MovePiece(InGameObjects.plate, InGameObjects.piecesSes
 movePiece.move(7, 5, 6, 5);
 movePiece.move(3, 2, 4, 2);
 movePiece.move(10, 9, 9, 9);
+```
 // 记得：move(row1, column1, row2, column2)！！！
-
-public class leiming{
-    public static int[] getposition（）{
-        开始监听
-        监听到
-        返回坐标
-    }
-}
 
 
 
 如何移除棋子？
+```java
 // 示例：移除棋盘上的棋子并动画移到观战区
 RemovePiece removePiece = new RemovePiece(InGameObjects.piecesSession);
 // 方法定义
@@ -30,10 +25,11 @@ public boolean remove(int row, int col, boolean isBlack)
 removePiece.remove(1, 1, true);
 // 移除红方棋子（假设10,1有棋子）
 removePiece.remove(10, 1, false);
-
+```
 
 
 如何显示红框蓝框？
+```java
 // 显示
 InGameObjects.blueBoxSession.setBlueBox(4, 5);
 InGameObjects.redBoxSession.setRedBox(5, 5);
@@ -41,7 +37,7 @@ InGameObjects.redBoxSession.setRedBox(5, 5);
 InGameObjects.blueBoxSession.removeBlueBox(4, 5);
 InGameObjects.redBoxSession.removeRedBox(5, 5);
 
-
+```
 
 如何获取点击坐标？
  GameClick 类用于监听棋盘组件上的鼠标点击事件，并将点击位置转换为棋盘的行列坐标。
@@ -53,12 +49,14 @@ InGameObjects.redBoxSession.removeRedBox(5, 5);
  4. 提供 waitForClick() 方法，阻塞直到有新的点击坐标返回。
  
  用法示例：
-         new Thread(() -> {
-            int count = 0;
-            while(count < 5) {
-                int[] result = gameclick.waitForClick();
-                System.out.println("In InitGame: Clicked at row: " + result[0] + ", col: " + result[1]);
-                count++;
-            }
-        }).start();
+ ```java
+new Thread(() -> {
+    int count = 0;
+    while(count < 5) {
+        int[] result = gameclick.waitForClick();
+        System.out.println("In InitGame: Clicked at row: " + result[0] + ", col: " + result[1]);
+        count++;
+    }
+}).start();
+```
 要新建一个线程，才能保证其它东西不被阻塞
