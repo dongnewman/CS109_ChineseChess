@@ -1,7 +1,6 @@
 package com.GUI;
 
 import javax.swing.JComponent;
-import com.Controller.InGameObjects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 /**

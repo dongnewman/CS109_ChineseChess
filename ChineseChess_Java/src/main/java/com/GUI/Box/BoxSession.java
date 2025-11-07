@@ -1,7 +1,5 @@
 package com.GUI.Box;
 
-import com.Controller.InGameObjects;
-
 public class BoxSession {
     private Box[][] blueBoxArray = new Box[11][10];
     private Box[][] redBoxArray = new Box[11][10];

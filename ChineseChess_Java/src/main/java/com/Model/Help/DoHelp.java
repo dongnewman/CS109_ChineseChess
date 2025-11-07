@@ -31,7 +31,7 @@ public class DoHelp {
     private void showWindow(){
         JFrame helpFrame = new JFrame("帮助");
         helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        helpFrame.setSize(700, 600);
+        helpFrame.setSize(1000, 600);
         helpFrame.setLocationRelativeTo(null);
 
         // 尝试从 classpath 加载名为 tutorial.png 的图片（常见放置位置：src/main/resources/tutorial.png）
@@ -59,7 +59,16 @@ public class DoHelp {
                 double scale = (double) frameContentWidth / img.getWidth();
                 int newW = (int) (img.getWidth() * scale);
                 int newH = (int) (img.getHeight() * scale);
-                displayImg = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+
+                // 使用高质量缩放
+                BufferedImage scaledImg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2d = scaledImg.createGraphics();
+                g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.drawImage(img, 0, 0, newW, newH, null);
+                g2d.dispose();
+                displayImg = scaledImg;
             }
 
             JLabel picLabel = new JLabel(new ImageIcon(displayImg));

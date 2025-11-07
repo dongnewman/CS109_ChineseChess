@@ -168,6 +168,7 @@ public class GameFrame {
     plate.setPreferredSize(new Dimension(pw, ph));
     centerPanel.add(plate, BorderLayout.CENTER);
 
+    // 下面的代码用于测试：
         // 点击棋盘时把相对像素坐标输出到控制台（模块：点击取坐标）
         // plate.addMouseListener(new MouseAdapter() {
         //     @Override
@@ -237,15 +238,5 @@ public class GameFrame {
     
     }
 }
-
-// test using
-//     public static void main(String[] args) {
-//         // 启动游戏界面
-//         SwingUtilities.invokeLater(() -> {
-//             new GameFrame();
-//         });
-//     }
-// }
-
 
 

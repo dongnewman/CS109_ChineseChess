@@ -11,7 +11,6 @@ public class RedBox extends Box {
     private static final int OFFSET_X = 39;
     private static final int OFFSET_Y = 55;
 
-    private static final String BASE_NAME = "Box/RedBox";
     private String file_path = "src\\main\\resources\\Box\\RedBox.png";
     private BufferedImage image;
     private int centerX;
