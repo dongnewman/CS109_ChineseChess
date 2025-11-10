@@ -21,7 +21,7 @@ import javax.swing.JButton;
 public class Menu {
     // 公开的静态标签引用，供其它类（例如 MenuListener）以受控方式更新显示文本
     public static JLabel label;
-    JFrame frame;
+    public static JFrame frame;
 
     public Menu() {
         // 将实例化的 JLabel 赋给静态字段（避免在外部使用局部变量引用）

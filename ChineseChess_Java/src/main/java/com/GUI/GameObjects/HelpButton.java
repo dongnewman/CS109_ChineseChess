@@ -14,9 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 
-public class Help {
+public class HelpButton {
     private String file_path = "src\\main\\resources\\help.png";
-    public Help(JFrame parentFrame) {
+    public HelpButton(JFrame parentFrame) {
         BufferedImage image = null;
         JButton helpbutton = new JButton();
         try {
@@ -33,7 +33,7 @@ public class Help {
                     image = ImageIO.read(in);
                 }
             } catch (IOException e) {
-                // ignore
+                System.out.println("Failed to load help button image from classpath: " + e.getMessage());
             }
         }
         if (image != null) {
