@@ -20,8 +20,8 @@ import com.GUI.Piece.PiecesSession;
 import com.GUI.Box.BlueBox;
 import com.GUI.Box.BoxSession;
 import com.GUI.Box.RedBox;
-import com.GUI.GameObjects.Help;
-
+import com.GUI.GameObjects.HelpButton;
+import com.GUI.GameObjects.SurrenderButton;
 
 /**
  * 游戏界面
@@ -222,11 +222,14 @@ public class GameFrame {
     GameFrame.setLocationRelativeTo(null);
     
     // 设置帮助页面
-    Help help = new Help(GameFrame);
+    HelpButton help = new HelpButton(GameFrame);
+    // 设置投降按钮
+    SurrenderButton surrender = new SurrenderButton(GameFrame);
 
 
     GameFrame.setVisible(true);
     
+    Menu.frame.setVisible(false); // 隐藏菜单界面
 
     // 通知其它线程界面已初始化完成
     try {
