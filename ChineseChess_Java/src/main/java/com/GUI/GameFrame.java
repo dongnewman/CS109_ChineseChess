@@ -34,13 +34,26 @@ public class GameFrame {
     // 如果找不到再回退到源码树中的文件路径，便于开发时运行
     private final String resourceName = "/Board.jpg"; // classpath 资源名（以 / 开头表示从 classpath 根查找）
     private final String filePath = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "Board.jpg";
+    private JFrame gameFrame;
 
     public GameFrame() {
         // 初始化游戏界面
+        gameFrame = new JFrame();
+        gameFrame.setLayout(new BorderLayout());
+        gameFrame.setTitle("Chinese Chess Game");
+    
 
-    JFrame GameFrame = new JFrame();
-    GameFrame.setLayout(new BorderLayout());
-    GameFrame.setTitle("Chinese Chess Game");
+        gameFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        gameFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                gameFrame.dispose();
+                if (Menu.frame != null) {
+                    Menu.frame.setVisible(true);
+                }
+            }
+        });
+
 
         
         try{
@@ -179,7 +192,7 @@ public class GameFrame {
             }
         });
 
-        GameFrame.addMouseListener(new MouseAdapter() {
+    gameFrame.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int x = e.getX();
@@ -207,27 +220,27 @@ public class GameFrame {
 
         centerPanel.add(timerWrapper, BorderLayout.EAST);
 
-        GameFrame.add(centerPanel, BorderLayout.CENTER);
+    gameFrame.add(centerPanel, BorderLayout.CENTER);
 
     JLabel label = new JLabel("欢迎来到中国象棋游戏!", SwingConstants.CENTER);
-    GameFrame.add(label, BorderLayout.EAST);
+    gameFrame.add(label, BorderLayout.EAST);
 
 
 
     // 使用 pack 让基于 preferredSize 的组件确定初始大小，然后将宽度调整为棋盘宽度的 1.5 倍
-    GameFrame.pack();
+    gameFrame.pack();
     int frameWidth = (int) Math.round(plateWidth * 1.5);
-    int frameHeight = GameFrame.getHeight();
-    GameFrame.setSize(frameWidth, frameHeight);
-    GameFrame.setLocationRelativeTo(null);
-    
+    int frameHeight = gameFrame.getHeight();
+    gameFrame.setSize(frameWidth, frameHeight);
+    gameFrame.setLocationRelativeTo(null);
+
+    // 设置其它小组件
     // 设置帮助页面
-    HelpButton help = new HelpButton(GameFrame);
+    HelpButton help = new HelpButton(gameFrame);
     // 设置投降按钮
-    SurrenderButton surrender = new SurrenderButton(GameFrame);
+    SurrenderButton surrender = new SurrenderButton(gameFrame);
 
-
-    GameFrame.setVisible(true);
+    gameFrame.setVisible(true);
     
     Menu.frame.setVisible(false); // 隐藏菜单界面
 
