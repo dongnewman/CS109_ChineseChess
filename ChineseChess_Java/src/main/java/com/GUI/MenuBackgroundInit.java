@@ -5,11 +5,10 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
 import javax.swing.JLabel;
 import java.awt.image.BufferedImage;
 
-public class MenuFrameInit {
+public class MenuBackgroundInit {
     public static void initMenuBackground (JFrame frame) {
         String file_path = "src\\main\\resources\\Menu.png";
         BufferedImage image = null;
@@ -22,7 +21,7 @@ public class MenuFrameInit {
             // ignore, try classpath next
         }
         if (image == null) {
-            try (java.io.InputStream in = MenuFrameInit.class.getResourceAsStream("/Menu.png")) {
+            try (java.io.InputStream in = MenuBackgroundInit.class.getResourceAsStream("/Menu.png")) {
                 if (in != null) {
                     image = ImageIO.read(in);
                 }

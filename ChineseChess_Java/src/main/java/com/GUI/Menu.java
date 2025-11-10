@@ -48,7 +48,7 @@ public class Menu {
         // 菜单栏生成完毕
         // 初始化菜单背景（传入 frame 以设置内容面板）
         // 查看：MenuFrameInit.java
-        MenuFrameInit.initMenuBackground(frame);
+        MenuBackgroundInit.initMenuBackground(frame);
 
         // Test
         // 添加鼠标监听器以调试点击位置
