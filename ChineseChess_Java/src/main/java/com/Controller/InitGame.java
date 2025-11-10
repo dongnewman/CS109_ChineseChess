@@ -8,7 +8,7 @@ import com.GUI.Piece.RemovePiece;
 import com.GUI.GameClick;
 
 public class InitGame {
-// 示例：在程序其他地方实现三个棋子的移动动画
+    // 示例：在程序其他地方实现三个棋子的移动动画
 
     public InitGame() throws Exception {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -16,22 +16,25 @@ public class InitGame {
         } else {
             SwingUtilities.invokeAndWait(() -> {
                 new GameFrame();
-         });
-        }   
+            });
+        }
 
-    // 等待界面完全初始化
+        // 等待界面完全初始化
         InGameObjects.uiReadyLatch.await();
 
         GameClick gameclick = new GameClick(InGameObjects.plate);
         new Thread(() -> {
             int count = 0;
-            while(count < 5) {
+            while (count < 5) {
                 int[] result = gameclick.waitForClick();
                 System.out.println("In InitGame: Clicked at row: " + result[0] + ", col: " + result[1]);
                 count++;
             }
         }).start();
 
+        new Thread(() -> {
+            new DoGame().gameStart();
+        }).start();
         // MovePiece movePiece;
         // movePiece = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
         // movePiece.move(7, 5, 6, 5);
