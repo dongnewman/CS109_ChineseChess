@@ -20,7 +20,7 @@ import com.GUI.Piece.PiecesSession;
 import com.GUI.Box.BlueBox;
 import com.GUI.Box.BoxSession;
 import com.GUI.Box.RedBox;
-
+import com.GUI.GameObjects.Help;
 
 
 /**
@@ -168,25 +168,25 @@ public class GameFrame {
     plate.setPreferredSize(new Dimension(pw, ph));
     centerPanel.add(plate, BorderLayout.CENTER);
 
-    // 下面的代码用于测试：
-        // 点击棋盘时把相对像素坐标输出到控制台（模块：点击取坐标）
-        // plate.addMouseListener(new MouseAdapter() {
-        //     @Override
-        //     public void mouseClicked(MouseEvent e) {
-        //         int x = e.getX();
-        //         int y = e.getY();
-        //         System.out.println("Plate clicked at: x=" + x + ", y=" + y);
-        //     }
-        // });
+    //下面的代码用于测试：
+        //点击棋盘时把相对像素坐标输出到控制台（模块：点击取坐标）
+        plate.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                System.out.println("Plate clicked at: x=" + x + ", y=" + y);
+            }
+        });
 
-        // GameFrame.addMouseListener(new MouseAdapter() {
-        //     @Override
-        //     public void mouseClicked(MouseEvent e) {
-        //         int x = e.getX();
-        //         int y = e.getY();
-        //         System.out.println("Frame clicked at: x=" + x + ", y=" + y);
-        //     }
-        // });
+        GameFrame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                System.out.println("Frame clicked at: x=" + x + ", y=" + y);
+            }
+        });
 
 
 
@@ -220,7 +220,9 @@ public class GameFrame {
     int frameHeight = GameFrame.getHeight();
     GameFrame.setSize(frameWidth, frameHeight);
     GameFrame.setLocationRelativeTo(null);
-
+    
+    // 设置帮助页面
+    Help help = new Help(GameFrame);
 
 
     GameFrame.setVisible(true);
