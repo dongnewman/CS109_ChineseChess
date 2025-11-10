@@ -22,6 +22,7 @@ public class BoxSession {
     public boolean removeBlueBox(int row, int col) {
         if(blueBoxArray[row][col] == null) return false;
         blueBoxArray[row][col] = null;
+        InGameObjects.plate.repaint();
         return true;
     }
     // 示例：获取BlueBox对象
@@ -43,6 +44,7 @@ public class BoxSession {
     public boolean removeRedBox(int row, int col) {
         if(redBoxArray[row][col] == null) return false;
         redBoxArray[row][col] = null;
+        InGameObjects.plate.repaint();
         return true;
     }
     // 示例：获取RedBox对象
