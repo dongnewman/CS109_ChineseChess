@@ -77,3 +77,12 @@ new Thread(() -> {
                 // 记得写完之后在这里调用！
 ```
 中加入调用你写的投降的按钮
+
+
+如何显示终局页面（显示谁赢了）：
+```java
+import com.GUI.GameObjects,EndGameDialog;
+
+EndGameDialog endGameDialog = new EndGameDialog(String winner, JFrame gameFrame);
+```
+注意：String winner中“red”表示红方赢，“black”表示黑方赢。
