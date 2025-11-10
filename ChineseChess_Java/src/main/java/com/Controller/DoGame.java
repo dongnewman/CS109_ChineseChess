@@ -21,30 +21,30 @@ public class DoGame {
         boolean side = board.getSide();
         Move move = new Move(0, 0, 0, 0);
         while (true) {
-            int[] posi = gameclick.waitForClick();
-            // debug
-            System.out.println("In DoGame: Clicked at row: " + posi[0] + ", col: " + posi[1]);
             //
+            System.out.println("getin geti\n");
+            //
+            int[] posi = gameclick.waitForClick();
             if (posi[0] == 0 && posi[1] == 0) {// 无效点击，继续等待
                 continue;
             } else {
-                char piece = board.getpiece(posi[0], posi[1]);
-                // debug
-                System.out.println("In DoGame: Clicked piece: " + piece);
-                //
-                if (piece == '.' || Character.isUpperCase(piece) != side) {
+                // playroom definition coordination
+                char piece = board.getpiece(11 - posi[0], posi[1]);
+                if (piece == '.' || Character.isLowerCase(piece) != side) {
                     continue;
                 }
-                InGameObjects.blueBoxSession.setBlueBox(posi[0], posi[1]);
-                move.setxi(posi[0]);
+                move.setxi(11 - posi[0]);
                 move.setyi(posi[1]);
+                //
+                InGameObjects.blueBoxSession.setBlueBox(posi[0], posi[1]);
                 while (true) {
                     int[] posf = gameclick.waitForClick();
                     if (posf[0] == 0 && posf[1] == 0) {
                         InGameObjects.blueBoxSession.removeBlueBox(posi[0], posi[1]);
                         break;
                     } else {
-                        move.setxf(posf[0]);
+                        // playroom definition coordination
+                        move.setxf(11 - posf[0]);
                         move.setyf(posf[1]);
                         if (board.isPossibleMove(move)) {
                             return move;
@@ -75,6 +75,9 @@ public class DoGame {
             Move move = getMove();
             board.doMove(move);
             // UI animation
+            // transform the coordination from board to screen board
+            move.setxi(11 - move.getxi());
+            move.setxf(11 - move.getxf());
             movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
             removetool.remove(move.getxf(), move.getyf(),
                     board.getpiece(move.getxf(), move.getyf()) == '.' ? false : true);

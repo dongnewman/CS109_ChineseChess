@@ -121,6 +121,8 @@ public final class ValidMove {
                         cnt++;
                     }
                 }
+                // return (cnt == 0 && board.getpiece(xf, yf) == '.') || (cnt == 1 &&
+                // board.getpiece(xf, yf) != '.');
                 return cnt == 0 && board.getpiece(xf, yf) == '.' || cnt == 1 && board.getpiece(xf, yf) != '.';
             } else if (yi == yf) {
                 int cnt = 0;
@@ -129,6 +131,8 @@ public final class ValidMove {
                         cnt++;
                     }
                 }
+                // return (cnt == 0 && board.getpiece(xf, yf) == '.') || (cnt == 1 &&
+                // board.getpiece(xf, yf) != '.');
                 return cnt == 0 && board.getpiece(xf, yf) == '.' || cnt == 1 && board.getpiece(xf, yf) != '.';
             } else
                 return false;
@@ -137,13 +141,13 @@ public final class ValidMove {
                 if (xi <= 5) {
                     return yf == yi && xf == xi + 1;
                 } else {
-                    return Math.abs(xi - xf) == 1 && Math.abs(yi - yf) == 1 && xf >= xi;
+                    return Math.abs(xi - xf) + Math.abs(yi - yf) == 1 && xf >= xi;
                 }
             } else {
                 if (xi >= 6) {
                     return yf == yi && xf == xi - 1;
                 } else {
-                    return Math.abs(xi - xf) == 1 && Math.abs(yi - yf) == 1 && xf <= xi;
+                    return Math.abs(xi - xf) + Math.abs(yi - yf) == 1 && xf <= xi;
                 }
             }
         }

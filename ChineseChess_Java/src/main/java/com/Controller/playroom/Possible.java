@@ -12,6 +12,8 @@ import java.util.ArrayList;
 public final class Possible {
     public static boolean isPossibleMove(Board board, Move move) {
         // wait for implementation
+        if (!ValidMove.isValidMove(board, move))
+            return false;
         char originalPiece = board.getpiece(move.getxf(), move.getyf());
         board.doMove(move);
         ArrayList<Move> validMoves = board.getAllValidMoves();
