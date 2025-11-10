@@ -9,8 +9,6 @@ import com.GUI.GameClick;
 
 public class InitGame {
 // 示例：在程序其他地方实现三个棋子的移动动画
-    
-    
 
     public InitGame() throws Exception {
         if (SwingUtilities.isEventDispatchThread()) {
@@ -34,26 +32,25 @@ public class InitGame {
             }
         }).start();
 
-    //  Test
-    //     private MovePiece movePiece;
-    //     movePiece = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
-    //     movePiece.move(7, 5, 6, 5);
-    //     movePiece.move(3, 2, 4, 2);
-    //     movePiece.move(10, 9, 9, 9);
+        // MovePiece movePiece;
+        // movePiece = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
+        // movePiece.move(7, 5, 6, 5);
+        // movePiece.move(3, 2, 4, 2);
+        // movePiece.move(10, 9, 9, 9);
 
-    //     private RemovePiece removePiece;
-    //     removePiece = new RemovePiece(InGameObjects.piecesSession);
-    //     removePiece.remove(1, 1, true); // 移除黑色棋子
-    //     removePiece.remove(1,2, true);
-    //     removePiece.remove(1, 3, true);
-    //     removePiece.remove(10, 1, false);
-    //     removePiece.remove(10,2, false);
-    //     removePiece.remove(10, 3, false);
+        // RemovePiece removePiece;
+        // removePiece = new RemovePiece(InGameObjects.piecesSession);
+        // removePiece.remove(1, 1, true); // 移除黑色棋子
+        // removePiece.remove(1,2, true);
+        // removePiece.remove(1, 3, true);
+        // removePiece.remove(10, 1, false);
+        // removePiece.remove(10,2, false);
+        // removePiece.remove(10, 3, false);
 
-    //     InGameObjects.blueBoxSession.setBlueBox(4, 5);
-    //     InGameObjects.redBoxSession.setRedBox(5, 5);
+        // InGameObjects.blueBoxSession.setBlueBox(4, 5);
+        // InGameObjects.redBoxSession.setRedBox(5, 5);
 
-    //     InGameObjects.blueBoxSession.removeBlueBox(4, 5);
-    //     InGameObjects.redBoxSession.removeRedBox(5, 5);
+        // InGameObjects.blueBoxSession.removeBlueBox(4, 5);
+        // InGameObjects.redBoxSession.removeRedBox(5, 5);
     }
 }

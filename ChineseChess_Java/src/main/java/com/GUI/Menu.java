@@ -3,10 +3,13 @@ package com.GUI;
 import javax.swing.JFrame;
 
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import javax.swing.JButton;
 
 // Menu GUI 控制的核心和源头！！！
 
@@ -42,13 +45,37 @@ public class Menu {
 
         
 
-        // 菜单生成完毕
+        // 菜单栏生成完毕
+        // 初始化菜单背景（传入 frame 以设置内容面板）
+        // 查看：MenuFrameInit.java
+        MenuFrameInit.initMenuBackground(frame);
+
+        // Test
+        // 添加鼠标监听器以调试点击位置
+        frame.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                System.out.println("Plate clicked at: x=" + x + ", y=" + y);
+            }
+        });
+
         // 开始生成正文部分
-        
+        // 开始游戏键
+        JButton startGameButton = new JButton("开始游戏");
+        startGameButton.setBounds(550,400,300,50);
+        frame.add(startGameButton);
 
+        // 第二个键（功能暂时未知）
+        JButton secondButton = new JButton("~");
+        secondButton.setBounds(550,470,300,50);
+        frame.add(secondButton);
 
-
-
+        // 第三个键（功能暂时未知）
+        JButton thirdButton = new JButton("~");
+        thirdButton.setBounds(550,540,300,50);
+        frame.add(thirdButton);
 
 
 
