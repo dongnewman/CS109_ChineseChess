@@ -9,6 +9,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+
+import com.GUI.MenuObjects.MenuBackgroundInit;
+import com.GUI.MenuObjects.MenuBarInit;
+import com.GUI.MenuObjects.StartButton;
+
 import javax.swing.JButton;
 
 // Menu GUI 控制的核心和源头！！！
@@ -63,9 +68,13 @@ public class Menu {
 
         // 开始生成正文部分
         // 开始游戏键
-        JButton startGameButton = new JButton("开始游戏");
-        startGameButton.setBounds(550,400,300,50);
-        frame.add(startGameButton);
+        // 旧的
+        // JButton startGameButton = new JButton("开始游戏");
+        // startGameButton.setBounds(550,400,300,50);
+        // frame.add(startGameButton);
+        // 新的
+        JButton startGameButton = new JButton();
+        StartButton startButtonObj = new StartButton(startGameButton, frame);
 
         // 第二个键（功能暂时未知）
         JButton secondButton = new JButton("~");

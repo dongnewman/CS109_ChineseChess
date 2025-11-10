@@ -1,4 +1,4 @@
-package com.GUI;
+package com.GUI.MenuObjects;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 public class MenuBackgroundInit {
     public static void initMenuBackground (JFrame frame) {
-        String file_path = "src\\main\\resources\\Menu.png";
+        final String file_path = "src\\main\\resources\\Menu.png";
         BufferedImage image = null;
         try {
             File f = new File(file_path);
