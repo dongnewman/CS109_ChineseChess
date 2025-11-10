@@ -1,5 +1,7 @@
 package com.GUI.Box;
 
+import com.Controller.InGameObjects;
+
 public class BoxSession {
     private Box[][] blueBoxArray = new Box[11][10];
     private Box[][] redBoxArray = new Box[11][10];
@@ -13,6 +15,7 @@ public class BoxSession {
     // 示例：保存BlueBox对象
     public void setBlueBox(int row, int col) {
         BlueBox blueBox = new BlueBox(col, row);
+        InGameObjects.plate.repaint();
         blueBoxArray[row][col] = blueBox;
     }
     // 示例：移除并返回BlueBox对象
@@ -33,6 +36,7 @@ public class BoxSession {
     // 示例：保存RedBox对象
     public void setRedBox(int row, int col) {
         Box redBox = new RedBox(col, row);
+        InGameObjects.plate.repaint();
         redBoxArray[row][col] = redBox;
     }
     // 示例：移除RedBox对象
