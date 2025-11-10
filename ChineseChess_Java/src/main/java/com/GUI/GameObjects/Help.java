@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.awt.image.BufferedImage;
 
 public class Help {
-    private final String file_path = "src\\main\\resources\\help.png";
+    private String file_path = "src\\main\\resources\\help.png";
     public Help(JFrame parentFrame) {
         BufferedImage image = null;
         JButton helpbutton = new JButton();
@@ -46,16 +46,15 @@ public class Help {
             // 使用JLayeredPane或合适的布局将按钮放在右下角
             // 这里采用绝对定位，需设置布局为null
             parentFrame.setLayout(null);
-            helpbutton.setBounds(parentFrame.getWidth() - 50, parentFrame.getHeight() - 50, 50, 50);
+            helpbutton.setBounds(parentFrame.getWidth() - 80, parentFrame.getHeight() - 80, 60, 60);
             parentFrame.add(helpbutton);
             parentFrame.setComponentZOrder(helpbutton, 0); // 保证按钮在最上层
             parentFrame.repaint();
-            parentFrame.revalidate();
             // 窗口大小变化时同步按钮位置
             parentFrame.addComponentListener(new java.awt.event.ComponentAdapter() {
                 @Override
                 public void componentResized(java.awt.event.ComponentEvent e) {
-                    helpbutton.setBounds(parentFrame.getWidth() - 70, parentFrame.getHeight() - 90, 50, 50);
+                    helpbutton.setBounds(parentFrame.getWidth() - 80, parentFrame.getHeight() - 80, 60, 60);
                 }
             });
             helpbutton.addActionListener(new ActionListener() {
