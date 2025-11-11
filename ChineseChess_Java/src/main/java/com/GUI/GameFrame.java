@@ -256,5 +256,3 @@ public class GameFrame {
     
     }
 }
-
-
