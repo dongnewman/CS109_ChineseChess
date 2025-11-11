@@ -42,26 +42,40 @@ public class HelpButton {
             helpbutton.setFocusPainted(false);
             helpbutton.setOpaque(false);
             helpbutton.setIcon(new javax.swing.ImageIcon(image));
-            helpbutton.setPreferredSize(new java.awt.Dimension(60, 60));
-            // 使用JLayeredPane或合适的布局将按钮放在右下角
-            // 这里采用绝对定位，需设置布局为null
-            parentFrame.setLayout(null);
-            helpbutton.setBounds(parentFrame.getWidth() - 80, parentFrame.getHeight() - 80, 60, 60);
-            parentFrame.add(helpbutton);
-            parentFrame.setComponentZOrder(helpbutton, 0); // 保证按钮在最上层
-            parentFrame.repaint();
-            // 窗口大小变化时同步按钮位置
+            java.awt.Dimension size = new java.awt.Dimension(60, 60);
+            helpbutton.setSize(size);
+
+            javax.swing.JLayeredPane layeredPane = parentFrame.getLayeredPane();
+            layeredPane.add(helpbutton, javax.swing.JLayeredPane.POPUP_LAYER);
+
+            Runnable relocate = () -> {
+                java.awt.Insets insets = parentFrame.getInsets();
+                int margin = 40;
+                int x = parentFrame.getWidth() - insets.right - margin - size.width;
+                int y = parentFrame.getHeight() - insets.bottom - margin - size.height;
+                helpbutton.setLocation(Math.max(0, x), Math.max(0, y));
+            };
+
             parentFrame.addComponentListener(new java.awt.event.ComponentAdapter() {
                 @Override
                 public void componentResized(java.awt.event.ComponentEvent e) {
-                    helpbutton.setBounds(parentFrame.getWidth() - 80, parentFrame.getHeight() - 80, 60, 60);
+                    relocate.run();
+                }
+
+                @Override
+                public void componentMoved(java.awt.event.ComponentEvent e) {
+                    relocate.run();
                 }
             });
+
+            relocate.run();
+            layeredPane.revalidate();
+            layeredPane.repaint();
             helpbutton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        DoHelp doHelp = new DoHelp();
+                        new DoHelp();
                     } catch (Exception e2) {
                         System.out.println("新游戏初始化失败: " + e2.getMessage());
                     }

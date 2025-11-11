@@ -59,6 +59,17 @@ public class DoGame {
         }
     }
 
+    private void animateCapture(RemovePiece removetool, Move move) {
+        char capturedChar = board.getPiece(move.getxf(), move.getyf());
+        if (capturedChar == '.') {
+            return;
+        }
+        int targetUiRow = 11 - move.getxf();
+        boolean capturedIsBlack = Character.isLowerCase(capturedChar);
+        // Run removal before board state mutates so the captured piece reference is still in session.
+        removetool.remove(targetUiRow, move.getyf(), capturedIsBlack);
+    }
+
     public void gameP2P() {
         //
         System.out.println("Game started!");
@@ -74,14 +85,13 @@ public class DoGame {
                 return;
             }
             Move move = getMove();
+            animateCapture(removetool, move);
             board.doMove(move);
             // UI animation
             // transform the coordination from board to screen board
             move.setxi(11 - move.getxi());
             move.setxf(11 - move.getxf());
             movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
-            removetool.remove(move.getxf(), move.getyf(),
-                    board.getPiece(move.getxf(), move.getyf()) == '.' ? false : true);
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
         }
@@ -105,14 +115,13 @@ public class DoGame {
             } else {
                 move = getMove();
             }
+            animateCapture(removetool, move);
             board.doMove(move);
             // UI animation
             // transform the coordination from board to screen board
             move.setxi(11 - move.getxi());
             move.setxf(11 - move.getxf());
             movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
-            removetool.remove(move.getxf(), move.getyf(),
-                    board.getPiece(move.getxf(), move.getyf()) == '.' ? false : true);
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
         }

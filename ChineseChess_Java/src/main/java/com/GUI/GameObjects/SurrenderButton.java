@@ -33,21 +33,36 @@ public class SurrenderButton {
             surrenderbutton.setFocusPainted(false);
             surrenderbutton.setOpaque(false);
             surrenderbutton.setIcon(new javax.swing.ImageIcon(image));
-            surrenderbutton.setPreferredSize(new java.awt.Dimension(60, 60));
-            // 使用JLayeredPane或合适的布局将按钮放在右下角
-            // 这里采用绝对定位，需设置布局为null
-            parentFrame.setLayout(null);
-            surrenderbutton.setBounds(parentFrame.getWidth() - 150, parentFrame.getHeight() - 80, 60, 60);
-            parentFrame.add(surrenderbutton);
-            parentFrame.setComponentZOrder(surrenderbutton, 0); // 保证按钮在最上层
-            parentFrame.repaint();
-            // 窗口大小变化时同步按钮位置
+            java.awt.Dimension size = new java.awt.Dimension(60, 60);
+            surrenderbutton.setSize(size);
+
+            javax.swing.JLayeredPane layeredPane = parentFrame.getLayeredPane();
+            layeredPane.add(surrenderbutton, javax.swing.JLayeredPane.POPUP_LAYER);
+
+            Runnable relocate = () -> {
+                java.awt.Insets insets = parentFrame.getInsets();
+                int horizontalMargin = 110;
+                int verticalMargin = 40;
+                int x = parentFrame.getWidth() - insets.right - horizontalMargin - size.width;
+                int y = parentFrame.getHeight() - insets.bottom - verticalMargin - size.height;
+                surrenderbutton.setLocation(Math.max(0, x), Math.max(0, y));
+            };
+
             parentFrame.addComponentListener(new java.awt.event.ComponentAdapter() {
                 @Override
                 public void componentResized(java.awt.event.ComponentEvent e) {
-                    surrenderbutton.setBounds(parentFrame.getWidth() - 150, parentFrame.getHeight() - 80, 60, 60);
+                    relocate.run();
+                }
+
+                @Override
+                public void componentMoved(java.awt.event.ComponentEvent e) {
+                    relocate.run();
                 }
             });
+
+            relocate.run();
+            layeredPane.revalidate();
+            layeredPane.repaint();
             surrenderbutton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
