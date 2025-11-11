@@ -7,7 +7,8 @@ public class Board {
     boolean side;
 
     // constructor: copy from given array (expects at least 11x10)
-    public Board(char b[][]) {
+    public Board(char b[][], boolean side) {
+        this.side = side;
         board = new char[11][10];
         for (int i = 0; i <= 10; i++) {
             for (int j = 0; j <= 9; j++) {
@@ -61,14 +62,20 @@ public class Board {
     }
 
     // getter
-    public char getpiece(int r, int c) {
+    public char getPiece(int r, int c) {
         if (r < 0 || r > 10 || c < 0 || c > 9)
             return 0;
         return board[r][c];
     }
 
-    public char[][] getboard() {
-        return board;
+    public char[][] getBoard() {
+        char[][] b = new char[11][10];// deep copy
+        for (int i = 0; i <= 10; i++) {
+            for (int j = 0; j <= 9; j++) {
+                b[i][j] = board[i][j];
+            }
+        }
+        return b;
     }
 
     public boolean getSide() {
@@ -76,7 +83,7 @@ public class Board {
     }
 
     // setter
-    public void setpiece(int r, int c, char p) {
+    public void setPiece(int r, int c, char p) {
         if (r < 0 || r > 10 || c < 0 || c > 9)
             return;
         board[r][c] = p;
@@ -117,15 +124,15 @@ public class Board {
     }
 
     public void doMove(Move move) {
-        char piece = getpiece(move.getxi(), move.getyi());
-        setpiece(move.getxf(), move.getyf(), piece);
-        setpiece(move.getxi(), move.getyi(), '.');
+        char piece = getPiece(move.getxi(), move.getyi());
+        setPiece(move.getxf(), move.getyf(), piece);
+        setPiece(move.getxi(), move.getyi(), '.');
         side = !side;
     }
 
     public void undoMove(Move move, char capturedPiece) {
-        setpiece(move.getxi(), move.getyi(), getpiece(move.getxf(), move.getyf()));
-        setpiece(move.getxf(), move.getyf(), capturedPiece);
+        setPiece(move.getxi(), move.getyi(), getPiece(move.getxf(), move.getyf()));
+        setPiece(move.getxf(), move.getyf(), capturedPiece);
         side = !side;
     }
 

@@ -5,6 +5,7 @@ import com.GUI.Piece.RemovePiece;
 import com.GUI.GameClick;
 
 import com.Controller.playroom.*;
+import com.Controller.playersAI.*;
 
 public class DoGame {
     private Board board;
@@ -29,7 +30,7 @@ public class DoGame {
                 continue;
             } else {
                 // playroom definition coordination
-                char piece = board.getpiece(11 - posi[0], posi[1]);
+                char piece = board.getPiece(11 - posi[0], posi[1]);
                 if (piece == '.' || Character.isLowerCase(piece) != side) {
                     continue;
                 }
@@ -58,7 +59,7 @@ public class DoGame {
         }
     }
 
-    public void gameStart() {
+    public void gameP2P() {
         //
         System.out.println("Game started!");
         //
@@ -78,18 +79,42 @@ public class DoGame {
             // transform the coordination from board to screen board
             move.setxi(11 - move.getxi());
             move.setxf(11 - move.getxf());
-            boolean ret = movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
-            ret = !ret;
+            movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
             removetool.remove(move.getxf(), move.getyf(),
-                    board.getpiece(move.getxf(), move.getyf()) == '.' ? false : true);
+                    board.getPiece(move.getxf(), move.getyf()) == '.' ? false : true);
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
-            //
-            // movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
-            // removetool.remove(move.getxf(), move.getyf(),
-            // board.getpiece(move.getxf(), move.getyf()) == '.' ? false : true);
-            // InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
-            // InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
+        }
+    }
+
+    public void gameWithAI() {
+        MovePiece movetool = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
+        RemovePiece removetool = new RemovePiece(InGameObjects.piecesSession);
+        gameclick = new GameClick(InGameObjects.plate);
+        HinatsuruAI AI = new HinatsuruAI();
+        while (true) {
+            if (board.gameOver()) {
+                // the UI is waiting for implementation
+                System.out.println("Game Over!");
+                System.out.println(board.getSide() ? "Red wins!" : "Black wins!");
+                return;
+            }
+            Move move;
+            if (board.getSide()) {
+                move = AI.makeMove(board);
+            } else {
+                move = getMove();
+            }
+            board.doMove(move);
+            // UI animation
+            // transform the coordination from board to screen board
+            move.setxi(11 - move.getxi());
+            move.setxf(11 - move.getxf());
+            movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
+            removetool.remove(move.getxf(), move.getyf(),
+                    board.getPiece(move.getxf(), move.getyf()) == '.' ? false : true);
+            InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
+            InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
         }
     }
 }

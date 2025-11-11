@@ -32,9 +32,15 @@ public class InitGame {
             }
         }).start();
 
+        // function:game P2P
+        // new Thread(() -> {
+        // new DoGame().gameP2P();
+        // }).start();
+        // new function: game with lovely hinatsuru AI
         new Thread(() -> {
-            new DoGame().gameStart();
+            new DoGame().gameWithAI();
         }).start();
+        //
         // MovePiece movePiece;
         // movePiece = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
         // movePiece.move(7, 5, 6, 5);

@@ -8,7 +8,7 @@ public final class ValidMove {
         boolean side = board.getSide();
         int xi = move.getxi(), yi = move.getyi();
         int xf = move.getxf(), yf = move.getyf();
-        char piecei = board.getpiece(xi, yi);
+        char piecei = board.getPiece(xi, yi);
         // universal checks
         if (piecei == '.' || Character.isLowerCase(piecei) != side) {
             return false;
@@ -16,13 +16,13 @@ public final class ValidMove {
         if (xi == xf && yi == yf) {
             return false;
         }
-        if (board.getpiece(xf, yf) != '.' && Character.isLowerCase(board.getpiece(xf, yf)) == side)
+        if (board.getPiece(xf, yf) != '.' && Character.isLowerCase(board.getPiece(xf, yf)) == side)
             return false;
         {// check the kings cant see each other
             int xK = 0, yK = 0, xk = 0, yk = 0;
             for (int x = 1; x <= 3; x++) {
                 for (int y = 4; y <= 6; y++) {
-                    if (board.getpiece(x, y) == 'K') {
+                    if (board.getPiece(x, y) == 'K') {
                         xK = x;
                         yK = y;
                     }
@@ -30,7 +30,7 @@ public final class ValidMove {
             }
             for (int x = 8; x <= 10; x++) {
                 for (int y = 4; y <= 6; y++) {
-                    if (board.getpiece(x, y) == 'k') {
+                    if (board.getPiece(x, y) == 'k') {
                         xk = x;
                         yk = y;
                     }
@@ -47,7 +47,7 @@ public final class ValidMove {
             if (yK == yk) {
                 int cnt = 0;
                 for (int x = xK + 1; x < xk; x++) {
-                    char piece = board.getpiece(x, yK);
+                    char piece = board.getPiece(x, yK);
                     if (piece != '.') {
                         if (xi == x && yi == yK) {
                             if (xf > xK && xf < xk && yf == yK) {
@@ -65,14 +65,14 @@ public final class ValidMove {
         if (piecei == 'R' || piecei == 'r') {
             if (xi == xf) {
                 for (int y = Math.min(yi, yf) + 1; y < Math.max(yi, yf); y++) {
-                    if (board.getpiece(xi, y) != '.') {
+                    if (board.getPiece(xi, y) != '.') {
                         return false;
                     }
                 }
                 return true;
             } else if (yi == yf) {
                 for (int x = Math.min(xi, xf) + 1; x < Math.max(xi, xf); x++) {
-                    if (board.getpiece(x, yi) != '.') {
+                    if (board.getPiece(x, yi) != '.') {
                         return false;
                     }
                 }
@@ -81,9 +81,9 @@ public final class ValidMove {
                 return false;
         } else if (piecei == 'N' || piecei == 'n') {
             if (Math.abs(xi - xf) == 2 && Math.abs(yi - yf) == 1) {
-                return board.getpiece((xi + xf) / 2, yi) == '.';
+                return board.getPiece((xi + xf) / 2, yi) == '.';
             } else if (Math.abs(xi - xf) == 1 && Math.abs(yi - yf) == 2) {
-                return board.getpiece(xi, (yi + yf) / 2) == '.';
+                return board.getPiece(xi, (yi + yf) / 2) == '.';
             } else {
                 return false;
             }
@@ -93,7 +93,7 @@ public final class ValidMove {
                     return false;
                 if (piecei == 'b' && xf < 6)
                     return false;
-                return board.getpiece((xi + xf) / 2, (yi + yf) / 2) == '.';
+                return board.getPiece((xi + xf) / 2, (yi + yf) / 2) == '.';
             } else {
                 return false;
             }
@@ -117,23 +117,23 @@ public final class ValidMove {
             if (xi == xf) {
                 int cnt = 0;
                 for (int y = Math.min(yi, yf) + 1; y < Math.max(yi, yf); y++) {
-                    if (board.getpiece(xi, y) != '.') {
+                    if (board.getPiece(xi, y) != '.') {
                         cnt++;
                     }
                 }
-                // return (cnt == 0 && board.getpiece(xf, yf) == '.') || (cnt == 1 &&
-                // board.getpiece(xf, yf) != '.');
-                return cnt == 0 && board.getpiece(xf, yf) == '.' || cnt == 1 && board.getpiece(xf, yf) != '.';
+                // return (cnt == 0 && board.getPiece(xf, yf) == '.') || (cnt == 1 &&
+                // board.getPiece(xf, yf) != '.');
+                return cnt == 0 && board.getPiece(xf, yf) == '.' || cnt == 1 && board.getPiece(xf, yf) != '.';
             } else if (yi == yf) {
                 int cnt = 0;
                 for (int x = Math.min(xi, xf) + 1; x < Math.max(xi, xf); x++) {
-                    if (board.getpiece(x, yi) != '.') {
+                    if (board.getPiece(x, yi) != '.') {
                         cnt++;
                     }
                 }
-                // return (cnt == 0 && board.getpiece(xf, yf) == '.') || (cnt == 1 &&
-                // board.getpiece(xf, yf) != '.');
-                return cnt == 0 && board.getpiece(xf, yf) == '.' || cnt == 1 && board.getpiece(xf, yf) != '.';
+                // return (cnt == 0 && board.getPiece(xf, yf) == '.') || (cnt == 1 &&
+                // board.getPiece(xf, yf) != '.');
+                return cnt == 0 && board.getPiece(xf, yf) == '.' || cnt == 1 && board.getPiece(xf, yf) != '.';
             } else
                 return false;
         } else {// pawn
@@ -161,7 +161,7 @@ public final class ValidMove {
         ArrayList<Move> validMoves = new ArrayList<>();
         for (int xi = 1; xi <= 10; xi++) {
             for (int yi = 1; yi <= 9; yi++) {
-                char piece = board.getpiece(xi, yi);
+                char piece = board.getPiece(xi, yi);
                 if (piece == '.' || Character.isLowerCase(piece) != board.getSide()) {
                     continue;
                 }

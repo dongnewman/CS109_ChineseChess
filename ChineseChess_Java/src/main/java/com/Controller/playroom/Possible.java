@@ -14,12 +14,12 @@ public final class Possible {
         // wait for implementation
         if (!ValidMove.isValidMove(board, move))
             return false;
-        char originalPiece = board.getpiece(move.getxf(), move.getyf());
+        char originalPiece = board.getPiece(move.getxf(), move.getyf());
         board.doMove(move);
         ArrayList<Move> validMoves = board.getAllValidMoves();
         boolean flag = true;
         for (Move m : validMoves) {
-            char piece = board.getpiece(m.getxf(), m.getyf());
+            char piece = board.getPiece(m.getxf(), m.getyf());
             if (piece == 'K' || piece == 'k') {
                 flag = false;
                 break;
