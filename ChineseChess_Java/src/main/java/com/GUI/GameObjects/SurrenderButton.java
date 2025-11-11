@@ -91,6 +91,9 @@ public class SurrenderButton {
             }
             // 显示菜单界面
             Menu.frame.setVisible(true); 
+            if(Menu.musicButton.isPlaying == true){
+                Menu.musicButton.doPlayMusic(); // 播放菜单音乐
+            }
         }
         // 否则什么都不做，返回游戏
     }
