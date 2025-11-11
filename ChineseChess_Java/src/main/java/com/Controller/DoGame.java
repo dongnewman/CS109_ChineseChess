@@ -22,9 +22,6 @@ public class DoGame {
         boolean side = board.getSide();
         Move move = new Move(0, 0, 0, 0);
         while (true) {
-            //
-            System.out.println("getin geti\n");
-            //
             int[] posi = gameclick.waitForClick();
             if (posi[0] == 0 && posi[1] == 0) {// 无效点击，继续等待
                 continue;
@@ -61,7 +58,7 @@ public class DoGame {
 
     public void gameP2P() {
         //
-        System.out.println("Game started!");
+        System.out.println("P2P Game started!");
         //
         MovePiece movetool = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
         RemovePiece removetool = new RemovePiece(InGameObjects.piecesSession);
@@ -88,6 +85,9 @@ public class DoGame {
     }
 
     public void gameWithAI() {
+        //
+        System.out.println("Single Game started!");
+        //
         MovePiece movetool = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
         RemovePiece removetool = new RemovePiece(InGameObjects.piecesSession);
         gameclick = new GameClick(InGameObjects.plate);
