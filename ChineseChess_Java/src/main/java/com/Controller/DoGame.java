@@ -78,11 +78,18 @@ public class DoGame {
             // transform the coordination from board to screen board
             move.setxi(11 - move.getxi());
             move.setxf(11 - move.getxf());
-            movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
+            boolean ret = movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
+            ret = !ret;
             removetool.remove(move.getxf(), move.getyf(),
                     board.getpiece(move.getxf(), move.getyf()) == '.' ? false : true);
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
+            //
+            // movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
+            // removetool.remove(move.getxf(), move.getyf(),
+            // board.getpiece(move.getxf(), move.getyf()) == '.' ? false : true);
+            // InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
+            // InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
         }
     }
 }

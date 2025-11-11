@@ -3,6 +3,7 @@ package com.GUI.Piece;
 import java.awt.Component;
 import java.awt.Point;
 import java.lang.reflect.InvocationTargetException;
+
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -93,8 +94,6 @@ public class MovePiece {
         return moveInternalByPixel(startX, startY, endX, endY, piece, fromRow, fromCol, toRow, toCol);
     }
 
-
-
     // 外部：以起始行列和目标像素坐标移动动画，能正确找到棋子对象并操作session
     private boolean moveInternalByPixel(int fromRow, int fromCol, int toX, int toY) {
         if (boardComponent == null) {
@@ -176,7 +175,8 @@ public class MovePiece {
     }
 
     // 重载：带piece和session操作的像素动画（供原moveInternal调用）
-    private boolean moveInternalByPixel(int fromX, int fromY, int toX, int toY, Pieces piece, int fromRow, int fromCol, int toRow, int toCol) {
+    private boolean moveInternalByPixel(int fromX, int fromY, int toX, int toY, Pieces piece, int fromRow, int fromCol,
+            int toRow, int toCol) {
         if (boardComponent == null) {
             System.err.println("MovePiece.move: board component is not set.");
             return false;
