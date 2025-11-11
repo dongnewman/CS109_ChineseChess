@@ -50,6 +50,9 @@ public class GameFrame {
                 gameFrame.dispose();
                 if (Menu.frame != null) {
                     Menu.frame.setVisible(true);
+                    if(Menu.musicButton.isPlaying == true){
+                        Menu.musicButton.doPlayMusic(); // 播放菜单音乐
+                    }
                 }
             }
         });
@@ -243,6 +246,9 @@ public class GameFrame {
     gameFrame.setVisible(true);
     
     Menu.frame.setVisible(false); // 隐藏菜单界面
+    if(Menu.musicButton.isPlaying == true){
+        Menu.musicButton.stopMusic(); // 停止菜单音乐
+    }
 
     // 通知其它线程界面已初始化完成
     try {
@@ -256,5 +262,3 @@ public class GameFrame {
     
     }
 }
-
-

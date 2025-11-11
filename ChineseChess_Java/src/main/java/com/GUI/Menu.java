@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 import com.GUI.MenuObjects.MenuBackgroundInit;
 import com.GUI.MenuObjects.MenuBarInit;
 import com.GUI.MenuObjects.StartButton;
+import com.GUI.MenuObjects.MusicButton;
 
 import javax.swing.JButton;
 
@@ -22,13 +23,15 @@ public class Menu {
     // 公开的静态标签引用，供其它类（例如 MenuListener）以受控方式更新显示文本
     public static JLabel label;
     public static JFrame frame;
+    public static MusicButton musicButton;
+    public static JButton musicBtn;
 
     public Menu() {
         // 将实例化的 JLabel 赋给静态字段（避免在外部使用局部变量引用）
         label = new JLabel("Welcome to Chinese Chess");
         frame = new JFrame("Chinese Chess");
         frame.setSize(800, 600);
-        frame.setLayout(new FlowLayout());
+        frame.setLayout(null); // 改为绝对布局
 
         // 处理关闭窗口行为
         // 拦截默认关闭行为，委托给 LeaveCheck 处理
@@ -86,6 +89,18 @@ public class Menu {
         thirdButton.setBounds(550,540,300,50);
         frame.add(thirdButton);
 
+        // 添加音乐按钮
+        musicBtn = new JButton();
+        musicButton = new MusicButton(frame, musicBtn);
+        musicBtn.setBounds(frame.getWidth() - 65, frame.getHeight() - 105, 40, 40);
+        frame.add(musicBtn);
+        // 窗口大小变化时同步按钮位置
+        frame.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                musicBtn.setBounds(frame.getWidth() - 65, frame.getHeight() - 105, 40, 40);
+            }
+        });
 
 
 

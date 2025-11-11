@@ -3,6 +3,9 @@ package com.GUI.GameObjects;
 import javax.swing.JOptionPane;
 import com.GUI.Menu;
 import javax.swing.JFrame;
+import javax.swing.JButton;
+
+import com.GUI.MenuObjects.MusicButton;
 
 public class EndGameDialog {
     private String winner;
@@ -18,6 +21,9 @@ public class EndGameDialog {
         // 显示主菜单
         if (Menu.frame != null) {
             Menu.frame.setVisible(true);
+            if(Menu.musicButton.isPlaying == true){
+                Menu.musicButton.doPlayMusic(); // 播放菜单音乐
+            }
         }
     }
 }
