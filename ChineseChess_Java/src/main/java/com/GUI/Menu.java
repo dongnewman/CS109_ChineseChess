@@ -13,8 +13,10 @@ import javax.swing.SwingUtilities;
 import com.GUI.MenuObjects.LeaveCheck;
 import com.GUI.MenuObjects.MenuBackgroundInit;
 import com.GUI.MenuObjects.MenuBarInit;
-import com.GUI.MenuObjects.StartButton;
+import com.GUI.MenuObjects.P2PButton;
+import com.GUI.MenuObjects.ReadGameButton;
 import com.GUI.MenuObjects.MusicButton;
+import com.GUI.MenuObjects.AIGameButton;
 
 import javax.swing.JButton;
 
@@ -71,24 +73,17 @@ public class Menu {
         });
 
         // 开始生成正文部分
-        // 开始游戏键
-        // 旧的
-        // JButton startGameButton = new JButton("开始游戏");
-        // startGameButton.setBounds(550,400,300,50);
-        // frame.add(startGameButton);
-        // 新的
+        // P2P 按钮
         JButton startGameButton = new JButton();
-        StartButton startButtonObj = new StartButton(startGameButton, frame);
+        P2PButton startButtonObj = new P2PButton(startGameButton, frame);
 
         // 第二个键（功能暂时未知）
-        JButton secondButton = new JButton("~");
-        secondButton.setBounds(550,470,300,50);
-        frame.add(secondButton);
+        JButton aiGameButton = new JButton();
+        AIGameButton aiGameButtonObj = new AIGameButton(aiGameButton, frame);
 
         // 第三个键（功能暂时未知）
-        JButton thirdButton = new JButton("~");
-        thirdButton.setBounds(550,540,300,50);
-        frame.add(thirdButton);
+        JButton readGameButton = new JButton();
+        ReadGameButton readGameButtonObj = new ReadGameButton(readGameButton, frame);
 
         // 添加音乐按钮
         musicBtn = new JButton();
