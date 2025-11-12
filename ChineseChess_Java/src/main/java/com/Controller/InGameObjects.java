@@ -1,8 +1,9 @@
 package com.Controller;
 
-import com.GUI.Piece.PiecesSession;
 import javax.swing.JComponent;
-import com.GUI.Box.BoxSession;
+
+import com.GUI.GameObjects.Box.BoxSession;
+import com.GUI.GameObjects.Piece.PiecesSession;
 
 public class InGameObjects {
 	public static PiecesSession piecesSession;

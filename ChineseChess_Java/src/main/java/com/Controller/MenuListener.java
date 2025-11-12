@@ -7,9 +7,8 @@ import javax.swing.JMenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-// GUI 相关处理器
-import com.GUI.LeaveCheck;
 import com.GUI.Menu;
+import com.GUI.MenuObjects.LeaveCheck;
 // Account 相关处理器
 import com.Model.Account.DoAccountRegister;
 import com.Model.Account.AccountSession;

@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import com.GUI.MenuObjects.LeaveCheck;
 import com.GUI.MenuObjects.MenuBackgroundInit;
 import com.GUI.MenuObjects.MenuBarInit;
 import com.GUI.MenuObjects.StartButton;
