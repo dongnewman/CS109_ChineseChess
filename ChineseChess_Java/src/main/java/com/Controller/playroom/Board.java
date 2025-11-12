@@ -140,4 +140,5 @@ public class Board {
         ArrayList<Move> possibleMoves = getAllPossibleMoves();
         return possibleMoves.isEmpty();
     }
+
 }
