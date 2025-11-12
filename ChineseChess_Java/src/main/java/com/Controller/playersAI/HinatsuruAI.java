@@ -61,97 +61,8 @@ class Estimation {
     }
 }
 
-public class HinatsuruAI {
-
-    static int Min = -1000000, Max = 1000000;
-    private Move bestMove = null;
-
-    private int quiescence(Board board, int alpha, int beta) {
-        int stand = Estimation.est(board);
-        boolean side = board.getSide();
-        if (!side) {
-            if (stand >= beta)
-                return stand;
-            if (alpha < stand)
-                alpha = stand;
-        } else {
-            if (stand <= alpha)
-                return stand;
-            if (beta > stand)
-                beta = stand;
-        }
-        ArrayList<Move> moves = board.getAllValidMoves();
-        ArrayList<Move> captures = new ArrayList<>();
-        for (Move m : moves) {
-            if (board.getPiece(m.getxf(), m.getyf()) != '.')
-                captures.add(m);
-        }
-        // MVV-LVA: sort captures by victim value desc, attacker value asc
-        Collections.sort(captures, new Comparator<Move>() {
-            @Override
-            public int compare(Move m1, Move m2) {
-                char vic1 = board.getPiece(m1.getxf(), m1.getyf());
-                char att1 = board.getPiece(m1.getxi(), m1.getyi());
-                int score1 = Estimation.pieceValue(vic1) * 100 - Estimation.pieceValue(att1);
-
-                char vic2 = board.getPiece(m2.getxf(), m2.getyf());
-                char att2 = board.getPiece(m2.getxi(), m2.getyi());
-                int score2 = Estimation.pieceValue(vic2) * 100 - Estimation.pieceValue(att2);
-
-                return Integer.compare(score2, score1); // desc
-            }
-        });
-        if (captures.isEmpty())
-            return stand;
-        int ret = stand;
-        for (Move m : captures) {
-            char captured = board.getPiece(m.getxf(), m.getyf());
-            board.doMove(m);
-            // quick king-safety check: skip captures that leave mover's king in check
-            boolean movedSide = !board.getSide();
-            int[] kp = KingProtect.findKingPos(board, movedSide);
-            if (kp != null && KingProtect.isSquareAttacked(board, kp[0], kp[1]) && !KingProtect.kingFacing(board)) {
-                board.undoMove(m, captured);
-                continue;
-            }
-            try {
-                int val = quiescence(board, alpha, beta);
-                if (!side) {
-                    if (val > ret)
-                        ret = val;
-                    if (ret > alpha)
-                        alpha = ret;
-                } else {
-                    if (val < ret)
-                        ret = val;
-                    if (ret < beta)
-                        beta = ret;
-                }
-            } finally {
-                board.undoMove(m, captured);
-            }
-            if (alpha >= beta)
-                break;
-        }
-        return ret;
-    }
-
-    private int minimax(Board board, int resdep, int alpha, int beta, boolean firstStep) {
-        if (resdep == 0)
-            return quiescence(board, alpha, beta);
-        if (board.gameOver())
-            return board.getSide() ? Max : Min;
-
-        ArrayList<Move> moves = firstStep ? board.getAllPossibleMoves() : board.getAllValidMoves();
-        boolean side = board.getSide();
-        int ret = side ? Max : Min;
-        if (moves.isEmpty())
-            return ret;
-        if (firstStep)
-            bestMove = moves.get(0);
-
-        // MVV-LVA ordering: sort moves so captures are searched first (victim high,
-        // attacker low)
+class MVVSort {
+    static void Sort(Board board, ArrayList<Move> moves) {
         Collections.sort(moves, new Comparator<Move>() {
             @Override
             public int compare(Move m1, Move m2) {
@@ -166,15 +77,89 @@ public class HinatsuruAI {
                 return Integer.compare(score2, score1); // desc
             }
         });
+    }
+};
 
+class CCheck {
+    static boolean check(Board board) {
+        /*
+         * consider the board after oneside did the move, and the side now is the
+         * attackside
+         */
+        boolean movedSide = !board.getSide();
+        int[] kp = KingProtect.findKingPos(board, movedSide);
+        if (kp != null && KingProtect.isSquareAttacked(board, kp[0], kp[1]) && !KingProtect.kingFacing(board))
+            return false;
+        else
+            return true;
+    };
+}
+
+public class HinatsuruAI {
+
+    static int Min = -1000000, Max = 1000000;
+    private Move bestMove = null;
+    // private TTable tt = null;
+
+    private int quiescence(Board board, int alpha, int beta) {
+        int stand = Estimation.est(board);
+        boolean side = board.getSide();
+        if (!side && alpha < stand)
+            alpha = stand;
+        if (side && beta > stand)
+            beta = stand;
+        if (alpha >= beta)
+            return stand;
+        ArrayList<Move> moves = board.getAllValidMoves();
+        ArrayList<Move> captures = new ArrayList<>();
+        for (Move m : moves) {
+            if (board.getPiece(m.getxf(), m.getyf()) != '.')
+                captures.add(m);
+        }
+        MVVSort.Sort(board, captures);
+        if (captures.isEmpty())
+            return stand;
+        int ret = stand;
+        for (Move move : captures) {
+            char originalPiece = board.getPiece(move.getxf(), move.getyf());
+            board.doMove(move);
+            if (!CCheck.check(board)) {
+                board.undoMove(move, originalPiece);
+                continue;
+            }
+            int val = quiescence(board, alpha, beta);
+            board.undoMove(move, originalPiece);
+            if (!side) {
+                ret = Math.max(ret, val);
+                alpha = Math.max(alpha, val);
+            } else {
+                ret = Math.min(ret, val);
+                beta = Math.min(beta, val);
+            }
+            if (alpha >= beta)
+                break;
+        }
+        return ret;
+    }
+
+    private int minimax(Board board, int resdep, int alpha, int beta, boolean firstStep) {
+        if (resdep == 0)
+            return quiescence(board, alpha, beta);
+        if (board.gameOver())
+            return board.getSide() ? Max : Min;
+        boolean side = board.getSide();
+        ArrayList<Move> moves = firstStep ? board.getAllPossibleMoves() : board.getAllValidMoves();
+        int ret = side ? Max : Min;
+        if (firstStep)
+            bestMove = moves.get(0);
+        // MVV-LVA ordering: sort moves so captures are searched first (victim high,
+        // attacker low)
+        MVVSort.Sort(board, moves);
         for (Move move : moves) {
             char originalPiece = board.getPiece(move.getxf(), move.getyf());
             board.doMove(move);
-            // if non-root, quick king-safety check and skip if mover's king is attacked
             if (!firstStep) {
-                boolean movedSide = !board.getSide();
-                int[] kp = KingProtect.findKingPos(board, movedSide);
-                if (kp != null && KingProtect.isSquareAttacked(board, kp[0], kp[1]) && !KingProtect.kingFacing(board)) {
+                if (!CCheck.check(board)) {
                     board.undoMove(move, originalPiece);
                     continue;
                 }
