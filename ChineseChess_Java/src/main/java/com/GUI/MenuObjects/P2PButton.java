@@ -9,12 +9,12 @@ import javax.swing.JFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 import com.Controller.InitGame;
-
+import com.Model.InGame.playroom.*;
 
 public class P2PButton {
     final String file_path = "src\\main\\resources\\Buttons\\P2Pbutton.png";
+
     public P2PButton(JButton startbutton, JFrame parentFrame) {
         BufferedImage image = null;
         try {
@@ -41,7 +41,7 @@ public class P2PButton {
             // startbutton.setFocusPainted(false);
             // 加上自己的
             startbutton.setIcon(new javax.swing.ImageIcon(image));
-            startbutton.setBounds(550,400,300,50);
+            startbutton.setBounds(550, 400, 300, 50);
             parentFrame.add(startbutton);
             parentFrame.repaint();
 
@@ -51,10 +51,10 @@ public class P2PButton {
                     // Handle start button click
                     // System.out.println("Start Button Clicked!");
                     try {
-			            InitGame initGame = new InitGame();
-		            } catch (Exception e2) {
-			            System.out.println("新游戏初始化失败: " + e2.getMessage());
-		            }
+                        InitGame initGame = new InitGame(new Board(), 0);
+                    } catch (Exception e2) {
+                        System.out.println("新游戏初始化失败: " + e2.getMessage());
+                    }
                 }
             });
         }

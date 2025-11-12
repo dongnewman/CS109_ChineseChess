@@ -3,15 +3,17 @@ package com.Controller;
 import com.GUI.GameObjects.GameClick;
 import com.GUI.GameObjects.Piece.MovePiece;
 import com.GUI.GameObjects.Piece.RemovePiece;
-import com.Controller.playroom.*;
-import com.Controller.playersAI.*;
+import com.GUI.GameObjects.SideIcon;
+//
+import com.Model.InGame.playroom.*;
+import com.Model.InGame.playersAI.*;
 
 public class DoGame {
     private Board board;
     private GameClick gameclick;
 
-    DoGame() {
-        board = new Board();
+    DoGame(Board initialBoard) {
+        board = initialBoard;
     }
 
     private Move getMove() {
@@ -62,7 +64,8 @@ public class DoGame {
         }
         int targetUiRow = 11 - move.getxf();
         boolean capturedIsBlack = Character.isLowerCase(capturedChar);
-        // Run removal before board state mutates so the captured piece reference is still in session.
+        // Run removal before board state mutates so the captured piece reference is
+        // still in session.
         removetool.remove(targetUiRow, move.getyf(), capturedIsBlack);
     }
 
@@ -73,12 +76,19 @@ public class DoGame {
         MovePiece movetool = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
         RemovePiece removetool = new RemovePiece(InGameObjects.piecesSession);
         gameclick = new GameClick(InGameObjects.plate);
+        SideIcon sideIcon = new SideIcon(
+                (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(InGameObjects.plate));
         while (true) {
+            if (board.getSide()) {
+                sideIcon.setBlackSideIcon();
+            } else {
+                sideIcon.setRedSideIcon();
+            }
             if (board.gameOver()) {
                 // the UI is waiting for implementation
                 System.out.println("Game Over!");
                 System.out.println(board.getSide() ? "Red wins!" : "Black wins!");
-                return;
+                break;
             }
             Move move = getMove();
             animateCapture(removetool, move);
@@ -100,13 +110,20 @@ public class DoGame {
         MovePiece movetool = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
         RemovePiece removetool = new RemovePiece(InGameObjects.piecesSession);
         gameclick = new GameClick(InGameObjects.plate);
+        SideIcon sideIcon = new SideIcon(
+                (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(InGameObjects.plate));
         HinatsuruAI AI = new HinatsuruAI();
         while (true) {
             if (board.gameOver()) {
                 // the UI is waiting for implementation
                 System.out.println("Game Over!");
                 System.out.println(board.getSide() ? "Red wins!" : "Black wins!");
-                return;
+                break;
+            }
+            if (board.getSide()) {
+                sideIcon.setBlackSideIcon();
+            } else {
+                sideIcon.setRedSideIcon();
             }
             Move move;
             if (board.getSide()) {

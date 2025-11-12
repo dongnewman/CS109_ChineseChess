@@ -4,13 +4,14 @@ import javax.swing.SwingUtilities;
 
 import com.GUI.GameFrame;
 import com.GUI.GameObjects.GameClick;
-import com.GUI.GameObjects.Piece.MovePiece;
-import com.GUI.GameObjects.Piece.RemovePiece;
+// import com.GUI.GameObjects.Piece.MovePiece;
+// import com.GUI.GameObjects.Piece.RemovePiece;
+import com.Model.InGame.playroom.*;
 
 public class InitGame {
     // 示例：在程序其他地方实现三个棋子的移动动画
 
-    public InitGame() throws Exception {
+    public InitGame(Board initialBoard, int type) throws Exception {
         if (SwingUtilities.isEventDispatchThread()) {
             new GameFrame();
         } else {
@@ -18,10 +19,8 @@ public class InitGame {
                 new GameFrame();
             });
         }
-
         // 等待界面完全初始化
         InGameObjects.uiReadyLatch.await();
-
         GameClick gameclick = new GameClick(InGameObjects.plate);
         new Thread(() -> {
             int count = 0;
@@ -33,13 +32,19 @@ public class InitGame {
         }).start();
 
         // function:game P2P
-        // new Thread(() -> {
-        // new DoGame().gameP2P();
-        // }).start();
+        if (type == 0) {
+            new Thread(() -> {
+                new DoGame(initialBoard).gameP2P();
+            }).start();
+        }
         // new function: game with lovely hinatsuru AI
-        new Thread(() -> {
-            new DoGame().gameWithAI();
-        }).start();
+        else if (type == 1) {
+            new Thread(() -> {
+                new DoGame(initialBoard).gameWithAI();
+            }).start();
+        } else {
+            throw new Exception("InitGame: Unknown game type " + type);
+        }
         //
         // MovePiece movePiece;
         // movePiece = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
