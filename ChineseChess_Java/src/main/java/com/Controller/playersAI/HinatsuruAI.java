@@ -110,7 +110,7 @@ public class HinatsuruAI {
             // quick king-safety check: skip captures that leave mover's king in check
             boolean movedSide = !board.getSide();
             int[] kp = KingProtect.findKingPos(board, movedSide);
-            if (kp != null && KingProtect.isSquareAttacked(board, kp[0], kp[1])) {
+            if (kp != null && KingProtect.isSquareAttacked(board, kp[0], kp[1]) && !KingProtect.kingFacing(board)) {
                 board.undoMove(m, captured);
                 continue;
             }
@@ -174,7 +174,7 @@ public class HinatsuruAI {
             if (!firstStep) {
                 boolean movedSide = !board.getSide();
                 int[] kp = KingProtect.findKingPos(board, movedSide);
-                if (kp != null && KingProtect.isSquareAttacked(board, kp[0], kp[1])) {
+                if (kp != null && KingProtect.isSquareAttacked(board, kp[0], kp[1]) && !KingProtect.kingFacing(board)) {
                     board.undoMove(move, originalPiece);
                     continue;
                 }
