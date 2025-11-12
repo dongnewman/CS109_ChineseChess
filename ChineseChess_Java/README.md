@@ -102,3 +102,7 @@ sideIcon.setBlackSideIcon();
 sideIcon.setRedSideIcon();
 ```
 // SideIcon 会自动初始化为红方图标，调用 setBlackSideIcon/setRedSideIcon 可随时切换。
+
+
+**代办**
+Menu中修改了三个大按钮分别为：“双人游戏”“人机对战”“读取游戏”三个按钮，这三个按钮被按下后游戏该如何执行的代码还未正确生成，记得补上

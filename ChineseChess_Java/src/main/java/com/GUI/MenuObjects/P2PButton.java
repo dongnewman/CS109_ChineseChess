@@ -13,9 +13,9 @@ import java.awt.event.ActionListener;
 import com.Controller.InitGame;
 
 
-public class StartButton {
-    final String file_path = "src\\main\\resources\\startbutton.png";
-    public StartButton(JButton startbutton, JFrame parentFrame) {
+public class P2PButton {
+    final String file_path = "src\\main\\resources\\Buttons\\P2Pbutton.png";
+    public P2PButton(JButton startbutton, JFrame parentFrame) {
         BufferedImage image = null;
         try {
             File f = new File(file_path);
