@@ -1,4 +1,4 @@
-package com.GUI.Box;
+package com.GUI.GameObjects.Box;
 
 import com.Controller.InGameObjects;
 

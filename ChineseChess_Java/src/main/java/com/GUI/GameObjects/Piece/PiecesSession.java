@@ -1,4 +1,4 @@
-package com.GUI.Piece;
+package com.GUI.GameObjects.Piece;
 
 public class PiecesSession {
     // 使用 1-based 存放：有效行 1..10，有效列 1..9

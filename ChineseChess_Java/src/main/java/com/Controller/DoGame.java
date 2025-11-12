@@ -1,9 +1,8 @@
 package com.Controller;
 
-import com.GUI.Piece.MovePiece;
-import com.GUI.Piece.RemovePiece;
-import com.GUI.GameClick;
-
+import com.GUI.GameObjects.GameClick;
+import com.GUI.GameObjects.Piece.MovePiece;
+import com.GUI.GameObjects.Piece.RemovePiece;
 import com.Controller.playroom.*;
 import com.Controller.playersAI.*;
 

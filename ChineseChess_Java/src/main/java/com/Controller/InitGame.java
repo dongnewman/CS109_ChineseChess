@@ -3,9 +3,9 @@ package com.Controller;
 import javax.swing.SwingUtilities;
 
 import com.GUI.GameFrame;
-import com.GUI.Piece.MovePiece;
-import com.GUI.Piece.RemovePiece;
-import com.GUI.GameClick;
+import com.GUI.GameObjects.GameClick;
+import com.GUI.GameObjects.Piece.MovePiece;
+import com.GUI.GameObjects.Piece.RemovePiece;
 
 public class InitGame {
     // 示例：在程序其他地方实现三个棋子的移动动画

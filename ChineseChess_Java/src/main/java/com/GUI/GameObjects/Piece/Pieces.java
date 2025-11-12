@@ -1,4 +1,4 @@
-package com.GUI.Piece;
+package com.GUI.GameObjects.Piece;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;

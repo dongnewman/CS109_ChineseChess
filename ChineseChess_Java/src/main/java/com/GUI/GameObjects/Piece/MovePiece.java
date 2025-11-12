@@ -1,4 +1,4 @@
-package com.GUI.Piece;
+package com.GUI.GameObjects.Piece;
 
 import java.awt.Component;
 import java.awt.Point;

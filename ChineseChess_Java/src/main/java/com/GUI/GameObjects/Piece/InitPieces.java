@@ -1,4 +1,4 @@
-package com.GUI.Piece;
+package com.GUI.GameObjects.Piece;
 
 public class InitPieces {
     private final int[][] piecesData = {

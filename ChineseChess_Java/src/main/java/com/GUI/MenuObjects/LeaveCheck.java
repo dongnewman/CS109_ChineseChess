@@ -1,4 +1,4 @@
-package com.GUI;
+package com.GUI.MenuObjects;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

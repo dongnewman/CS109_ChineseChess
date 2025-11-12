@@ -1,4 +1,4 @@
-package com.GUI;
+package com.GUI.GameObjects;
 
 import javax.swing.JComponent;
 import java.util.concurrent.BlockingQueue;
