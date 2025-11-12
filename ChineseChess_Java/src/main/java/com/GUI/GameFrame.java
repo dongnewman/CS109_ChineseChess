@@ -22,6 +22,7 @@ import com.GUI.GameObjects.Box.RedBox;
 import com.GUI.GameObjects.Piece.InitPieces;
 import com.GUI.GameObjects.Piece.Pieces;
 import com.GUI.GameObjects.Piece.PiecesSession;
+import com.GUI.GameObjects.SideIcon;
 
 /**
  * 游戏界面
@@ -242,6 +243,8 @@ public class GameFrame {
         HelpButton help = new HelpButton(gameFrame);
         // 设置投降按钮
         SurrenderButton surrender = new SurrenderButton(gameFrame);
+        // 设置当前边图标
+        SideIcon sideIcon = new SideIcon(gameFrame);
 
         gameFrame.setVisible(true);
         

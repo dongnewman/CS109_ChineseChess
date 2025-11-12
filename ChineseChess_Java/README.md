@@ -86,3 +86,19 @@ import com.GUI.GameObjects,EndGameDialog;
 EndGameDialog endGameDialog = new EndGameDialog(String winner, JFrame gameFrame);
 ```
 注意：String winner中“red”表示红方赢，“black”表示黑方赢。
+
+
+如何显示和切换当前执棋方（SideIcon）：
+```java
+import com.GUI.GameObjects.SideIcon;
+
+// 初始化，传入你的主窗口 JFrame
+SideIcon sideIcon = new SideIcon(gameFrame);
+
+// 切换为黑方执棋
+sideIcon.setBlackSideIcon();
+
+// 切换为红方执棋
+sideIcon.setRedSideIcon();
+```
+// SideIcon 会自动初始化为红方图标，调用 setBlackSideIcon/setRedSideIcon 可随时切换。
