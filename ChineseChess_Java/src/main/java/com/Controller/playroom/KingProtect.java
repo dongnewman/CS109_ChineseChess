@@ -8,12 +8,25 @@ public class KingProtect {
      * @param isBlack true for black (lowercase 'k'), false for red (uppercase 'K')
      * @return int[]{x,y} or null if not found
      */
+    private static int dirc1[][] = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+    private static int dirc2[][] = { { 2, 1 }, { 2, -1 }, { -2, 1 }, { -2, -1 }, { 1, 2 }, { 1, -2 }, { -1, 2 },
+            { -1, -2 } };
+
     public static int[] findKingPos(Board board, boolean isBlack) {
         char k = isBlack ? 'k' : 'K';
-        for (int x = 1; x <= 10; x++) {
-            for (int y = 1; y <= 9; y++) {
-                if (board.getPiece(x, y) == k)
-                    return new int[] { x, y };
+        if (!isBlack) {
+            for (int x = 1; x <= 3; x++) {
+                for (int y = 4; y <= 6; y++) {
+                    if (board.getPiece(x, y) == k)
+                        return new int[] { x, y };
+                }
+            }
+        } else {
+            for (int x = 8; x <= 10; x++) {
+                for (int y = 4; y <= 6; y++) {
+                    if (board.getPiece(x, y) == k)
+                        return new int[] { x, y };
+                }
             }
         }
         return null;
@@ -28,83 +41,75 @@ public class KingProtect {
      * brevity but can be added.
      */
     public static boolean isSquareAttacked(Board board, int x, int y) {
+        // We dont consider the king facing attack here
         if (x < 1 || x > 10 || y < 1 || y > 9)
             return false;
-        boolean attackerLower = board.getSide();
-
-        // Pawn attacks
-        if (attackerLower) {
-            int px = x + 1;
-            if (px >= 1 && px <= 10) {
-                if (y - 1 >= 1 && board.getPiece(px, y - 1) == 'p')
-                    return true;
-                if (y + 1 <= 9 && board.getPiece(px, y + 1) == 'p')
-                    return true;
-            }
+        boolean attacker = board.getSide();
+        // pawn attacks
+        if (!attacker) {
+            if (x > 1 && board.getPiece(x - 1, y) == 'P')
+                return true;
+            if (x >= 6
+                    && (y > 1 && board.getPiece(x + 1, y - 1) == 'P' || (y < 9 && board.getPiece(x + 1, y + 1) == 'P')))
+                return true;
         } else {
-            int px = x - 1;
-            if (px >= 1 && px <= 10) {
-                if (y - 1 >= 1 && board.getPiece(px, y - 1) == 'P')
-                    return true;
-                if (y + 1 <= 9 && board.getPiece(px, y + 1) == 'P')
-                    return true;
-            }
+            if (x < 10 && board.getPiece(x + 1, y) == 'p')
+                return true;
+            if (x <= 5
+                    && (y > 1 && board.getPiece(x - 1, y - 1) == 'p' || (y < 9 && board.getPiece(x - 1, y + 1) == 'p')))
+                return true;
         }
-
-        // Knight checks
-        int[][] dkn = { { -2, -1 }, { -2, 1 }, { -1, -2 }, { -1, 2 }, { 1, -2 }, { 1, 2 }, { 2, -1 }, { 2, 1 } };
-        for (int[] d : dkn) {
-            int kx = x + d[0], ky = y + d[1];
-            if (kx < 1 || kx > 10 || ky < 1 || ky > 9)
-                continue;
-            int lx = x + (d[0] / 2), ly = y + (d[1] / 2);
-            if (lx < 1 || lx > 10 || ly < 1 || ly > 9)
-                continue;
-            if (board.getPiece(lx, ly) != '.')
-                continue; // blocked leg
-            char piece = board.getPiece(kx, ky);
-            if (attackerLower) {
-                if (piece == 'n')
-                    return true;
-            } else {
-                if (piece == 'N')
-                    return true;
-            }
-        }
-
-        // Rook/king facing and cannon checks along ranks/files
-        int[][] dirs = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-        for (int[] d : dirs) {
+        // cannon and rook attacks
+        for (int[] dir : dirc1) {
+            int nx = x + dir[0];
+            int ny = y + dir[1];
             int cnt = 0;
-            int nx = x + d[0], ny = y + d[1];
             while (nx >= 1 && nx <= 10 && ny >= 1 && ny <= 9) {
-                char p = board.getPiece(nx, ny);
-                if (p != '.') {
-                    if (cnt == 0) {
-                        if (attackerLower) {
-                            if (p == 'r' || p == 'k')
-                                return true;
-                        } else {
-                            if (p == 'R' || p == 'K')
-                                return true;
-                        }
-                    } else if (cnt == 1) {
-                        if (attackerLower) {
-                            if (p == 'c')
-                                return true;
-                        } else {
-                            if (p == 'C')
-                                return true;
-                        }
-                    }
-                    cnt++;
+                char piece = board.getPiece(nx, ny);
+                nx += dir[0];
+                ny += dir[1];
+                if (piece == '.')
+                    continue;
+                if (piece == (attacker ? 'r' : 'R')) {
+                    if (cnt == 0)
+                        return true;
+                } else if (piece == (attacker ? 'c' : 'C')) {
+                    if (cnt == 1)
+                        return true;
                 }
-                nx += d[0];
-                ny += d[1];
+                cnt++;
+                if (cnt > 1)
+                    break;
             }
         }
-
+        // knight attacks
+        for (int[] dir : dirc2) {
+            int legX = x + (dir[0] / 2);
+            int legY = y + (dir[1] / 2);
+            int nx = x + dir[0];
+            int ny = y + dir[1];
+            if (nx < 1 || nx > 10 || ny < 1 || ny > 9)
+                continue;
+            if (board.getPiece(legX, legY) != '.')
+                continue;
+            char piece = board.getPiece(nx, ny);
+            if (piece == (attacker ? 'n' : 'N'))
+                return true;
+        }
         return false;
     }
 
+    public static boolean kingFacing(Board board) {
+        int[] redKingPos = findKingPos(board, false);
+        int[] blackKingPos = findKingPos(board, true);
+        if (redKingPos == null || blackKingPos == null)
+            return false;
+        if (redKingPos[1] != blackKingPos[1])
+            return false;
+        for (int x = redKingPos[0] + 1; x < blackKingPos[0]; x++) {
+            if (board.getPiece(x, redKingPos[1]) != '.')
+                return false;
+        }
+        return true;
+    }
 }
