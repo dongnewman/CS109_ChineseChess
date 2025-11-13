@@ -16,19 +16,28 @@ public class SideIcon {
     private final javax.swing.ImageIcon blackIcon;
     private final javax.swing.ImageIcon redIcon;
     JFrame parentFrame;
-    private final JLabel sidelabel = new JLabel();
+    private final JLabel sidelabelRed = new JLabel();
+    private final JLabel sidelabelBlack = new JLabel();
 
     public SideIcon(JFrame parentFrame) {
         this.parentFrame = parentFrame;
         blackIcon = loadIcon(black_file_path);
         redIcon = loadIcon(red_file_path);
-        parentFrame.getLayeredPane().add(sidelabel, javax.swing.JLayeredPane.POPUP_LAYER);
-        sidelabel.setPreferredSize(new java.awt.Dimension(100, 86));
-        sidelabel.setSize(60, 52);
-        // 默认初始化为红方
+
+        // 将两个 label 都添加到 layered pane，不同的可见性控制显示哪一方箭头
+        parentFrame.getLayeredPane().add(sidelabelRed, javax.swing.JLayeredPane.POPUP_LAYER);
+        parentFrame.getLayeredPane().add(sidelabelBlack, javax.swing.JLayeredPane.POPUP_LAYER);
+
+        // 使用相同尺寸和位置
+        sidelabelRed.setPreferredSize(new java.awt.Dimension(100, 86));
+        sidelabelRed.setSize(60, 52);
+        sidelabelBlack.setPreferredSize(new java.awt.Dimension(100, 86));
+        sidelabelBlack.setSize(60, 52);
+
+        // 默认初始化为红方 visible，黑方隐藏
+        sidelabelRed.setLocation(720, 375);
+        sidelabelBlack.setLocation(720, 375);
         setRedSideIcon();
-        // 默认放在窗口左上角
-        sidelabel.setLocation(720, 375);
     }
 
     private javax.swing.ImageIcon loadIcon(String path) {
@@ -50,13 +59,19 @@ public class SideIcon {
 
     public void setBlackSideIcon() {
         if (blackIcon != null) {
-            sidelabel.setIcon(blackIcon);
+            sidelabelBlack.setIcon(blackIcon);
         }
+        // 显示黑方箭头，隐藏红方箭头（即使 icon 为 null 也要切换显示状态）
+        sidelabelBlack.setVisible(true);
+        sidelabelRed.setVisible(false);
     }
 
     public void setRedSideIcon() {
         if (redIcon != null) {
-            sidelabel.setIcon(redIcon);
+            sidelabelRed.setIcon(redIcon);
         }
+        // 显示红方箭头，隐藏黑方箭头
+        sidelabelRed.setVisible(true);
+        sidelabelBlack.setVisible(false);
     }
 }
