@@ -108,6 +108,7 @@ public class MusicButton {
                 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(musicFile);
                 clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
+                clip.loop(Clip.LOOP_CONTINUOUSLY); // 自动循环播放
                 clip.start();
             } else {
                 System.out.println("音乐文件未找到: " + music_path);

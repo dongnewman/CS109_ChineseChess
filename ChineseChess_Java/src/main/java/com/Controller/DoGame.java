@@ -4,7 +4,7 @@ import com.GUI.GameObjects.GameClick;
 import com.GUI.GameObjects.Piece.MovePiece;
 import com.GUI.GameObjects.Piece.RemovePiece;
 import com.GUI.GameObjects.SideIcon;
-//
+import com.GUI.GameObjects.EndGameDialog;
 import com.Model.InGame.playroom.*;
 import com.Model.InGame.playersAI.*;
 
@@ -89,6 +89,10 @@ public class DoGame {
                 // the UI is waiting for implementation
                 System.out.println("Game Over!");
                 System.out.println(board.getSide() ? "Red wins!" : "Black wins!");
+                // 调用对话框显示结果
+                new EndGameDialog(board.getSide() ? "red" : "black",
+                        (javax.swing.JFrame) javax.swing.SwingUtilities
+                                .getWindowAncestor(InGameObjects.plate));
                 break;
             }
             Move move = getMove();
