@@ -64,6 +64,7 @@ public class DoGame {
         boolean capturedIsBlack = Character.isLowerCase(capturedChar);
         // Run removal before board state mutates so the captured piece reference is still in session.
         removetool.remove(targetUiRow, move.getyf(), capturedIsBlack);
+        InGameObjects.plate.repaint();
     }
 
     public void gameP2P() {
