@@ -44,4 +44,9 @@ public class Move {
     public void setyf(int yf) {
         this.yf = yf;
     }
+
+    // other methods
+    public boolean equals(Move move) {
+        return xi == move.getxi() && yi == move.getyi() && xf == move.getxf() && yf == move.getyf();
+    }
 }

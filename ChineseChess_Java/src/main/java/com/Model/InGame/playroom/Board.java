@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Board {
     private char board[][];
     boolean side;
+    private long zobristKey;
 
     // constructor: copy from given array (expects at least 11x10)
     public Board(char b[][], boolean side) {
@@ -15,6 +16,8 @@ public class Board {
                 board[i][j] = b[i][j];
             }
         }
+        // initialize zobrist key
+        zobristKey = com.Model.InGame.playersAI.Zobrist.computeKey(this);
     }
 
     public Board() {
@@ -59,6 +62,8 @@ public class Board {
         board[7][7] = 'p';
         board[7][9] = 'p';
         side = false;// false for red, true for black
+        // initialize zobrist key
+        zobristKey = com.Model.InGame.playersAI.Zobrist.computeKey(this);
     }
 
     // getter
@@ -80,6 +85,10 @@ public class Board {
 
     public boolean getSide() {
         return side;
+    }
+
+    public long getZobristKey() {
+        return zobristKey;
     }
 
     // setter
@@ -124,16 +133,42 @@ public class Board {
     }
 
     public void doMove(Move move) {
-        char piece = getPiece(move.getxi(), move.getyi());
-        setPiece(move.getxf(), move.getyf(), piece);
-        setPiece(move.getxi(), move.getyi(), '.');
+        int xi = move.getxi(), yi = move.getyi();
+        int xf = move.getxf(), yf = move.getyf();
+        char piece = getPiece(xi, yi);
+        char captured = getPiece(xf, yf);
+        // incremental zobrist: remove piece from source, remove captured at dest, add
+        // piece at dest, flip side
+        zobristKey ^= com.Model.InGame.playersAI.Zobrist.keyFor(piece, xi, yi);
+        if (captured != '.') {
+            zobristKey ^= com.Model.InGame.playersAI.Zobrist.keyFor(captured, xf, yf);
+        }
+        zobristKey ^= com.Model.InGame.playersAI.Zobrist.keyFor(piece, xf, yf);
+        // apply move on board
+        setPiece(xf, yf, piece);
+        setPiece(xi, yi, '.');
+        // toggle side and hash
         side = !side;
+        zobristKey ^= com.Model.InGame.playersAI.Zobrist.sideKey();
     }
 
     public void undoMove(Move move, char capturedPiece) {
-        setPiece(move.getxi(), move.getyi(), getPiece(move.getxf(), move.getyf()));
-        setPiece(move.getxf(), move.getyf(), capturedPiece);
+        int xi = move.getxi(), yi = move.getyi();
+        int xf = move.getxf(), yf = move.getyf();
+        char moving = getPiece(xf, yf);
+        // toggle side and hash (reverse of doMove)
         side = !side;
+        zobristKey ^= com.Model.InGame.playersAI.Zobrist.sideKey();
+        // remove moving piece from dest, restore captured if any, add moving back to
+        // source
+        zobristKey ^= com.Model.InGame.playersAI.Zobrist.keyFor(moving, xf, yf);
+        if (capturedPiece != '.') {
+            zobristKey ^= com.Model.InGame.playersAI.Zobrist.keyFor(capturedPiece, xf, yf);
+        }
+        zobristKey ^= com.Model.InGame.playersAI.Zobrist.keyFor(moving, xi, yi);
+        // apply board state
+        setPiece(xi, yi, moving);
+        setPiece(xf, yf, capturedPiece);
     }
 
     public boolean gameOver() {
