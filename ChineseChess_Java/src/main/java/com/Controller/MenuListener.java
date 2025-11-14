@@ -79,8 +79,11 @@ public class MenuListener {
                             case DELETE_ACCOUNT:
                                 handleDeleteAccount();
                                 break;
-                            case NEW_GAME:
-                                handleNewGame();
+                            case P2P_NEW:
+                                handleP2PNewGame();
+                                break;
+                            case AI_NEW:
+                                handleAINewGame();
                                 break;
                             case LOAD_GAME:
                                 handleLoadGame();
@@ -191,9 +194,17 @@ public class MenuListener {
     }
 
     // 游戏栏
-    private static void handleNewGame() {
+    private static void handleP2PNewGame() {
         try {
             InitGame initGame = new InitGame(new Board(), 0);
+        } catch (Exception e) {
+            System.out.println("新游戏初始化失败: " + e.getMessage());
+        }
+    }
+
+    private static void handleAINewGame() {
+        try {
+            InitGame initGame = new InitGame(new Board(), 1);
         } catch (Exception e) {
             System.out.println("新游戏初始化失败: " + e.getMessage());
         }

@@ -43,9 +43,12 @@ public class MenuBarInit {
 
         // 创建“游戏”菜单及其子菜单项
         JMenu jmGame = new JMenu("游戏");
-        JMenuItem jmGameNew = new JMenuItem("新游戏");
+        JMenuItem jmP2PNew = new JMenuItem("双人游戏");
+        JMenuItem jmAIGameNew = new JMenuItem("人机对战");
         JMenuItem jmGameLoad = new JMenuItem("加载游戏");
-        jmGame.add(jmGameNew);
+        jmGame.add(jmP2PNew);
+        jmGame.add(jmAIGameNew);
+        jmGame.addSeparator();
         jmGame.add(jmGameLoad);
 
         jmb.add(jmGame);

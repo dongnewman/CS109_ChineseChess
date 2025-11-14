@@ -11,7 +11,8 @@ public enum MenuAction {
     REGISTER,
     LOGOUT,
     DELETE_ACCOUNT,
-    NEW_GAME,
+    P2P_NEW,
+    AI_NEW,
     LOAD_GAME,
     VIEW_RECORD,
     DELETE_RECORD,
@@ -28,7 +29,8 @@ public enum MenuAction {
             case "注册": return REGISTER;
             case "注销": return LOGOUT;
             case "删除账号": return DELETE_ACCOUNT;
-            case "新游戏": return NEW_GAME;
+            case "双人游戏": return P2P_NEW;
+            case "人机对战": return AI_NEW;
             case "加载游戏": return LOAD_GAME;
             case "查看记录": return VIEW_RECORD;
             case "删除记录": return DELETE_RECORD;
