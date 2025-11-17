@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import com.GUI.Menu;
 
 public class SurrenderButton {
-    private String file_path = "src\\main\\resources\\surrender.png";
+    private String file_path = "src\\main\\resources\\InGameIcons\\surrender.png";
     private JFrame parentFrame;
     public SurrenderButton(JFrame parentFrame) {
         this.parentFrame = parentFrame;

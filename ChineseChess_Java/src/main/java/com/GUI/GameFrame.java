@@ -12,18 +12,9 @@ import javax.imageio.ImageIO;
 
 import com.Model.InGame.CountdownTimer;
 import com.Controller.InGameObjects;
-import com.GUI.GameObjects.HelpButton;
-import com.GUI.GameObjects.SurrenderButton;
-import com.GUI.GameObjects.Box.BlueBox;
-import com.GUI.GameObjects.Box.BoxSession;
-import com.GUI.GameObjects.Box.RedBox;
-import com.GUI.GameObjects.Piece.InitPieces;
-import com.GUI.GameObjects.Piece.Pieces;
-import com.GUI.GameObjects.Piece.PiecesSession;
-import com.GUI.GameObjects.SideIcon;
-import com.GUI.GameObjects.RestartButton;
-import com.GUI.GameObjects.UndoButton;
-
+import com.GUI.GameObjects.*;
+import com.GUI.GameObjects.Box.*;
+import com.GUI.GameObjects.Piece.*;
 /**
  * 游戏界面
  * 
@@ -181,23 +172,23 @@ public class GameFrame {
 
         // 下面的代码用于测试：
         // 点击棋盘时把相对像素坐标输出到控制台（模块：点击取坐标）
-        plate.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
-                System.out.println("Plate clicked at: x=" + x + ", y=" + y);
-            }
-        });
+        // plate.addMouseListener(new MouseAdapter() {
+        //     @Override
+        //     public void mouseClicked(MouseEvent e) {
+        //         int x = e.getX();
+        //         int y = e.getY();
+        //         System.out.println("Plate clicked at: x=" + x + ", y=" + y);
+        //     }
+        // });
 
-        gameFrame.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int x = e.getX();
-                int y = e.getY();
-                System.out.println("Frame clicked at: x=" + x + ", y=" + y);
-            }
-        });
+        // gameFrame.addMouseListener(new MouseAdapter() {
+        //     @Override
+        //     public void mouseClicked(MouseEvent e) {
+        //         int x = e.getX();
+        //         int y = e.getY();
+        //         System.out.println("Frame clicked at: x=" + x + ", y=" + y);
+        //     }
+        // });
 
         // 在 centerContainer 的右上角放置倒计时模块（绝对定位）
         // 使用 CountdownTimer（避免与 Swing Timer 冲突）

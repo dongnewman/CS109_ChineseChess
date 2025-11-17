@@ -15,7 +15,7 @@ import com.Controller.InitGame;
 import com.Model.InGame.playroom.Board;
 
 public class RestartButton {
-    private String file_path = "src\\main\\resources\\Restart.png";
+    private String file_path = "src\\main\\resources\\InGameIcons\\Restart.png";
     private JFrame parentFrame;
     public RestartButton(JFrame parentFrame) {
         this.parentFrame = parentFrame;

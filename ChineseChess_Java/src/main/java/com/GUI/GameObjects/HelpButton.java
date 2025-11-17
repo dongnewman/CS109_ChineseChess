@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.awt.image.BufferedImage;
 
 public class HelpButton {
-    private String file_path = "src\\main\\resources\\help.png";
+    private String file_path = "src\\main\\resources\\InGameIcons\\help.png";
     public HelpButton(JFrame parentFrame) {
         BufferedImage image = null;
         JButton helpbutton = new JButton();

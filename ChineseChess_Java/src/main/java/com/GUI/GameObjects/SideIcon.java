@@ -11,8 +11,8 @@ import java.awt.image.BufferedImage;
 import com.GUI.MenuObjects.MenuBackgroundInit;
 
 public class SideIcon {
-    private final String black_file_path = "src/main/resources/BlackSide.png";
-    private final String red_file_path = "src/main/resources/RedSide.png";
+    private final String black_file_path = "src\\main\\resources\\InGameIcons\\BlackSide.png";
+    private final String red_file_path = "src\\main\\resources\\InGameIcons\\RedSide.png";
     private final javax.swing.ImageIcon blackIcon;
     private final javax.swing.ImageIcon redIcon;
     JFrame parentFrame;

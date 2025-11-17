@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import com.GUI.Menu;
 
 public class UndoButton {
-    private String file_path = "src\\main\\resources\\Undo.png";
+    private String file_path = "src\\main\\resources\\InGameIcons\\Undo.png";
     private JFrame parentFrame;
     public UndoButton(JFrame parentFrame) {
         this.parentFrame = parentFrame;
