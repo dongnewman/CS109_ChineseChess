@@ -86,12 +86,4 @@ public class RedBox extends Box {
     public static int rowToY(int row) {
         return (row - 1) * CELL_SIZE + OFFSET_Y;
     }
-
-    // 判断颜色，黑色返回true
-    public boolean getColor() {
-        if (file_path != null && file_path.toLowerCase().contains("black")) {
-            return true;
-        }
-        return false;
-    }
 }

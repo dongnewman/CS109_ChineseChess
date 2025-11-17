@@ -102,7 +102,7 @@ public class SurrenderButton {
                 //
                 // 记得写完之后在这里调用！
                 // 记得在DoSurrender中使用EndGameDialog
-                // new EndGameDialog("黑方", parentFrame);
+                new EndGameDialog("黑方", parentFrame);
             }
             // 显示菜单界面
             Menu.frame.setVisible(true); 
