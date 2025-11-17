@@ -124,12 +124,12 @@ public class Board {
         return ValidMove.getAllValidMoves(this);
     }
 
-    public boolean isPossibleMove(Move move) {
-        return Possible.isPossibleMove(this, move);
+    public boolean isLegalMove(Move move) {
+        return Legal.isLegalMove(this, move);
     }
 
-    public ArrayList<Move> getAllPossibleMoves() {
-        return Possible.getAllPossibleMoves(this);
+    public ArrayList<Move> getAllLegalMoves() {
+        return Legal.getAllLegalMoves(this);
     }
 
     public void doMove(Move move) {
@@ -172,7 +172,7 @@ public class Board {
     }
 
     public boolean gameOver() {
-        ArrayList<Move> possibleMoves = getAllPossibleMoves();
+        ArrayList<Move> possibleMoves = getAllLegalMoves();
         return possibleMoves.isEmpty();
     }
 

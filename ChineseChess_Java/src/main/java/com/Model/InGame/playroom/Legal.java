@@ -9,8 +9,9 @@ import java.util.ArrayList;
  * checks. You can
  * extend this with full piece movement rules later.
  */
-public final class Possible {
-    public static boolean isPossibleMove(Board board, Move move) {
+public final class Legal extends PieceProtect {
+
+    public static boolean isLegalMove(Board board, Move move) {
         // wait for implementation
         if (!ValidMove.isValidMove(board, move))
             return false;
@@ -29,15 +30,32 @@ public final class Possible {
         return flag;
     }
 
-    public static ArrayList<Move> getAllPossibleMoves(Board board) {
+    public static ArrayList<Move> getAllLegalMoves(Board board) {
         // wait for implementation
         ArrayList<Move> validMoves = board.getAllValidMoves();
-        ArrayList<Move> possibleMoves = new ArrayList<>();
+        ArrayList<Move> legalMoves = new ArrayList<>();
         for (Move m : validMoves) {
-            if (board.isPossibleMove(m)) {
-                possibleMoves.add(m);
+            if (board.isLegalMove(m)) {
+                legalMoves.add(m);
             }
         }
-        return possibleMoves;
+        return legalMoves;
+    }
+
+    public static boolean fastCheckLegal(Board board, Move move) {
+        // this is check in now side, if its legal to do this move
+        boolean side = board.getSide();
+        char originalPiece = board.getPiece(move.getxf(), move.getyf());
+        board.doMove(move);
+        int[] kingPos = findKingPos(board, side);
+        boolean attacked = (isAttacked(board, kingPos[0], kingPos[1]) || kingFacing(board));
+        board.undoMove(move, originalPiece);
+        return !attacked;
+    }
+
+    public static boolean isInCheck(Board board) {
+        int[] kingPos = findKingPos(board, board.getSide());
+        return isAttacked(board, kingPos[0], kingPos[1]);
+        // In check dont need to check kingfacing
     }
 }

@@ -45,7 +45,7 @@ public class DoGame {
                         // playroom definition coordination
                         move.setxf(11 - posf[0]);
                         move.setyf(posf[1]);
-                        if (board.isPossibleMove(move)) {
+                        if (board.isLegalMove(move)) {
                             return move;
                         } else {
                             InGameObjects.blueBoxSession.removeBlueBox(posi[0], posi[1]);
