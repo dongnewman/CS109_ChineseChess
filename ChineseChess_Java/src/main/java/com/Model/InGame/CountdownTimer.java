@@ -5,6 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import com.Controller.InGameObjects;
+import com.GUI.GameObjects.EndGameDialog;
+import com.Model.InGame.playroom.Board;
+
 /**
  * 倒计时模块（放在 Model/InGame 中）
  * - 提供一个 JPanel（包含一个显示剩余时间的 JLabel 和一个控制按钮）
@@ -25,16 +29,17 @@ public class CountdownTimer {
     public CountdownTimer(int seconds) {
         this.initialSeconds = Math.max(0, seconds);
         this.remainingSeconds = this.initialSeconds;
+        InGameObjects.countdownTimer = this;
 
-    timeLabel = new JLabel(formatSeconds(remainingSeconds));
-    // 更醒目的红色更大号字体用于倒计时数字
-    timeLabel.setFont(timeLabel.getFont().deriveFont(Font.BOLD, 32f));
-    timeLabel.setForeground(Color.RED);
+        timeLabel = new JLabel(formatSeconds(remainingSeconds));
+        // 更醒目的红色更大号字体用于倒计时数字
+        timeLabel.setFont(timeLabel.getFont().deriveFont(Font.BOLD, 32f));
+        timeLabel.setForeground(Color.RED);
 
-    controlButton = new JButton("Start");
-    controlButton.setFont(controlButton.getFont().deriveFont(14f));
-    // 给按钮一个合适的首选大小以配合更大的面板
-    controlButton.setPreferredSize(new Dimension(80, 28));
+        controlButton = new JButton("Start");
+        controlButton.setFont(controlButton.getFont().deriveFont(14f));
+        // 给按钮一个合适的首选大小以配合更大的面板
+        controlButton.setPreferredSize(new Dimension(80, 28));
 
         // 每秒触发一次
         swingTimer = new javax.swing.Timer(1000, new ActionListener() {
@@ -54,33 +59,33 @@ public class CountdownTimer {
         });
 
         // panel 布局：垂直排列（时间在上，按钮在下）
-    panel = new JPanel();
-    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-    // 右对齐内容（便于放在右上角）
-    JPanel labelWrap = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-    labelWrap.setOpaque(false);
-    labelWrap.add(timeLabel);
-    panel.add(labelWrap);
+        panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        // 右对齐内容（便于放在右上角）
+        JPanel labelWrap = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        labelWrap.setOpaque(false);
+        labelWrap.add(timeLabel);
+        panel.add(labelWrap);
 
-    JPanel btnWrap = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-    btnWrap.setOpaque(false);
-    btnWrap.add(controlButton);
-    panel.add(btnWrap);
+        JPanel btnWrap = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        btnWrap.setOpaque(false);
+        btnWrap.add(controlButton);
+        panel.add(btnWrap);
 
-    // 计算并设置 panel 的 preferredSize，确保在未显示前也能取得合理尺寸
-    Dimension dLabel = labelWrap.getPreferredSize();
-    Dimension dBtn = btnWrap.getPreferredSize();
-    int w = Math.max(dLabel.width, dBtn.width);
-    int h = dLabel.height + dBtn.height;
-    // 加一点内边距
-    int padW = 16;
-    int padH = 12;
-    // 增大最小宽度与高度以确保面板更明显
-    panel.setPreferredSize(new Dimension(Math.max(200, w + padW), Math.max(70, h + padH)));
-    // 使面板可见并加边框，便于用户识别（不影响布局）
-    panel.setOpaque(true);
-    panel.setBackground(new Color(250, 250, 250));
-    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        // 计算并设置 panel 的 preferredSize，确保在未显示前也能取得合理尺寸
+        Dimension dLabel = labelWrap.getPreferredSize();
+        Dimension dBtn = btnWrap.getPreferredSize();
+        int w = Math.max(dLabel.width, dBtn.width);
+        int h = dLabel.height + dBtn.height;
+        // 加一点内边距
+        int padW = 16;
+        int padH = 12;
+        // 增大最小宽度与高度以确保面板更明显
+        panel.setPreferredSize(new Dimension(Math.max(200, w + padW), Math.max(70, h + padH)));
+        // 使面板可见并加边框，便于用户识别（不影响布局）
+        panel.setOpaque(true);
+        panel.setBackground(new Color(250, 250, 250));
+        panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
     }
 
     private void tick() {
@@ -89,11 +94,14 @@ public class CountdownTimer {
             timeLabel.setText(formatSeconds(remainingSeconds));
             if (remainingSeconds == 0) {
                 // 倒计时结束
-                swingTimer.stop();
-                running = false;
-                controlButton.setText("Reset");
                 // 可选：发出提示音
                 Toolkit.getDefaultToolkit().beep();
+                swingTimer.stop();
+                running = false;
+                boolean currentSide = InGameObjects.board.getSide();
+                String sideStr = currentSide ? "Red" : "Black";
+                System.out.println(sideStr + " time out!");
+                EndGameDialog endGameDialog = new EndGameDialog(sideStr, (javax.swing.JFrame) InGameObjects.plate.getTopLevelAncestor());
             }
         } else {
             swingTimer.stop();
@@ -129,12 +137,9 @@ public class CountdownTimer {
         controlButton.setText("Start");
     }
 
-    public void reset() {
-        swingTimer.stop();
-        running = false;
+    public void changeSide() {
         remainingSeconds = initialSeconds;
         timeLabel.setText(formatSeconds(remainingSeconds));
-        controlButton.setText("Start");
     }
 
     public void setSeconds(int seconds) {

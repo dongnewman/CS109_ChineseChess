@@ -12,9 +12,9 @@ import javax.imageio.ImageIO;
 
 import com.Model.InGame.CountdownTimer;
 import com.Controller.InGameObjects;
-import com.GUI.GameObjects.*;
 import com.GUI.GameObjects.Box.*;
 import com.GUI.GameObjects.Piece.*;
+import com.GUI.GameObjects.*;
 /**
  * 游戏界面
  * 
@@ -161,56 +161,24 @@ public class GameFrame {
         }
         // 通知其它线程界面已初始化完成
 
-        // 将棋盘放入一个 JLayeredPane，以便把计时器覆盖显示在右上角
-        // 将棋盘与计时器放在不同的 panel 中，centerPanel 负责承载棋盘（CENTER）和计时器（EAST）
+
+        // 棋盘和计时器放在centerPanel
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
-
-        // 保持 plate 的 preferredSize，直接放在 CENTER
         plate.setPreferredSize(new Dimension(pw, ph));
         centerPanel.add(plate, BorderLayout.CENTER);
 
-        // 下面的代码用于测试：
-        // 点击棋盘时把相对像素坐标输出到控制台（模块：点击取坐标）
-        // plate.addMouseListener(new MouseAdapter() {
-        //     @Override
-        //     public void mouseClicked(MouseEvent e) {
-        //         int x = e.getX();
-        //         int y = e.getY();
-        //         System.out.println("Plate clicked at: x=" + x + ", y=" + y);
-        //     }
-        // });
-
-        // gameFrame.addMouseListener(new MouseAdapter() {
-        //     @Override
-        //     public void mouseClicked(MouseEvent e) {
-        //         int x = e.getX();
-        //         int y = e.getY();
-        //         System.out.println("Frame clicked at: x=" + x + ", y=" + y);
-        //     }
-        // });
-
-        // 在 centerContainer 的右上角放置倒计时模块（绝对定位）
-        // 使用 CountdownTimer（避免与 Swing Timer 冲突）
+        // 使用Model包下的CountdownTimer
         CountdownTimer timerModule = new CountdownTimer(60);
         JPanel timerPanel = timerModule.getPanel();
-        // 将计时器放到右侧的 timerWrapper 的顶部，timerWrapper 放在 centerPanel 的 EAST
-        timerPanel.setOpaque(true);
-        Dimension tps = timerPanel.getPreferredSize();
-        // 设置一个合适的宽度（确保不会太窄），并把高度设置为棋盘高度以便对齐
-        int wrapperWidth = Math.max(100, tps.width + 8);
+        int wrapperWidth = Math.max(100, timerPanel.getPreferredSize().width + 8);
         JPanel timerWrapper = new JPanel(new BorderLayout());
         timerWrapper.setOpaque(false);
         timerWrapper.setPreferredSize(new Dimension(wrapperWidth, ph));
-        // 把计时器面板放在 timerWrapper 的 NORTH（顶部）以靠上显示
         timerWrapper.add(timerPanel, BorderLayout.NORTH);
-
         centerPanel.add(timerWrapper, BorderLayout.EAST);
 
         gameFrame.add(centerPanel, BorderLayout.CENTER);
-
-        JLabel label = new JLabel("欢迎来到中国象棋游戏!", SwingConstants.CENTER);
-        gameFrame.add(label, BorderLayout.EAST);
 
         // 使用 pack 让基于 preferredSize 的组件确定初始大小，然后将宽度调整为棋盘宽度的 1.5 倍
         gameFrame.pack();
@@ -230,6 +198,10 @@ public class GameFrame {
         RestartButton restartbutton = new RestartButton(gameFrame);
         // 设置Undo按钮
         UndoButton undobutton = new UndoButton(gameFrame);
+        // 设置提示框
+        JLabel label = new JLabel("<html><div style='width:50px;'>欢迎来到中国象棋游戏</div></html>", SwingConstants.CENTER);
+        gameFrame.add(label, BorderLayout.EAST);
+
 
         gameFrame.setVisible(true);
 

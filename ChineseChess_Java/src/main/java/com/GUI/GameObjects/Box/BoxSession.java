@@ -6,11 +6,6 @@ public class BoxSession {
     private Box[][] blueBoxArray = new Box[11][10];
     private Box[][] redBoxArray = new Box[11][10];
 
-    // public BoxSession() {
-    //     InGameObjects.blueBoxSession = this;
-    //     InGameObjects.redBoxSession = this;
-    // }
-
     // BlueBox相关操作
     // 示例：保存BlueBox对象
     public void setBlueBox(int row, int col) {

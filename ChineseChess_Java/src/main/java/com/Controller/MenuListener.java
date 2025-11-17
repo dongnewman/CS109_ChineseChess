@@ -196,7 +196,9 @@ public class MenuListener {
     // 游戏栏
     private static void handleP2PNewGame() {
         try {
-            InitGame initGame = new InitGame(new Board(), 0);
+            Board board = new Board();
+            InGameObjects.board = board;
+            InitGame initGame = new InitGame(board, 0);
         } catch (Exception e) {
             System.out.println("新游戏初始化失败: " + e.getMessage());
         }
@@ -204,7 +206,9 @@ public class MenuListener {
 
     private static void handleAINewGame() {
         try {
-            InitGame initGame = new InitGame(new Board(), 1);
+            Board board = new Board();
+            InGameObjects.board = board;
+            InitGame initGame = new InitGame(board, 1);
         } catch (Exception e) {
             System.out.println("新游戏初始化失败: " + e.getMessage());
         }

@@ -23,7 +23,7 @@ public class RemovePiece {
             // 通过动画移动到一旁的观战区
             boolean success = false;
             if (isBlack) {
-                if (place >= 0 && place <= 7) {
+                if (place >= 0 && place <= 6) {
                     success = movePiece.moveByPixel(row, col, (755 + place * 40), 290);
                 }
                 if (place >= 8 && place <= 15) {
@@ -31,7 +31,7 @@ public class RemovePiece {
                 }
             }
             else {
-                if (place >= 0 && place <= 7) {
+                if (place >= 0 && place <= 6) {
                     success = movePiece.moveByPixel(row, col, (755 + place * 40), 520);
                 }
                 if (place >= 8 && place <= 15) {

@@ -7,6 +7,7 @@ import com.GUI.GameObjects.SideIcon;
 import com.GUI.GameObjects.EndGameDialog;
 import com.Model.InGame.playroom.*;
 import com.Model.InGame.playersAI.*;
+import com.Controller.InGameObjects;
 
 public class DoGame {
     private Board board;
@@ -105,6 +106,7 @@ public class DoGame {
             movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
+            InGameObjects.countdownTimer.changeSide();
         }
     }
 
@@ -145,6 +147,7 @@ public class DoGame {
             movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
+            InGameObjects.countdownTimer.changeSide();
         }
     }
 }
