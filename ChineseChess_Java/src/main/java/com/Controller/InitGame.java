@@ -31,6 +31,10 @@ public class InitGame {
             }
         }).start();
 
+        InGameObjects.gametype = type;
+        // 测试代码
+        // System.out.println("Type: " + InGameObjects.gametype);
+
         // function:game P2P
         if (type == 0) {
             new Thread(() -> {

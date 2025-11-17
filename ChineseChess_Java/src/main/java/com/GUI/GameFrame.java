@@ -21,6 +21,8 @@ import com.GUI.GameObjects.Piece.InitPieces;
 import com.GUI.GameObjects.Piece.Pieces;
 import com.GUI.GameObjects.Piece.PiecesSession;
 import com.GUI.GameObjects.SideIcon;
+import com.GUI.GameObjects.RestartButton;
+import com.GUI.GameObjects.UndoButton;
 
 /**
  * 游戏界面
@@ -233,6 +235,10 @@ public class GameFrame {
         SurrenderButton surrender = new SurrenderButton(gameFrame);
         // 设置当前边图标
         // SideIcon sideIcon = new SideIcon(gameFrame);
+        // 设置重开按钮
+        RestartButton restartbutton = new RestartButton(gameFrame);
+        // 设置Undo按钮
+        UndoButton undobutton = new UndoButton(gameFrame);
 
         gameFrame.setVisible(true);
 
