@@ -107,7 +107,6 @@ public class DoGame {
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
             InGameObjects.countdownTimer.changeSide();
-            // 有问题，等待修复
         }
     }
 
@@ -149,7 +148,6 @@ public class DoGame {
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
             InGameObjects.countdownTimer.changeSide();
-            // 有问题，等待修复
         }
     }
 }

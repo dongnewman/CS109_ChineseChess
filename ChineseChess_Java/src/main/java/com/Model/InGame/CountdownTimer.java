@@ -1,12 +1,13 @@
 package com.Model.InGame;
 
 import javax.swing.*;
-
-import com.Controller.InGameObjects;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import com.Controller.InGameObjects;
+import com.GUI.GameObjects.EndGameDialog;
+import com.Model.InGame.playroom.Board;
 
 /**
  * 倒计时模块（放在 Model/InGame 中）
@@ -93,11 +94,14 @@ public class CountdownTimer {
             timeLabel.setText(formatSeconds(remainingSeconds));
             if (remainingSeconds == 0) {
                 // 倒计时结束
-                swingTimer.stop();
-                running = false;
-                controlButton.setText("Reset");
                 // 可选：发出提示音
                 Toolkit.getDefaultToolkit().beep();
+                swingTimer.stop();
+                running = false;
+                boolean currentSide = InGameObjects.board.getSide();
+                String sideStr = currentSide ? "Red" : "Black";
+                System.out.println(sideStr + " time out!");
+                EndGameDialog endGameDialog = new EndGameDialog(sideStr, (javax.swing.JFrame) InGameObjects.plate.getTopLevelAncestor());
             }
         } else {
             swingTimer.stop();

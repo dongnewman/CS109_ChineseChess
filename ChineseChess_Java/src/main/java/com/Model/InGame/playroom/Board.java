@@ -2,6 +2,8 @@ package com.Model.InGame.playroom;
 
 import java.util.ArrayList;
 
+import com.Controller.InGameObjects;
+
 public class Board {
     private char board[][];
     boolean side;
@@ -64,6 +66,7 @@ public class Board {
         side = false;// false for red, true for black
         // initialize zobrist key
         zobristKey = com.Model.InGame.playersAI.Zobrist.computeKey(this);
+        InGameObjects.board = this;
     }
 
     // getter
