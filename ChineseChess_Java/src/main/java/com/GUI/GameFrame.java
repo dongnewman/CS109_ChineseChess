@@ -12,9 +12,9 @@ import javax.imageio.ImageIO;
 
 import com.Model.InGame.CountdownTimer;
 import com.Controller.InGameObjects;
-import com.GUI.GameObjects.*;
 import com.GUI.GameObjects.Box.*;
 import com.GUI.GameObjects.Piece.*;
+import com.GUI.GameObjects.*;
 /**
  * 游戏界面
  * 
@@ -168,10 +168,9 @@ public class GameFrame {
         plate.setPreferredSize(new Dimension(pw, ph));
         centerPanel.add(plate, BorderLayout.CENTER);
 
-        // 通过CountDownTimer统一处理计时器及其位置
+        // 使用Model包下的CountdownTimer
         CountdownTimer timerModule = new CountdownTimer(60);
         JPanel timerPanel = timerModule.getPanel();
-        // 包装一层，设置宽度和高度对齐棋盘
         int wrapperWidth = Math.max(100, timerPanel.getPreferredSize().width + 8);
         JPanel timerWrapper = new JPanel(new BorderLayout());
         timerWrapper.setOpaque(false);
