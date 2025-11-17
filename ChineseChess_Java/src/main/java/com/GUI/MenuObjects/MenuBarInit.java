@@ -55,13 +55,13 @@ public class MenuBarInit {
 
 
         // 创建“记录”菜单及其子菜单项
-        JMenu jmRecord = new JMenu("记录");
-        JMenuItem jmRecordView = new JMenuItem("查看记录");
-        JMenuItem jmRecordDelete = new JMenuItem("删除记录");
-        jmRecord.add(jmRecordView);
-        jmRecord.add(jmRecordDelete);
+        // JMenu jmRecord = new JMenu("记录");
+        // JMenuItem jmRecordView = new JMenuItem("查看记录");
+        // JMenuItem jmRecordDelete = new JMenuItem("删除记录");
+        // jmRecord.add(jmRecordView);
+        // jmRecord.add(jmRecordDelete);
 
-        jmb.add(jmRecord);
+        // jmb.add(jmRecord);
 
 
         // 创建“帮助”菜单及其子菜单项
