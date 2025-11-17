@@ -1,6 +1,8 @@
 package com.GUI.GameObjects;
 
 import javax.swing.JOptionPane;
+
+import com.Controller.InGameObjects;
 import com.GUI.Menu;
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -11,6 +13,8 @@ public class EndGameDialog {
     private String winner;
     public EndGameDialog(String winner, JFrame gameFrame) {
         this.winner = winner;
+        // 停止计时
+        InGameObjects.countdownTimer.pause();
         // 弹出赢家对话框
         String msg = ("red".equalsIgnoreCase(winner)) ? "红方胜利！" : "黑方胜利！";
         JOptionPane.showMessageDialog(null, msg, "游戏结束", JOptionPane.INFORMATION_MESSAGE);
