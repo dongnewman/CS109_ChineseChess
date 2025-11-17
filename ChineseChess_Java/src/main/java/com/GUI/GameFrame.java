@@ -180,9 +180,6 @@ public class GameFrame {
 
         gameFrame.add(centerPanel, BorderLayout.CENTER);
 
-        JLabel label = new JLabel("欢迎来到中国象棋游戏!", SwingConstants.CENTER);
-        gameFrame.add(label, BorderLayout.EAST);
-
         // 使用 pack 让基于 preferredSize 的组件确定初始大小，然后将宽度调整为棋盘宽度的 1.5 倍
         gameFrame.pack();
         int frameWidth = (int) Math.round(plateWidth * 1.5);
@@ -201,6 +198,10 @@ public class GameFrame {
         RestartButton restartbutton = new RestartButton(gameFrame);
         // 设置Undo按钮
         UndoButton undobutton = new UndoButton(gameFrame);
+        // 设置提示框
+        JLabel label = new JLabel("<html><div style='width:50px;'>欢迎来到中国象棋游戏</div></html>", SwingConstants.CENTER);
+        gameFrame.add(label, BorderLayout.EAST);
+
 
         gameFrame.setVisible(true);
 

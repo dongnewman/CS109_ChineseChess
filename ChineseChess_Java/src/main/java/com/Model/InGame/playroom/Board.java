@@ -20,6 +20,7 @@ public class Board {
         }
         // initialize zobrist key
         zobristKey = com.Model.InGame.playersAI.Zobrist.computeKey(this);
+        InGameObjects.board = this;
     }
 
     public Board() {
