@@ -45,14 +45,11 @@ public class HistoryPrompt {
             }
             hist = hist.trim();
             HistoryInfo strict = ReadHistory.StringtoBoard(hist);
-            boolean strictOk = (strict != null);
-            HistoryInfo loose = null;
-            if (!strictOk)
-                loose = ReadHistory.StringtoBoardLoose(hist);
-            HistoryInfo usable = strictOk ? strict : loose;
-            if (usable == null)
+            // 严格校验失败则按无历史处理
+            if (strict == null) {
                 return new Result(ResultType.START_NEW, null);
-
+            }
+            HistoryInfo usable = strict;
             Board histBoard = usable.getBoard();
             // if finished or equals start position -> treat as no history
             if (histBoard.gameOver() || com.Model.InGame.playroom.Board.isStartingPosition(histBoard)) {
@@ -61,7 +58,7 @@ public class HistoryPrompt {
 
             // show three options: Load, Start New, Return
             Object[] options = { "加载历史并继续", "忽略历史并开始新对局", "返回主菜单" };
-            String msg = strictOk ? "检测到未完成的历史对局，选择操作：" : "检测到可能的历史对局（校验失败），选择操作：";
+            String msg = "检测到未完成的历史对局，选择操作：";
             int sel = JOptionPane.showOptionDialog(parent,
                     msg,
                     "检测到历史对局",
