@@ -12,9 +12,19 @@ import javax.imageio.ImageIO;
 
 import com.Model.InGame.CountdownTimer;
 import com.Controller.InGameObjects;
+import com.Controller.HistoryGame.SetHistory;
+import com.Controller.HistoryGame.HistoryInfo;
+import com.Model.Account.AccountSession;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import com.GUI.GameObjects.Box.*;
 import com.GUI.GameObjects.Piece.*;
 import com.GUI.GameObjects.*;
+
 /**
  * 游戏界面
  * 
@@ -39,6 +49,82 @@ public class GameFrame {
         gameFrame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
+                // 保存当前对局到当前登录账户的 rawJson（如果已登录）
+                try {
+                    if (AccountSession.isLoggedIn() && InGameObjects.board != null) {
+                        HistoryInfo hInfo = new HistoryInfo(InGameObjects.board, InGameObjects.gametype);
+                        String s = SetHistory.BoardtoString(hInfo);
+                        AccountSession.setRawJson(s);
+
+                        // 同步写回 accounts/<username>.json（保留原有字段，更新或插入 history 字段）
+                        String username = AccountSession.getUsername();
+                        if (username != null && !username.isEmpty()) {
+                            try {
+                                Path dir = Paths.get("accounts");
+                                if (!Files.exists(dir))
+                                    Files.createDirectories(dir);
+                                Path acct = dir.resolve(sanitizeFileName(username) + ".json");
+                                String orig = null;
+                                if (Files.exists(acct)) {
+                                    orig = new String(Files.readAllBytes(acct), StandardCharsets.UTF_8);
+                                }
+                                String escaped = escapeJson(s);
+                                String newJson;
+                                if (orig != null) {
+                                    // 如果已有 history 字段，替换之；否则在末尾插入
+                                    Pattern p = Pattern.compile("(\"history\"\\s*:\\s*\")[^\"]*(\")", Pattern.DOTALL);
+                                    Matcher m = p.matcher(orig);
+                                    if (m.find()) {
+                                        newJson = m.replaceFirst("$1" + escaped + "$2");
+                                    } else {
+                                        int idx = orig.lastIndexOf('}');
+                                        if (idx >= 0) {
+                                            // 插入一个 history 字段
+                                            // 如果原始 JSON 不是以 { } 包裹，降级为覆盖写入
+                                            String prefix = orig.substring(0, idx).trim();
+                                            if (prefix.endsWith(",")) {
+                                                newJson = prefix + "\"history\":\"" + escaped + "\"}";
+                                            } else if (prefix.endsWith("{")) {
+                                                newJson = prefix + "\"history\":\"" + escaped + "\"}";
+                                            } else {
+                                                newJson = orig.substring(0, idx) + ",\"history\":\"" + escaped + "\"}";
+                                            }
+                                        } else {
+                                            // 无法解析原始 JSON，直接创建新 JSON
+                                            newJson = "{\"history\":\"" + escaped + "\"}";
+                                        }
+                                    }
+                                } else {
+                                    // 原文件不存在：创建一个最小的 account JSON（不含密码）
+                                    String email = AccountSession.getEmail();
+                                    newJson = "{" +
+                                            "\"loggedIn\":false," +
+                                            "\"username\":\"" + escapeJson(username) + "\"," +
+                                            "\"email\":\"" + escapeJson(email) + "\"," +
+                                            "\"password\":\"\"," +
+                                            "\"history\":\"" + escaped + "\"}";
+                                }
+                                // 写回文件
+                                try {
+                                    Files.write(acct, newJson.getBytes(StandardCharsets.UTF_8));
+                                    // 同时把纯历史串写入单独文件，便于读取和兼容性
+                                    try {
+                                        Path hist = dir.resolve(sanitizeFileName(username) + ".history");
+                                        Files.write(hist, s.getBytes(StandardCharsets.UTF_8));
+                                    } catch (Exception ex) {
+                                        System.err.println("Failed to write history file: " + ex.getMessage());
+                                    }
+                                } catch (Exception ex) {
+                                    System.err.println("Failed to write account file: " + ex.getMessage());
+                                }
+                            } catch (Exception ex) {
+                                System.err.println("Failed to update account file: " + ex.getMessage());
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    System.err.println("Failed to save history on window close: " + ex.getMessage());
+                }
                 gameFrame.dispose();
                 if (Menu.frame != null) {
                     Menu.frame.setVisible(true);
@@ -161,7 +247,6 @@ public class GameFrame {
         }
         // 通知其它线程界面已初始化完成
 
-
         // 棋盘和计时器放在centerPanel
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
@@ -202,7 +287,6 @@ public class GameFrame {
         JLabel label = new JLabel("<html><div style='width:50px;'>欢迎来到中国象棋游戏</div></html>", SwingConstants.CENTER);
         gameFrame.add(label, BorderLayout.EAST);
 
-
         gameFrame.setVisible(true);
 
         Menu.frame.setVisible(false); // 隐藏菜单界面
@@ -220,5 +304,49 @@ public class GameFrame {
             System.err.println("无法countDown InGameObjects.uiReadyLatch: " + e.getMessage());
         }
 
+    }
+
+    private static String sanitizeFileName(String name) {
+        if (name == null)
+            return "";
+        return name.replaceAll("[\\/:*?\"<>|]", "_");
+    }
+
+    private static String escapeJson(String s) {
+        if (s == null)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        for (char c : s.toCharArray()) {
+            switch (c) {
+                case '\\':
+                    sb.append("\\\\");
+                    break;
+                case '\"':
+                    sb.append("\\\"");
+                    break;
+                case '\b':
+                    sb.append("\\b");
+                    break;
+                case '\f':
+                    sb.append("\\f");
+                    break;
+                case '\n':
+                    sb.append("\\n");
+                    break;
+                case '\r':
+                    sb.append("\\r");
+                    break;
+                case '\t':
+                    sb.append("\\t");
+                    break;
+                default:
+                    if (c < 0x20 || c > 0x7E) {
+                        sb.append(String.format("\\u%04x", (int) c));
+                    } else {
+                        sb.append(c);
+                    }
+            }
+        }
+        return sb.toString();
     }
 }

@@ -180,4 +180,57 @@ public class Board {
         return possibleMoves.isEmpty();
     }
 
+    /**
+     * 检查给定 Board 是否等于程序默认的起始布置（不构造新的 Board 对象）
+     */
+    public static boolean isStartingPosition(Board a) {
+        if (a == null)
+            return false;
+        char[][] B = a.getBoard();
+        char[][] init = new char[11][10];
+        for (int i = 0; i <= 10; i++) {
+            for (int j = 0; j <= 9; j++)
+                init[i][j] = '.';
+        }
+        init[1][1] = 'R';
+        init[1][2] = 'N';
+        init[1][3] = 'B';
+        init[1][4] = 'A';
+        init[1][5] = 'K';
+        init[1][6] = 'A';
+        init[1][7] = 'B';
+        init[1][8] = 'N';
+        init[1][9] = 'R';
+        init[3][2] = 'C';
+        init[3][8] = 'C';
+        init[4][1] = 'P';
+        init[4][3] = 'P';
+        init[4][5] = 'P';
+        init[4][7] = 'P';
+        init[4][9] = 'P';
+        init[10][1] = 'r';
+        init[10][2] = 'n';
+        init[10][3] = 'b';
+        init[10][4] = 'a';
+        init[10][5] = 'k';
+        init[10][6] = 'a';
+        init[10][7] = 'b';
+        init[10][8] = 'n';
+        init[10][9] = 'r';
+        init[8][2] = 'c';
+        init[8][8] = 'c';
+        init[7][1] = 'p';
+        init[7][3] = 'p';
+        init[7][5] = 'p';
+        init[7][7] = 'p';
+        init[7][9] = 'p';
+        for (int i = 0; i <= 10; i++) {
+            for (int j = 0; j <= 9; j++) {
+                if (B[i][j] != init[i][j])
+                    return false;
+            }
+        }
+        return true;
+    }
+
 }

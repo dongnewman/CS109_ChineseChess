@@ -1,17 +1,20 @@
 package com.GUI.MenuObjects;
 
-
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+
+import com.Controller.HistoryGame.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 public class ReadGameButton {
     final String file_path = "src\\main\\resources\\Buttons\\Readgamebutton.png";
+
     public ReadGameButton(JButton readGameButton, JFrame parentFrame) {
         BufferedImage image = null;
         try {
@@ -38,7 +41,7 @@ public class ReadGameButton {
             // readGameButton.setFocusPainted(false);
             // 加上自己的
             readGameButton.setIcon(new javax.swing.ImageIcon(image));
-            readGameButton.setBounds(550,540,300,50);
+            readGameButton.setBounds(550, 540, 300, 50);
             parentFrame.add(readGameButton);
             parentFrame.repaint();
 
@@ -48,7 +51,8 @@ public class ReadGameButton {
                     // Handle start button click
                     // System.out.println("Start Button Clicked!");
                     try {
-			            // InitGame initGame = new InitGame();
+                        HistoryGame historyGame = new HistoryGame();
+                        // InitGame initGame = new InitGame();
                         // 启动读取游戏的初始化逻辑
                         // 记得写上！！！
                         //
@@ -57,9 +61,9 @@ public class ReadGameButton {
                         //
                         //
                         //
-		            } catch (Exception e2) {
-			            System.out.println("新游戏初始化失败: " + e2.getMessage());
-		            }
+                    } catch (Exception e2) {
+                        System.out.println("新游戏初始化失败: " + e2.getMessage());
+                    }
                 }
             });
         }

@@ -12,6 +12,7 @@ import com.Model.InGame.playroom.Board;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import com.Controller.HistoryGame.HistoryPrompt;
 
 public class AIGameButton {
     final String file_path = "src\\main\\resources\\Buttons\\AIGamebutton.png";
@@ -49,13 +50,16 @@ public class AIGameButton {
             aiGameButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Handle start button click
-                    // System.out.println("Start Button Clicked!");
                     try {
-                        try {
-                            InitGame initGame = new InitGame(new Board(), 1);
-                        } catch (Exception e2) {
-                            System.out.println("新游戏初始化失败: " + e2.getMessage());
+                        int defaultType = 1;
+                        HistoryPrompt.Result res = HistoryPrompt.promptIfHistory(parentFrame, defaultType);
+                        if (res.type == HistoryPrompt.ResultType.CANCEL) {
+                            return; // 返回主菜单
+                        } else if (res.type == HistoryPrompt.ResultType.LOAD_HISTORY && res.history != null) {
+                            new InitGame(res.history.getBoard(), res.history.getType());
+                        } else {
+                            // START_NEW
+                            new InitGame(new Board(), defaultType);
                         }
                     } catch (Exception e2) {
                         System.out.println("新游戏初始化失败: " + e2.getMessage());
@@ -64,4 +68,7 @@ public class AIGameButton {
             });
         }
     }
+
+    // history logic delegated to HistoryPrompt
+
 }

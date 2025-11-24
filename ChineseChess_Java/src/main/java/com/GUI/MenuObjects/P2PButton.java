@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import com.Controller.InitGame;
+import com.Controller.HistoryGame.HistoryPrompt;
 import com.Model.InGame.playroom.*;
 
 public class P2PButton {
@@ -48,10 +49,18 @@ public class P2PButton {
             startbutton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Handle start button click
-                    // System.out.println("Start Button Clicked!");
+                    // Handle start button click with centralized history prompt
                     try {
-                        InitGame initGame = new InitGame(new Board(), 0);
+                        int defaultType = 0;
+                        HistoryPrompt.Result res = HistoryPrompt.promptIfHistory(parentFrame, defaultType);
+                        if (res.type == HistoryPrompt.ResultType.CANCEL) {
+                            return; // 返回主菜单
+                        } else if (res.type == HistoryPrompt.ResultType.LOAD_HISTORY && res.history != null) {
+                            new InitGame(res.history.getBoard(), res.history.getType());
+                        } else {
+                            // START_NEW
+                            new InitGame(new Board(), defaultType);
+                        }
                     } catch (Exception e2) {
                         System.out.println("新游戏初始化失败: " + e2.getMessage());
                     }
@@ -59,4 +68,6 @@ public class P2PButton {
             });
         }
     }
+
+    // history comparisons and file reading handled by HistoryPrompt
 }
