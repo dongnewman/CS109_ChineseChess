@@ -12,6 +12,8 @@ public class InitGame {
     // 示例：在程序其他地方实现三个棋子的移动动画
 
     public InitGame(Board initialBoard, int type) throws Exception {
+        InGameObjects.gametype = type;
+        
         if (SwingUtilities.isEventDispatchThread()) {
             new GameFrame();
         } else {
@@ -64,7 +66,7 @@ public class InitGame {
             }
         }).start();
 
-        InGameObjects.gametype = type;
+        
         // 测试代码
         // System.out.println("Type: " + InGameObjects.gametype);
 

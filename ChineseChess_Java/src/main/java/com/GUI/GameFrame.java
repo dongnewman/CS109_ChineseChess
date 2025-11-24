@@ -11,6 +11,7 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import com.Model.InGame.CountdownTimer;
+import com.Model.InGame.playersAI.HinatsuruAI;
 import com.Controller.InGameObjects;
 import com.Controller.HistoryGame.SetHistory;
 import com.Controller.HistoryGame.HistoryInfo;
@@ -336,6 +337,11 @@ public class GameFrame {
         // 设置提示框
         JLabel label = new JLabel("<html><div style='width:50px;'>欢迎来到中国象棋游戏</div></html>", SwingConstants.CENTER);
         gameFrame.add(label, BorderLayout.EAST);
+        // 设置Hinatsuru
+        if(InGameObjects.gametype == 1) {
+            Hinatsuru h = new Hinatsuru(gameFrame);
+        }
+        
 
         gameFrame.setVisible(true);
 
