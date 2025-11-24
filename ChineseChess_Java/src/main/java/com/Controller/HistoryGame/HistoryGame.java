@@ -42,10 +42,10 @@ public class HistoryGame {
         }
 
         // GUI prompt
-        String gt = (hInfo.getType() == 0) ? "双人对战" : "人机对战" ;
-        String message = "历史游戏记录已成功加载。\n游戏类型：" + gt +"\n这是您想读取的记录吗？";
-        int choice = JOptionPane.showConfirmDialog(null, message, "Read Game" , JOptionPane.YES_NO_OPTION);
-        if(choice == 1) {
+        String gt = (hInfo.getType() == 0) ? "双人对战" : "人机对战";
+        String message = "历史游戏记录已成功加载。\n游戏类型：" + gt + "\n这是您想读取的记录吗？";
+        int choice = JOptionPane.showConfirmDialog(null, message, "Read Game", JOptionPane.YES_NO_OPTION);
+        if (choice == 1) {
             return;
         }
 

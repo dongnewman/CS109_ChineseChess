@@ -30,19 +30,19 @@ public class DoAccountLogin {
         dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         dialog.setSize(380, 200);
         dialog.setLocationRelativeTo(null);
-        dialog.setLayout(new BorderLayout(8,8));
+        dialog.setLayout(new BorderLayout(8, 8));
 
-        JPanel center = new JPanel(new GridLayout(2,2,6,6));
-        center.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
+        JPanel center = new JPanel(new GridLayout(2, 2, 6, 6));
+        center.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         center.add(new JLabel("用户名:"));
         usernameField = new JTextField();
-    // 在用户名框按 Enter 将焦点移到密码框
-    usernameField.addActionListener(e -> passwordField.requestFocusInWindow());
+        // 在用户名框按 Enter 将焦点移到密码框
+        usernameField.addActionListener(e -> passwordField.requestFocusInWindow());
         center.add(usernameField);
         center.add(new JLabel("密码:"));
         passwordField = new JPasswordField();
-    // 在密码框按 Enter 触发确认登录
-    passwordField.addActionListener(e -> onConfirm());
+        // 在密码框按 Enter 触发确认登录
+        passwordField.addActionListener(e -> onConfirm());
         center.add(passwordField);
 
         dialog.add(center, BorderLayout.CENTER);
@@ -53,19 +53,23 @@ public class DoAccountLogin {
 
         ok.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) { onConfirm(); }
+            public void actionPerformed(ActionEvent e) {
+                onConfirm();
+            }
         });
 
         cancel.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) { onCancel(); }
+            public void actionPerformed(ActionEvent e) {
+                onCancel();
+            }
         });
 
         bottom.add(ok);
         bottom.add(cancel);
         dialog.add(bottom, BorderLayout.SOUTH);
-    // 将确认按钮设为默认按钮，按 Enter 时触发登录确认
-    dialog.getRootPane().setDefaultButton(ok);
+        // 将确认按钮设为默认按钮，按 Enter 时触发登录确认
+        dialog.getRootPane().setDefaultButton(ok);
     }
 
     public boolean showDialog() {
@@ -119,7 +123,8 @@ public class DoAccountLogin {
         }
 
         String storedPwd = extractString(json, "password");
-        String provided = new String(pwd);
+        // 先计算哈希，再清零密码数组以避免后续使用已清零的数组
+        long providedHash = AccountHash.hash(pwd);
         java.util.Arrays.fill(pwd, '\0');
 
         if (storedPwd == null) {
@@ -127,7 +132,7 @@ public class DoAccountLogin {
             return;
         }
 
-        if (!storedPwd.equals(provided)) {
+        if (!storedPwd.equals(String.valueOf(providedHash))) {
             JOptionPane.showMessageDialog(dialog, "用户名或密码错误", "登录失败", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -137,11 +142,15 @@ public class DoAccountLogin {
             AccountSession.setUsername(username);
             AccountSession.setEmail(extractString(json, "email"));
             AccountSession.setLoggedIn(true);
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
 
         loggedIn = true;
         loggedUsername = username;
-        try { com.GUI.Menu.setStatusText("已登录: " + username); } catch (Exception ignore) {}
+        try {
+            com.GUI.Menu.setStatusText("已登录: " + username);
+        } catch (Exception ignore) {
+        }
         dialog.dispose();
     }
 
@@ -150,15 +159,20 @@ public class DoAccountLogin {
             String pattern = "\\\"" + key + "\\\"\\s*:\\s*\\\"([^\\\"]*)\\\"";
             java.util.regex.Pattern p = java.util.regex.Pattern.compile(pattern);
             java.util.regex.Matcher m = p.matcher(json);
-            if (m.find()) return m.group(1);
-        } catch (Exception e) {}
+            if (m.find())
+                return m.group(1);
+        } catch (Exception e) {
+        }
         return null;
     }
 
     private String sanitizeFileName(String name) {
-        if (name == null) return "";
+        if (name == null)
+            return "";
         return name.replaceAll("[\\/:*?\"<>|]", "_");
     }
 
-    public String getLoggedUsername() { return loggedUsername; }
+    public String getLoggedUsername() {
+        return loggedUsername;
+    }
 }
