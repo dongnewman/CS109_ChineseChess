@@ -14,6 +14,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.AudioInputStream;
 
+import com.chinesechess.Main;
+
 
 public class MusicButton {
     private final String music_path = "src\\main\\resources\\audio\\BGM.wav";
@@ -29,6 +31,10 @@ public class MusicButton {
     public MusicButton(JFrame parentFrame, JButton musicbutton) {
         this.parentFrame = parentFrame;
         this.musicbutton = musicbutton;
+
+        if(Main.settingsSession.isDisableMusic()) {
+            isPlaying = false;
+        }
 
         // 加载图片
         try {
@@ -77,8 +83,9 @@ public class MusicButton {
         musicbutton.setPreferredSize(new java.awt.Dimension(60, 60));
         // 由外部决定布局和添加方式
         // 默认直接add，布局由Menu控制
-    doPlayMusic();
-    parentFrame.repaint();
+
+        doPlayMusic();
+        parentFrame.repaint();
 
         musicbutton.addActionListener(new ActionListener() {
             @Override
@@ -102,6 +109,10 @@ public class MusicButton {
     }
 
     public void doPlayMusic() {
+        if(Main.settingsSession.isDisableMusic()) {
+            return;
+        }
+
         try {
             File musicFile = new File(music_path);
             if (musicFile.exists()) {

@@ -296,6 +296,7 @@ public class GameFrame {
         }
         // 通知其它线程界面已初始化完成
 
+        
         // 棋盘和计时器放在centerPanel
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
@@ -353,6 +354,10 @@ public class GameFrame {
             System.err.println("无法countDown InGameObjects.uiReadyLatch: " + e.getMessage());
         }
 
+        // 如果设置为自动开始倒计时，则初始化后立刻启动
+        if (com.chinesechess.Main.settingsSession != null && com.chinesechess.Main.settingsSession.isStartTimer()) {
+            InGameObjects.countdownTimer.start();
+        }
     }
 
     private static String sanitizeFileName(String name) {

@@ -54,7 +54,7 @@ public class HistoryGame {
             return;
         }
 
-
+        // 正常开始
         try {
             new InitGame(hInfo.getBoard(), hInfo.getType());
         } catch (Exception e) {

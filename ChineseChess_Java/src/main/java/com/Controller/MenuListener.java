@@ -21,6 +21,8 @@ import com.Model.InGame.playroom.Board;
 import com.Model.About.DoAbout;
 // Game 相关处理器
 import com.Controller.InitGame;
+// Setting 相关处理器
+import com.GUI.MenuObjects.DoSettings;
 
 /**
  * 为菜单栏中的菜单项注册监听器（占位实现）。
@@ -116,7 +118,7 @@ public class MenuListener {
 
     // 设置栏
     private static void handlePreferences() {
-        System.out.println("TODO: handlePreferences() - 偏好设置");
+        DoSettings doSettings = new DoSettings();
         // 使用 Menu 提供的线程安全方法来更新界面文本
         Menu.setStatusText("TODO: handlePreferences() - 偏好设置");
     }
