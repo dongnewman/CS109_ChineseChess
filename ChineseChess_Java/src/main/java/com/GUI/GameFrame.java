@@ -70,12 +70,30 @@ public class GameFrame {
                                 }
                                 String escaped = escapeJson(s);
                                 String newJson;
+                                boolean isGameOver = false;
+                                try {
+                                    isGameOver = InGameObjects.board != null && InGameObjects.board.gameOver();
+                                } catch (Exception ex) {
+                                    isGameOver = false;
+                                }
+
+                                if (isGameOver) {
+                                    // If game is over, clear stored history: remove history field and delete
+                                    // .history file
+                                    AccountSession.setRawJson(null);
+                                }
+
                                 if (orig != null) {
                                     // 如果已有 history 字段，替换之；否则在末尾插入
                                     Pattern p = Pattern.compile("(\"history\"\\s*:\\s*\")[^\"]*(\")", Pattern.DOTALL);
                                     Matcher m = p.matcher(orig);
                                     if (m.find()) {
-                                        newJson = m.replaceFirst("$1" + escaped + "$2");
+                                        if (isGameOver) {
+                                            // remove the history field entirely
+                                            newJson = m.replaceFirst("");
+                                        } else {
+                                            newJson = m.replaceFirst("$1" + escaped + "$2");
+                                        }
                                     } else {
                                         int idx = orig.lastIndexOf('}');
                                         if (idx >= 0) {
@@ -83,36 +101,67 @@ public class GameFrame {
                                             // 如果原始 JSON 不是以 { } 包裹，降级为覆盖写入
                                             String prefix = orig.substring(0, idx).trim();
                                             if (prefix.endsWith(",")) {
-                                                newJson = prefix + "\"history\":\"" + escaped + "\"}";
+                                                if (isGameOver) {
+                                                    newJson = prefix + "}";
+                                                } else {
+                                                    newJson = prefix + "\"history\":\"" + escaped + "\"}";
+                                                }
                                             } else if (prefix.endsWith("{")) {
-                                                newJson = prefix + "\"history\":\"" + escaped + "\"}";
+                                                if (isGameOver) {
+                                                    newJson = prefix + "}";
+                                                } else {
+                                                    newJson = prefix + "\"history\":\"" + escaped + "\"}";
+                                                }
                                             } else {
-                                                newJson = orig.substring(0, idx) + ",\"history\":\"" + escaped + "\"}";
+                                                if (isGameOver) {
+                                                    // remove history by leaving original content unchanged
+                                                    newJson = orig.substring(0, idx) + "}";
+                                                } else {
+                                                    newJson = orig.substring(0, idx) + ",\"history\":\"" + escaped
+                                                            + "\"}";
+                                                }
                                             }
                                         } else {
                                             // 无法解析原始 JSON，直接创建新 JSON
-                                            newJson = "{\"history\":\"" + escaped + "\"}";
+                                            newJson = isGameOver ? "{}" : "{\"history\":\"" + escaped + "\"}";
                                         }
                                     }
                                 } else {
                                     // 原文件不存在：创建一个最小的 account JSON（不含密码）
                                     String email = AccountSession.getEmail();
-                                    newJson = "{" +
-                                            "\"loggedIn\":false," +
-                                            "\"username\":\"" + escapeJson(username) + "\"," +
-                                            "\"email\":\"" + escapeJson(email) + "\"," +
-                                            "\"password\":\"\"," +
-                                            "\"history\":\"" + escaped + "\"}";
+                                    if (isGameOver) {
+                                        newJson = "{" +
+                                                "\"loggedIn\":false," +
+                                                "\"username\":\"" + escapeJson(username) + "\"," +
+                                                "\"email\":\"" + escapeJson(email) + "\"," +
+                                                "\"password\":\"\"}";
+                                    } else {
+                                        newJson = "{" +
+                                                "\"loggedIn\":false," +
+                                                "\"username\":\"" + escapeJson(username) + "\"," +
+                                                "\"email\":\"" + escapeJson(email) + "\"," +
+                                                "\"password\":\"\"," +
+                                                "\"history\":\"" + escaped + "\"}";
+                                    }
                                 }
                                 // 写回文件
                                 try {
                                     Files.write(acct, newJson.getBytes(StandardCharsets.UTF_8));
-                                    // 同时把纯历史串写入单独文件，便于读取和兼容性
+                                    // 如果游戏结束，删除 .history 文件；否则写入历史串
                                     try {
                                         Path hist = dir.resolve(sanitizeFileName(username) + ".history");
-                                        Files.write(hist, s.getBytes(StandardCharsets.UTF_8));
+                                        if (isGameOver) {
+                                            try {
+                                                if (Files.exists(hist))
+                                                    Files.delete(hist);
+                                            } catch (Exception dex) {
+                                                // ignore
+                                            }
+                                        } else {
+                                            Files.write(hist, s.getBytes(StandardCharsets.UTF_8));
+                                        }
                                     } catch (Exception ex) {
-                                        System.err.println("Failed to write history file: " + ex.getMessage());
+                                        System.err.println("Failed to write/delete history file: " + ex.getMessage());
                                     }
                                 } catch (Exception ex) {
                                     System.err.println("Failed to write account file: " + ex.getMessage());
