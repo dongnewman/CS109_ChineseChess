@@ -52,15 +52,6 @@ public class ReadGameButton {
                     // System.out.println("Start Button Clicked!");
                     try {
                         HistoryGame historyGame = new HistoryGame();
-                        // InitGame initGame = new InitGame();
-                        // 启动读取游戏的初始化逻辑
-                        // 记得写上！！！
-                        //
-                        //
-                        //
-                        //
-                        //
-                        //
                     } catch (Exception e2) {
                         System.out.println("新游戏初始化失败: " + e2.getMessage());
                     }

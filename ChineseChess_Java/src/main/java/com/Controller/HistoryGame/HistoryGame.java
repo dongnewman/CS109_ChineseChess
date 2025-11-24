@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.charset.StandardCharsets;
+import javax.swing.JOptionPane;
 
 public class HistoryGame {
     public HistoryGame() {
@@ -38,12 +39,22 @@ public class HistoryGame {
 
         HistoryInfo hInfo = ReadHistory.StringtoBoard(hString);
         if (hInfo == null) {
-            /*
-             * there should be some GUI prompt
-             */
+            // GUI prompt
+            String message = "无法读取历史游戏记录，可能是因为没有保存过游戏或存档已损坏。";
+            JOptionPane.showMessageDialog(null, message);
             System.out.println("Failed to read history game from account data. not exist or broken.");
             return;
         }
+
+        // GUI prompt
+        String gt = (hInfo.getType() == 0) ? "双人对战" : "人机对战" ;
+        String message = "历史游戏记录已成功加载。\n游戏类型：" + gt +"\n这是您想读取的记录吗？";
+        int choice = JOptionPane.showConfirmDialog(null, message, "Read Game" , JOptionPane.YES_NO_OPTION);
+        if(choice == 1) {
+            return;
+        }
+
+
         try {
             new InitGame(hInfo.getBoard(), hInfo.getType());
         } catch (Exception e) {
