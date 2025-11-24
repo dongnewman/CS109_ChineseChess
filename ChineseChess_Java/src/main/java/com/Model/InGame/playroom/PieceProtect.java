@@ -1,6 +1,6 @@
 package com.Model.InGame.playroom;
 
-public class KingProtect {
+public class PieceProtect {
     /**
      * Find king position for the given side on the provided board.
      * 
@@ -29,18 +29,11 @@ public class KingProtect {
                 }
             }
         }
+        board.printboard();
         return null;
     }
 
-    /**
-     * Detect whether square (x,y) is attacked by side `byBlack` on the provided
-     * board.
-     * Implements common Xiangqi attack patterns (pawns, knights with leg, rooks,
-     * cannons, king facing).
-     * This is a conservative fast check; diagonal elephant attacks are omitted for
-     * brevity but can be added.
-     */
-    public static boolean isSquareAttacked(Board board, int x, int y) {
+    public static boolean isAttacked(Board board, int x, int y) {
         // We dont consider the king facing attack here
         if (x < 1 || x > 10 || y < 1 || y > 9)
             return false;
@@ -50,13 +43,13 @@ public class KingProtect {
             if (x > 1 && board.getPiece(x - 1, y) == 'P')
                 return true;
             if (x >= 6
-                    && (y > 1 && board.getPiece(x + 1, y - 1) == 'P' || (y < 9 && board.getPiece(x + 1, y + 1) == 'P')))
+                    && (y > 1 && board.getPiece(x, y - 1) == 'P' || (y < 9 && board.getPiece(x, y + 1) == 'P')))
                 return true;
         } else {
             if (x < 10 && board.getPiece(x + 1, y) == 'p')
                 return true;
             if (x <= 5
-                    && (y > 1 && board.getPiece(x - 1, y - 1) == 'p' || (y < 9 && board.getPiece(x - 1, y + 1) == 'p')))
+                    && (y > 1 && board.getPiece(x, y - 1) == 'p' || (y < 9 && board.getPiece(x, y + 1) == 'p')))
                 return true;
         }
         // cannon and rook attacks
@@ -66,10 +59,11 @@ public class KingProtect {
             int cnt = 0;
             while (nx >= 1 && nx <= 10 && ny >= 1 && ny <= 9) {
                 char piece = board.getPiece(nx, ny);
-                nx += dir[0];
-                ny += dir[1];
-                if (piece == '.')
+                if (piece == '.') {
+                    nx += dir[0];
+                    ny += dir[1];
                     continue;
+                }
                 if (piece == (attacker ? 'r' : 'R')) {
                     if (cnt == 0)
                         return true;
@@ -80,14 +74,16 @@ public class KingProtect {
                 cnt++;
                 if (cnt > 1)
                     break;
+                nx += dir[0];
+                ny += dir[1];
             }
         }
         // knight attacks
         for (int[] dir : dirc2) {
-            int legX = x + (dir[0] / 2);
-            int legY = y + (dir[1] / 2);
-            int nx = x + dir[0];
-            int ny = y + dir[1];
+            int nx = x - dir[0];
+            int ny = y - dir[1];
+            int legX = nx + (dir[0] / 2);
+            int legY = ny + (dir[1] / 2);
             if (nx < 1 || nx > 10 || ny < 1 || ny > 9)
                 continue;
             if (board.getPiece(legX, legY) != '.')

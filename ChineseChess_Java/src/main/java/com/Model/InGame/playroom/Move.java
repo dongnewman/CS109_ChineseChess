@@ -49,4 +49,11 @@ public class Move {
     public boolean equals(Move move) {
         return xi == move.getxi() && yi == move.getyi() && xf == move.getxf() && yf == move.getyf();
     }
+
+    public void Copy(Move move) {
+        this.xi = move.getxi();
+        this.yi = move.getyi();
+        this.xf = move.getxf();
+        this.yf = move.getyf();
+    }
 }

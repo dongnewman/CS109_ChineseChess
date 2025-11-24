@@ -1,0 +1,60 @@
+package com.Controller.HistoryGame;
+
+import com.Controller.InitGame;
+import com.Model.Account.*;
+import com.Model.InGame.playroom.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
+
+public class HistoryGame {
+    public HistoryGame() {
+        // debug
+        System.out.println("HistoryGame will to be start.");
+        //
+        if (!AccountSession.isLoggedIn()) {
+            /*
+             * there should be some GUI prompt
+             */
+            System.out.println("User not logged in. Cannot read history game.");
+            return;
+        }
+        String hString = AccountSession.getRawJson();
+        // 如果内存中没有 rawJson，尝试从 accounts/<username>.history 读取
+        if (hString == null || hString.trim().isEmpty()) {
+            String username = AccountSession.getUsername();
+            if (username != null && !username.isEmpty()) {
+                try {
+                    Path hist = Paths.get("accounts", sanitizeFileName(username) + ".history");
+                    if (Files.exists(hist)) {
+                        hString = new String(Files.readAllBytes(hist), StandardCharsets.UTF_8);
+                    }
+                } catch (Exception ex) {
+                    System.err.println("HistoryGame: failed to read history file: " + ex.getMessage());
+                }
+            }
+        }
+
+        HistoryInfo hInfo = ReadHistory.StringtoBoard(hString);
+        if (hInfo == null) {
+            /*
+             * there should be some GUI prompt
+             */
+            System.out.println("Failed to read history game from account data. not exist or broken.");
+            return;
+        }
+        try {
+            new InitGame(hInfo.getBoard(), hInfo.getType());
+        } catch (Exception e) {
+            System.err.println("HistoryGame: failed to start InitGame: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static String sanitizeFileName(String name) {
+        if (name == null)
+            return "";
+        return name.replaceAll("[\\/:*?\"<>|]", "_");
+    }
+}

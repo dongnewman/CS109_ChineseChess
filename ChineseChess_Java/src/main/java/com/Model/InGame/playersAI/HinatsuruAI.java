@@ -2,353 +2,178 @@ package com.Model.InGame.playersAI;
 
 import com.Model.InGame.playroom.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
-class Estimation {
-    static final int R = 1000, N = 500, B = 200, A = 150, K = 10000, C = 510, P = 50;
+/*
+What we can use:
 
-    public static int est(Board board) {
-        int score = 0;
-        for (int i = 1; i <= 10; i++) {
-            for (int j = 1; j <= 9; j++) {
-                char piece = board.getPiece(i, j);
-                if (piece == '.')
-                    continue;
-                int value = 0;
-                if (piece == 'R' || piece == 'r')
-                    value = R;
-                else if (piece == 'N' || piece == 'n')
-                    value = N;
-                else if (piece == 'B' || piece == 'b')
-                    value = B;
-                else if (piece == 'A' || piece == 'a')
-                    value = A;
-                else if (piece == 'K' || piece == 'k')
-                    value = K;
-                else if (piece == 'C' || piece == 'c')
-                    value = C;
-                else
-                    value = P;
-                if (Character.isUpperCase(piece)) {
-                    score += value;
-                } else {
-                    score -= value;
-                }
-            }
-        }
-        return score;
-    }
+ZobristHash & TTtable
 
-    public static int pieceValue(char piece) {
-        if (piece == '.')
-            return 0;
-        char p = Character.toUpperCase(piece);
-        if (p == 'R')
-            return R;
-        if (p == 'N')
-            return N;
-        if (p == 'B')
-            return B;
-        if (p == 'A')
-            return A;
-        if (p == 'K')
-            return K;
-        if (p == 'C')
-            return C;
-        return P;
-    }
-}
+*/
 
-class MVVSort {
-    static void Sort(Board board, ArrayList<Move> moves) {
-        Collections.sort(moves, new Comparator<Move>() {
-            @Override
-            public int compare(Move m1, Move m2) {
-                char vic1 = board.getPiece(m1.getxf(), m1.getyf());
-                char att1 = board.getPiece(m1.getxi(), m1.getyi());
-                int score1 = Estimation.pieceValue(vic1) * 100 - Estimation.pieceValue(att1);
-
-                char vic2 = board.getPiece(m2.getxf(), m2.getyf());
-                char att2 = board.getPiece(m2.getxi(), m2.getyi());
-                int score2 = Estimation.pieceValue(vic2) * 100 - Estimation.pieceValue(att2);
-
-                return Integer.compare(score2, score1); // desc
-            }
-        });
-    }
-};
-
-class CCheck {
-    static boolean check(Board board) {
-        /*
-         * consider the board after oneside did the move, and the side now is the
-         * attackside
-         */
-        boolean movedSide = !board.getSide();
-        int[] kp = KingProtect.findKingPos(board, movedSide);
-        if (kp == null || KingProtect.isSquareAttacked(board, kp[0], kp[1]) || KingProtect.kingFacing(board))
-            return false;
-        else
-            return true;
-    };
-}
-
-public class HinatsuruAI {
-
-    static int Min = -1000000, Max = 1000000;
-    private Move bestMove = null;
-    private Move bannedMove = null;
-    private TTtable tt = null;
-    // TTtable move packing
-    private static final int TT_MOVE_UNKNOWN = -1;
-    // nodes counter for debug
-    private long nodeCount = 0L;
-
-    private ArrayList<Move> historyMoves;
-    private ArrayList<Boolean> historyIfCheck;
+public class HinatsuruAI extends SearchFrame {
 
     public HinatsuruAI() {
-        tt = new TTtable(1 << 20);
-        historyMoves = new ArrayList<>();
-        historyIfCheck = new ArrayList<>();
+        super();
     }
 
+    // 打包走法到整型，便于与 TT 最优着法对比/存储
     private static int packMove(Move m) {
-        if (m == null)
-            return TT_MOVE_UNKNOWN;
-        int xi = m.getxi() & 0x0F;
-        int yi = m.getyi() & 0x0F;
-        int xf = m.getxf() & 0x0F;
-        int yf = m.getyf() & 0x0F;
-        return (xi) | (yi << 4) | (xf << 8) | (yf << 12);
+        return (m.getxi() & 0xFF) << 24 | (m.getyi() & 0xFF) << 16 | (m.getxf() & 0xFF) << 8 | (m.getyf() & 0xFF);
     }
 
-    private static Move unpackMove(int packed) {
-        if (packed == TT_MOVE_UNKNOWN)
-            return null;
-        int xi = (packed) & 0x0F;
-        int yi = (packed >>> 4) & 0x0F;
-        int xf = (packed >>> 8) & 0x0F;
-        int yf = (packed >>> 12) & 0x0F;
-        return new Move(xi, yi, xf, yf);
-    }
-
-    //
-    private int quiescence(Board board, int alpha, int beta) {
+    private int minimax(Board board, int resdep, int alpha, int beta, boolean isRoot, Move firstMove) {
         nodeCount++;
-        // TT probe at qsearch depth 0
-        TTtable.Entry qEntry = tt.probe(board, 0);
-        if (qEntry != null) {
-            if (qEntry.flag == TTtable.FLAG_EXACT) {
-                return qEntry.score;
-            } else if (qEntry.flag == TTtable.FLAG_LOWERBOUND) {
-                alpha = Math.max(alpha, qEntry.score);
-            } else if (qEntry.flag == TTtable.FLAG_UPPERBOUND) {
-                beta = Math.min(beta, qEntry.score);
-            }
-            if (alpha >= beta)
-                return qEntry.score;
-        }
-        int stand = Estimation.est(board);
-        boolean side = board.getSide();
-        if (!side && alpha < stand)
-            alpha = stand;
-        if (side && beta > stand)
-            beta = stand;
-        if (alpha >= beta)
-            return stand;
-        ArrayList<Move> moves = board.getAllValidMoves();
-        ArrayList<Move> captures = new ArrayList<>();
-        for (Move m : moves) {
-            if (board.getPiece(m.getxf(), m.getyf()) != '.')
-                captures.add(m);
-        }
-        MVVSort.Sort(board, captures);
-        if (captures.isEmpty())
-            return stand;
-        int ret = stand;
-        for (Move move : captures) {
-            char originalPiece = board.getPiece(move.getxf(), move.getyf());
-            board.doMove(move);
-            if (!CCheck.check(board)) {
-                board.undoMove(move, originalPiece);
-                continue;
-            }
-            int val = quiescence(board, alpha, beta);
-            board.undoMove(move, originalPiece);
-            if (!side) {
-                ret = Math.max(ret, val);
-                alpha = Math.max(alpha, val);
-            } else {
-                ret = Math.min(ret, val);
-                beta = Math.min(beta, val);
-            }
-            if (alpha >= beta)
-                break;
-        }
-        // store quiescence result as EXACT at depth 0
-        tt.store(board, 0, ret, TTtable.FLAG_EXACT, TT_MOVE_UNKNOWN);
-        return ret;
-    }
+        int tryprobe = ttprobe(board, resdep, alpha, beta);
+        if (tryprobe != -1)
+            return tryprobe;
 
-    private ArrayList<Move> firstPossibleMoves(Board board) {
-        ArrayList<Move> candidateMoves = board.getAllPossibleMoves();
-        if (bannedMove == null)
-            return candidateMoves;
-        ArrayList<Move> moves = new ArrayList<>();
-        for (Move move : candidateMoves) {
-            if (move.equals(bannedMove))
-                continue;
-            moves.add(move);
-        }
-        if (moves.isEmpty()) {
-            return candidateMoves;
-        } else
-            return moves;
-    }
+        int orialpha = alpha, oribeta = beta;
+        if (resdep == 0)
+            return terminalSearch(board, alpha, beta);
 
-    private int minimax(Board board, int resdep, int alpha, int beta, boolean firstStep) {
-        nodeCount++;
-        int alphaOrig = alpha, betaOrig = beta;
-        // try to probe transposition table
-        TTtable.Entry entry = tt.probe(board, resdep);
-        if (entry != null) {
-            if (entry.flag == TTtable.FLAG_LOWERBOUND) {
-                alpha = Math.max(alpha, entry.score);
-            } else if (entry.flag == TTtable.FLAG_UPPERBOUND) {
-                beta = Math.min(beta, entry.score);
-            } else if (!firstStep) {
-                return entry.score;
-            }
-        }
-        if (entry != null && alpha >= beta && !firstStep) {
-            return entry.score;
-        }
-        int ttPackedMove = (entry != null) ? entry.movePacked : TT_MOVE_UNKNOWN;
-        //
-        if (resdep == 0) {
-            int ret = quiescence(board, alpha, beta);
-            tt.store(board, resdep, ret, TTtable.FLAG_EXACT, -1);
-            return ret;
-        }
-        if (board.gameOver())
-            return board.getSide() ? Max : Min;
-        boolean side = board.getSide();
-        ArrayList<Move> moves = firstStep ? firstPossibleMoves(board) : board.getAllValidMoves();
-        int ret = side ? Max : Min;
-        Move localBest = null;
-        if (firstStep)
-            bestMove = moves.get(0);
-        // MVV-LVA ordering: sort moves so captures are searched first (victim high,
-        // attacker low)
-        MVVSort.Sort(board, moves);
-        // TT move to front if available
-        if (ttPackedMove != TT_MOVE_UNKNOWN) {
-            Move ttMove = unpackMove(ttPackedMove);
-            if (ttMove != null) {
-                for (int i = 0; i < moves.size(); i++) {
-                    Move m = moves.get(i);
-                    if (m.getxi() == ttMove.getxi() && m.getyi() == ttMove.getyi()
-                            && m.getxf() == ttMove.getxf() && m.getyf() == ttMove.getyf()) {
-                        if (i != 0)
-                            Collections.swap(moves, 0, i);
-                        break;
+        ArrayList<Move> moves = isRoot ? getRootLegalMoves(board) : board.getAllValidMoves();
+        // 历史表 + MVV 排序
+        MoveOrder.complexSort(board, moves, history);
+        // 将 TT 最优着法置前尝试（若存在）
+        TTtable.Entry hinted = tt.probe(board, resdep);
+        if (hinted != null && hinted.movePacked != -1 && !moves.isEmpty()) {
+            for (int i = 0; i < moves.size(); i++) {
+                if (packMove(moves.get(i)) == hinted.movePacked) {
+                    if (i != 0) {
+                        Move tmp = moves.get(0);
+                        moves.set(0, moves.get(i));
+                        moves.set(i, tmp);
                     }
+                    break;
                 }
             }
         }
-        boolean firstMoveInNode = true;
+
+        boolean side = board.getSide();
+        int ret = side ? Estimation.INF : -Estimation.INF;
+        boolean anySearched = false;
+        boolean firstTried = false;
+        int bestPacked = -1;
+
         for (Move move : moves) {
+            if (!Legal.fastCheckLegal(board, move))
+                continue;
             char originalPiece = board.getPiece(move.getxf(), move.getyf());
             board.doMove(move);
-            if (!firstStep) {
-                if (!CCheck.check(board)) {
-                    board.undoMove(move, originalPiece);
-                    continue;
-                }
-            }
-            int val;
-            try {
-                if (firstMoveInNode) {
-                    val = minimax(board, resdep - 1, alpha, beta, false);
-                } else {
-                    // PVS: zero-window search first
-                    val = minimax(board, resdep - 1, alpha, alpha + 1, false);
-                    if (val > alpha && val < beta) {
-                        val = minimax(board, resdep - 1, alpha, beta, false);
-                    }
-                }
-            } finally {
-                board.undoMove(move, originalPiece);
-            }
-            firstMoveInNode = false;
-            if (!side) {
-                if (firstStep && val > ret)
-                    bestMove = move;
-                ret = Math.max(val, ret);
-                alpha = Math.max(alpha, ret);
-                if (ret == val)
-                    localBest = move;
+
+            int score;
+            if (!firstTried) {
+                score = minimax(board, resdep - 1, alpha, beta, false, null);
             } else {
-                if (firstStep && val < ret)
-                    bestMove = move;
-                ret = Math.min(val, ret);
-                beta = Math.min(beta, ret);
-                if (ret == val)
-                    localBest = move;
+                if (!side) { // maximizing
+                    score = minimax(board, resdep - 1, alpha, alpha + 1, false, null);
+                    if (score > alpha && score < beta)
+                        score = minimax(board, resdep - 1, alpha, beta, false, null);
+                } else { // minimizing
+                    score = minimax(board, resdep - 1, beta - 1, beta, false, null);
+                    if (score < beta && score > alpha)
+                        score = minimax(board, resdep - 1, alpha, beta, false, null);
+                }
             }
-            if (alpha >= beta)
+
+            board.undoMove(move, originalPiece);
+            anySearched = true;
+            firstTried = true;
+
+            if (side) { // minimizing
+                if (score < ret) {
+                    ret = score;
+                    if (isRoot && firstMove != null)
+                        firstMove.Copy(move);
+                    bestPacked = packMove(move);
+                }
+                beta = Math.min(beta, ret);
+            } else { // maximizing
+                if (score > ret) {
+                    ret = score;
+                    if (isRoot && firstMove != null)
+                        firstMove.Copy(move);
+                    bestPacked = packMove(move);
+                }
+                alpha = Math.max(alpha, ret);
+            }
+
+            if (alpha >= beta) {
+                if (originalPiece == '.') {
+                    int bonus = (resdep + 1) * (resdep + 1);
+                    history.add(board, move, bonus);
+                }
                 break;
+            }
         }
-        // using the subtree strict alpha and beta to store in TTtable
-        if (ret <= alphaOrig) {
-            tt.store(board, resdep, ret, TTtable.FLAG_UPPERBOUND, packMove(localBest));
-        } else if (ret >= betaOrig) {
-            tt.store(board, resdep, ret, TTtable.FLAG_LOWERBOUND, packMove(localBest));
-        } else {
-            tt.store(board, resdep, ret, TTtable.FLAG_EXACT, packMove(localBest));
-        }
+
+        if (!anySearched)
+            return terminalSearch(board, alpha, beta);
+
+        byte flag;
+        if (ret <= orialpha)
+            flag = TTtable.FLAG_UPPERBOUND;
+        else if (ret >= oribeta)
+            flag = TTtable.FLAG_LOWERBOUND;
+        else
+            flag = TTtable.FLAG_EXACT;
+        tt.store(board, resdep, ret, flag, bestPacked);
         return ret;
     }
 
     public Move makeMove(Board board) {
-        this.bestMove = null;
-        Board copyBoard = new Board(board.getBoard(), board.getSide());
-        // We try to find the move should be banned there
-        bannedMove = null;
-        if (historyMoves.size() > 2) {
-            int top = historyMoves.size() - 1;
-            if (historyIfCheck.get(top) && historyIfCheck.get(top - 1)) {
-                Move tMove = historyMoves.get(top), ttMove = historyMoves.get(top - 1);
-                if (tMove.getxf() == ttMove.getxi() && tMove.getyf() == ttMove.getyi()) {
-                    bannedMove = tMove;// maybe this move doesnt exist in this step, but
+        nodeCount = 0;
+        // 历史表轻度衰减，保持稳定性
+        history.decay(1);
+        Move bestMove = new Move(0, 0, 0, 0);
+        int maxDepth = 6;
+        int bestScore = 0;
+
+        int lastScore = Estimation.est(board);
+        final int INF = Estimation.INF;
+
+        for (int depth = 1; depth <= maxDepth; depth++) {
+            Move currentBest = new Move(0, 0, 0, 0);
+            int alpha, beta;
+            if (depth == 1) {
+                alpha = -INF;
+                beta = INF;
+                lastScore = minimax(board, depth, alpha, beta, true, currentBest);
+            } else {
+                int delta = 50;
+                alpha = Math.max(lastScore - delta, -INF);
+                beta = Math.min(lastScore + delta, INF);
+                while (true) {
+                    int score = minimax(board, depth, alpha, beta, true, currentBest);
+                    if (score <= alpha) {
+                        if (alpha <= -INF + 1) {
+                            lastScore = score;
+                            break;
+                        }
+                        delta <<= 1;
+                        alpha = Math.max(score - delta, -INF);
+                    } else if (score >= beta) {
+                        if (beta >= INF - 1) {
+                            lastScore = score;
+                            break;
+                        }
+                        delta <<= 1;
+                        beta = Math.min(score + delta, INF);
+                    } else {
+                        lastScore = score;
+                        break;
+                    }
                 }
             }
-        }
-        // reset node counter
-        this.nodeCount = 0L;
-        int guess = 0;
-        for (int dep = 2; dep <= 6; dep += 2) {
-            int window = 50;
-            int a = Math.max(Min, guess - window);
-            int b = Math.min(Max, guess + window);
-            int score = minimax(copyBoard, dep, a, b, dep == 6);
-            if (score <= a) {
-                score = minimax(copyBoard, dep, Min, b, dep == 6);
-            } else if (score >= b) {
-                score = minimax(copyBoard, dep, a, Max, dep == 6);
+
+            if (!(currentBest.getxi() == 0 && currentBest.getyi() == 0 && currentBest.getxf() == 0
+                    && currentBest.getyf() == 0)) {
+                bestMove.Copy(currentBest);
+                bestScore = lastScore;
             }
-            guess = score;
         }
-        System.out.println("Nodes: " + nodeCount);
-        // update the history AI move informations
-        copyBoard.doMove(bestMove);
-        historyMoves.add(bestMove);
-        int[] oppKP = KingProtect.findKingPos(copyBoard, copyBoard.getSide());
-        historyIfCheck.add(KingProtect.isSquareAttacked(copyBoard, oppKP[0], oppKP[1]));
-        //
+        System.out.println("Best score: " + bestScore + ", Nodes searched: " + nodeCount);
         return bestMove;
     }
 }
