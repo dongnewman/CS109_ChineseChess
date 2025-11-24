@@ -3,17 +3,23 @@ package com.chinesechess;
 import javax.swing.SwingUtilities;
 
 import com.Model.InGame.playersAI.Zobrist;
-
+import com.Controller.SettingsSession;
 // import com.Controller.InitAll;
 import com.GUI.Menu;
 import com.Model.Account.AccountSession;
+import com.Controller.SettingsSession;
 
 public class Main {
+    public static SettingsSession settingsSession;
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
         // 初始化所有必要组件
         AccountSession.clear();
+        settingsSession = new SettingsSession();
+        if(!settingsSession.settingsInit()) {
+            System.out.println("Settings Init has some problem");
+        }
 
         // 固定 Zobrist 的种子，使 Zobrist 哈希在不同运行间可复现
         // 如果你想使用其他种子，请修改这里的常量值

@@ -11,13 +11,8 @@ import javax.swing.JOptionPane;
 
 public class HistoryGame {
     public HistoryGame() {
-        // debug
-        System.out.println("HistoryGame will to be start.");
-        //
         if (!AccountSession.isLoggedIn()) {
-            /*
-             * there should be some GUI prompt
-             */
+            JOptionPane.showMessageDialog(null, "读取历史游戏需要登录账号，请先登录。");
             System.out.println("User not logged in. Cannot read history game.");
             return;
         }
@@ -54,6 +49,7 @@ public class HistoryGame {
             return;
         }
 
+        // 正常开始
         try {
             new InitGame(hInfo.getBoard(), hInfo.getType());
         } catch (Exception e) {

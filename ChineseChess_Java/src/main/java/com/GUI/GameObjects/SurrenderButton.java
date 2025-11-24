@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import com.GUI.Menu;
+import com.chinesechess.Main;
 
 public class SurrenderButton {
     private String file_path = "src\\main\\resources\\InGameIcons\\surrender.png";
@@ -77,6 +78,13 @@ public class SurrenderButton {
     }
 
     private void Surrender() {
+        if(Main.settingsSession.isDisableSurrender()) {
+            JOptionPane.showMessageDialog(null,
+                    "投降功能已被禁用！",
+                    "无法投降",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         // 弹出确认对话框
         String[] options = {"再战一会", "我要投降"};
         int choice = JOptionPane.showOptionDialog(null,
@@ -91,17 +99,7 @@ public class SurrenderButton {
         if (choice == 1) { // "我要投降"
             if (parentFrame != null) {
                 parentFrame.dispose();
-                // 接下来就是调用DoSurrender的方法了
-                // 交给你来写了
-                //
-                //
-                //
-                //
-                //
-                //
-                //
-                // 记得写完之后在这里调用！
-                // 记得在DoSurrender中使用EndGameDialog
+                
                 new EndGameDialog("黑方", parentFrame);
             }
             // 显示菜单界面
