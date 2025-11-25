@@ -60,4 +60,15 @@ public class BoxSession {
         }
         InGameObjects.plate.repaint();
     }
+
+    public void clearAllBlueBoxes() {
+        for (int i = 1; i <= 10; i++) {
+            for (int j = 1; j <= 9; j++) {
+                if (blueBoxArray[i][j] != null) {
+                    blueBoxArray[i][j] = null;
+                }
+            }
+        }
+        InGameObjects.plate.repaint();
+    }
 }

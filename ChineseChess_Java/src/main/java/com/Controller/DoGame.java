@@ -3,6 +3,7 @@ package com.Controller;
 import com.GUI.GameObjects.GameClick;
 import com.GUI.GameObjects.Piece.MovePiece;
 import com.GUI.GameObjects.Piece.RemovePiece;
+import com.GUI.GameObjects.Piece.UndoMove;
 import com.GUI.GameObjects.SideIcon;
 import com.GUI.GameObjects.EndGameDialog;
 import com.Model.InGame.playroom.*;
@@ -52,7 +53,6 @@ public class DoGame {
         //
         System.out.println("In DoGame: Waiting for player move...");
         //
-        boolean side = board.getSide();
         Move move = new Move(0, 0, 0, 0);
         while (true) {
             // 等待第一次点击（选择棋子）
@@ -63,7 +63,7 @@ public class DoGame {
                 // playroom definition coordination
                 char piece = board.getPiece(11 - posi[0], posi[1]);
                 // 检查点击位置是否有棋子，且是否为己方棋子
-                if (piece == '.' || Character.isLowerCase(piece) != side) {
+                if (piece == '.' || Character.isLowerCase(piece) != board.getSide()) {
                     continue;
                 }
                 move.setxi(11 - posi[0]);
@@ -132,6 +132,10 @@ public class DoGame {
         gameclick = new GameClick(InGameObjects.plate);
         SideIcon sideIcon = new SideIcon(
                 (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(InGameObjects.plate));
+        InGameObjects.sideIcon = sideIcon;
+        
+        InGameObjects.undoMove = new UndoMove();
+
         while (true) {
             if (board.getSide()) {
                 sideIcon.setBlackSideIcon();
@@ -150,6 +154,9 @@ public class DoGame {
             }
             Move move = getMove();
             InGameObjects.messageLabel.setDefault();
+            
+            InGameObjects.undoMove.save();
+
             animateCapture(removetool, move);
             board.doMove(move);
             // UI animation
@@ -181,7 +188,12 @@ public class DoGame {
         gameclick = new GameClick(InGameObjects.plate);
         SideIcon sideIcon = new SideIcon(
                 (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(InGameObjects.plate));
+        InGameObjects.sideIcon = sideIcon;
+
         HinatsuruAI AI = new HinatsuruAI();
+        
+        InGameObjects.undoMove = new UndoMove();
+
         while (true) {
             if (board.gameOver()) {
                 // the UI is waiting for implementation
@@ -203,6 +215,9 @@ public class DoGame {
                 move = getMove();
             }
             InGameObjects.messageLabel.setDefault();
+            
+            InGameObjects.undoMove.save();
+
             animateCapture(removetool, move);
             board.doMove(move);
             // UI animation

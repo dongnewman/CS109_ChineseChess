@@ -77,10 +77,19 @@ public class UndoButton {
     }
 
     private void Surrender() {
+        // 检查是否可以Undo
+        if (com.Controller.InGameObjects.undoMove == null || !com.Controller.InGameObjects.undoMove.isCanUndo()) {
+            JOptionPane.showMessageDialog(parentFrame, 
+                "无法悔棋：只能悔棋一次或尚未走棋。", 
+                "提示", 
+                JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
         // 弹出确认对话框
         String[] options = {"取消", "确认"};
         int choice = JOptionPane.showOptionDialog(null,
-                "你确定要Undo吗？",
+                "你确定要Undo吗？\n(注意：每步棋只能悔棋一次)",
                 "Undo确认",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -91,15 +100,9 @@ public class UndoButton {
         if (choice == 1) { // "确认"
             if (parentFrame != null) {
                 // 接下来就是调用Undo的方法了
-                // 交给你来写了
-                //
-                //
-                //
-                //
-                //
-                //
-                //
-                // 记得写完之后在这里调用！
+                if (com.Controller.InGameObjects.undoMove != null) {
+                    com.Controller.InGameObjects.undoMove.undo();
+                }
             }
         }
         // 否则什么都不做，返回游戏

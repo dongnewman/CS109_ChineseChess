@@ -33,8 +33,6 @@ public class PiecesSession {
         return piecesArray[row][col];
     }
 
-
-
     // 记录被吃掉的棋子
     public int addRemovedPiece(Pieces piece, boolean isBlack) {
         if (isBlack) {
@@ -46,5 +44,45 @@ public class PiecesSession {
             RedRemovedPieces[redRemovedCount++] = piece;
             return redRemovedCount - 1;
         }
+    }
+
+    public Pieces[][] getPiecesArray() {
+        return piecesArray;
+    }
+
+    public void setPiecesArray(Pieces[][] piecesArray) {
+        this.piecesArray = piecesArray;
+    }
+
+    public Pieces[] getBlackRemovedPieces() {
+        return BlackRemovedPieces;
+    }
+
+    public void setBlackRemovedPieces(Pieces[] blackRemovedPieces) {
+        BlackRemovedPieces = blackRemovedPieces;
+    }
+
+    public Pieces[] getRedRemovedPieces() {
+        return RedRemovedPieces;
+    }
+
+    public void setRedRemovedPieces(Pieces[] redRemovedPieces) {
+        RedRemovedPieces = redRemovedPieces;
+    }
+
+    public int getBlackRemovedCount() {
+        return blackRemovedCount;
+    }
+
+    public void setBlackRemovedCount(int blackRemovedCount) {
+        this.blackRemovedCount = blackRemovedCount;
+    }
+
+    public int getRedRemovedCount() {
+        return redRemovedCount;
+    }
+
+    public void setRedRemovedCount(int redRemovedCount) {
+        this.redRemovedCount = redRemovedCount;
     }
 }

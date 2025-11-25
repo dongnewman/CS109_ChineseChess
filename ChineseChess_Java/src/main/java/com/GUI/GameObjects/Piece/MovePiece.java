@@ -135,6 +135,7 @@ public class MovePiece {
         final JLabel movingLabel = new JLabel(new ImageIcon(piece.getImage()));
         movingLabel.setSize(pieceWidth, pieceHeight);
         movingLabel.setOpaque(false);
+        movingLabel.setName("RemovedPiece");
         int startDrawX = startX - pieceWidth / 2 + boardOrigin.x;
         int startDrawY = startY - pieceHeight / 2 + boardOrigin.y;
         movingLabel.setLocation(startDrawX, startDrawY);

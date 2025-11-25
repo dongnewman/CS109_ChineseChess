@@ -130,6 +130,22 @@ public class Board {
         board[r][c] = p;
     }
 
+    public char[][] getBoardArray() {
+        return board;
+    }
+
+    public void setBoardArray(char[][] newBoard) {
+        for (int i = 0; i <= 10; i++) {
+            for (int j = 0; j <= 9; j++) {
+                board[i][j] = newBoard[i][j];
+            }
+        }
+    }
+
+    public void setSide(boolean side) {
+        this.side = side;
+    }
+
     // other methods
     public void printboard() {// for test
         System.out.print("  ");
