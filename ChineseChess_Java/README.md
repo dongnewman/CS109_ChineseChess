@@ -90,5 +90,3 @@ AI 位于 `com.Model.InGame.playersAI` 包中，主要由 `HinatsuruAI` 类实�
         *   清除所有选中的高亮框。
     *   **一次性限制**：`UndoMove` 维护一个 `canUndo` 标志。`save()` 时设为 `true`，`undo()` 执行后设为 `false`，从而实现只能悔棋一次的限制。
 
-## 📝 待办事项 (TODO)
-1.  [x] 实现 Undo (悔棋) 按钮的具体逻辑。
