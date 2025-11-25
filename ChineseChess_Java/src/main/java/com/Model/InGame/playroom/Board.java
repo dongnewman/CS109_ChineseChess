@@ -6,7 +6,7 @@ import com.Controller.InGameObjects;
 
 public class Board {
     private char board[][];
-    boolean side;
+    boolean side; // false for red, true for black
     private long zobristKey;
 
     // constructor: copy from given array (expects at least 11x10)

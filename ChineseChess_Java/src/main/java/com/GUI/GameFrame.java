@@ -297,7 +297,6 @@ public class GameFrame {
         }
         // 通知其它线程界面已初始化完成
 
-        
         // 棋盘和计时器放在centerPanel
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
@@ -335,13 +334,7 @@ public class GameFrame {
         // 设置Undo按钮
         UndoButton undobutton = new UndoButton(gameFrame);
         // 设置提示框
-        JLabel label = new JLabel("<html><div style='width:50px;'>欢迎来到中国象棋游戏</div></html>", SwingConstants.CENTER);
-        gameFrame.add(label, BorderLayout.EAST);
-        // 设置Hinatsuru
-        if(InGameObjects.gametype == 1) {
-            Hinatsuru h = new Hinatsuru(gameFrame);
-        }
-        
+        MessageLabel messageLabel = new MessageLabel(gameFrame.getLayeredPane());
 
         gameFrame.setVisible(true);
 
@@ -359,6 +352,40 @@ public class GameFrame {
         } catch (Exception e) {
             System.err.println("无法countDown InGameObjects.uiReadyLatch: " + e.getMessage());
         }
+
+        
+        new Thread(() -> {
+            try {
+                if (InGameObjects.gametype == 1) {
+                    // 设置Hinatsuru
+                    Hinatsuru h = new Hinatsuru(gameFrame);
+                    messageLabel.setMessage("Ciallo~~(∠・ω< )⌒★");
+                    // 播放Ciallo.mav
+                    try {
+                        javax.sound.sampled.AudioInputStream audioInputStream = javax.sound.sampled.AudioSystem.getAudioInputStream(new java.io.File("src/main/resources/Hinatsuru/Callio.wav"));
+                        javax.sound.sampled.Clip clip = javax.sound.sampled.AudioSystem.getClip();
+                        clip.open(audioInputStream);
+                        clip.start();
+                    } catch (Exception ex) {
+                        System.err.println("播放音频失败: " + ex.getMessage());
+                    }
+
+                    Thread.sleep(2000);
+                    messageLabel.setMessage("I'm Hinatsuru, your AI opponent!");
+                    Thread.sleep(2000);
+                    messageLabel.setMessage("Let's have a fun game together!");
+                    Thread.sleep(2000);
+                    messageLabel.setDefault();
+                } else {
+                    messageLabel.setMessage("欢迎来到中国象棋游戏");
+                    Thread.sleep(1500);
+                    messageLabel.setDefault();
+                }
+            } catch (InterruptedException e) {
+                // 忽略
+            }
+            InGameObjects.messageLabel = messageLabel;
+        }).start();
 
         // 如果设置为自动开始倒计时，则初始化后立刻启动
         if (com.chinesechess.Main.settingsSession != null && com.chinesechess.Main.settingsSession.isStartTimer()) {
