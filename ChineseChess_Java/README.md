@@ -1,7 +1,7 @@
 
 # Chinese Chess (Java Implementation)
 
-这是一个基于 Java Swing 开发的中国象棋游戏，支持人人对战 (P2P) 和人机对战 (AI) 模式，并包含账户系统和历史记录保存功能。
+这是一个基于 Java Swing 开发的中国象棋游戏，支持双人对战 (P2P) 和人机对战 (AI) 模式，并包含账户系统和历史记录保存功能。
 
 ## 📁 项目结构
 
