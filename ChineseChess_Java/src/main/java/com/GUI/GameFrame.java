@@ -27,9 +27,12 @@ import com.GUI.GameObjects.Piece.*;
 import com.GUI.GameObjects.*;
 
 /**
- * 游戏界面
+ * 游戏主界面类 GameFrame
+ * 负责创建和管理游戏的主窗口，包括棋盘背景、棋子显示、菜单栏以及各种游戏交互组件。
  * 
  * 使用示例:
+ * GameFrame frame = new GameFrame();
+ * frame.show();
  */
 public class GameFrame {
     private BufferedImage boardImage;
@@ -40,6 +43,10 @@ public class GameFrame {
             + "Board.jpg";
     private JFrame gameFrame;
 
+    /**
+     * 构造函数
+     * 初始化游戏窗口、布局、背景图片以及各种监听器。
+     */
     public GameFrame() {
         // 初始化游戏界面
         gameFrame = new JFrame();

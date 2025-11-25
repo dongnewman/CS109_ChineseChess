@@ -11,6 +11,16 @@ ZobristHash & TTtable
 
 */
 
+/**
+ * HinatsuruAI (雏鹤 AI)
+ * 实现了基于 Alpha-Beta 剪枝的 Minimax 算法的中国象棋 AI。
+ * 
+ * 主要特性：
+ * 1. Alpha-Beta 剪枝：减少搜索节点数。
+ * 2. 置换表 (Transposition Table, TT)：缓存已搜索局面的结果，避免重复计算。
+ * 3. 历史启发 (History Heuristic)：对走法进行排序，优先搜索历史上表现好的走法，提高剪枝效率。
+ * 4. 迭代加深 (Iterative Deepening)：在 SearchFrame 中实现（本类继承自 SearchFrame）。
+ */
 public class HinatsuruAI extends SearchFrame {
 
     public HinatsuruAI() {
@@ -22,18 +32,31 @@ public class HinatsuruAI extends SearchFrame {
         return (m.getxi() & 0xFF) << 24 | (m.getyi() & 0xFF) << 16 | (m.getxf() & 0xFF) << 8 | (m.getyf() & 0xFF);
     }
 
+    /**
+     * Minimax 搜索算法核心实现
+     * @param board 当前棋盘状态
+     * @param resdep 剩余搜索深度
+     * @param alpha Alpha 值（当前层最大下界）
+     * @param beta Beta 值（当前层最小上界）
+     * @param isRoot 是否为根节点
+     * @param firstMove 用于回传根节点的最佳走法
+     * @return 当前局面的评分
+     */
     private int minimax(Board board, int resdep, int alpha, int beta, boolean isRoot, Move firstMove) {
         nodeCount++;
+        // 尝试查询置换表
         int tryprobe = ttprobe(board, resdep, alpha, beta);
         if (tryprobe != -1)
             return tryprobe;
 
         int orialpha = alpha, oribeta = beta;
+        // 到达叶子节点或搜索深度耗尽，进行静态局面评估
         if (resdep == 0)
             return terminalSearch(board, alpha, beta);
 
+        // 生成所有合法走法
         ArrayList<Move> moves = isRoot ? getRootLegalMoves(board) : board.getAllValidMoves();
-        // 历史表 + MVV 排序
+        // 历史表 + MVV 排序，优化搜索顺序
         MoveOrder.complexSort(board, moves, history);
         // 将 TT 最优着法置前尝试（若存在）
         TTtable.Entry hinted = tt.probe(board, resdep);
@@ -63,6 +86,8 @@ public class HinatsuruAI extends SearchFrame {
             board.doMove(move);
 
             int score;
+            // PVS (Principal Variation Search) 逻辑：
+            // 对第一个节点进行全窗口搜索，后续节点先进行零窗口搜索 (Null Window Search)
             if (!firstTried) {
                 score = minimax(board, resdep - 1, alpha, beta, false, null);
             } else {

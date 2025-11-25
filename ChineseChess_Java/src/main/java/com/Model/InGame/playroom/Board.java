@@ -4,12 +4,26 @@ import java.util.ArrayList;
 
 import com.Controller.InGameObjects;
 
+/**
+ * 棋盘类 Board
+ * 维护中国象棋的棋盘状态，包括棋子位置、当前走棋方、Zobrist 哈希值等。
+ * 提供棋盘操作的基本方法，如获取棋子、移动棋子、撤销移动等。
+ */
 public class Board {
+    /**
+     * 棋盘数组，11x10 大小
+     * 索引 1-10 为行，1-9 为列。0 行和 0 列不使用（或作为边界）。
+     * 字符表示棋子：大写为红方，小写为黑方，'.' 表示空位。
+     */
     private char board[][];
     boolean side; // false for red, true for black
     private long zobristKey;
 
-    // constructor: copy from given array (expects at least 11x10)
+    /**
+     * 构造函数：从给定的二维数组复制棋盘状态
+     * @param b 初始棋盘数组
+     * @param side 当前走棋方 (false: 红方, true: 黑方)
+     */
     public Board(char b[][], boolean side) {
         this.side = side;
         board = new char[11][10];
@@ -23,6 +37,10 @@ public class Board {
         InGameObjects.board = this;
     }
 
+    /**
+     * 默认构造函数
+     * 初始化标准开局的棋盘状态。
+     */
     public Board() {
         board = new char[11][10];
         // initialize empty board using '.' as empty
@@ -71,12 +89,22 @@ public class Board {
     }
 
     // getter
+    /**
+     * 获取指定位置的棋子
+     * @param r 行坐标 (1-10)
+     * @param c 列坐标 (1-9)
+     * @return 棋子字符，越界返回 0
+     */
     public char getPiece(int r, int c) {
         if (r < 0 || r > 10 || c < 0 || c > 9)
             return 0;
         return board[r][c];
     }
 
+    /**
+     * 获取棋盘数组的深拷贝
+     * @return 棋盘字符数组
+     */
     public char[][] getBoard() {
         char[][] b = new char[11][10];// deep copy
         for (int i = 0; i <= 10; i++) {
