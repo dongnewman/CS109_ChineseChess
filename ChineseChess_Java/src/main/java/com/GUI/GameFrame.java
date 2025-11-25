@@ -353,16 +353,17 @@ public class GameFrame {
             System.err.println("无法countDown InGameObjects.uiReadyLatch: " + e.getMessage());
         }
 
-        
         new Thread(() -> {
             try {
                 if (InGameObjects.gametype == 1) {
                     // 设置Hinatsuru
                     Hinatsuru h = new Hinatsuru(gameFrame);
+                    Thread.sleep(2000);
                     messageLabel.setMessage("Ciallo~~(∠・ω< )⌒★");
                     // 播放Ciallo.mav
                     try {
-                        javax.sound.sampled.AudioInputStream audioInputStream = javax.sound.sampled.AudioSystem.getAudioInputStream(new java.io.File("src/main/resources/Hinatsuru/Callio.wav"));
+                        javax.sound.sampled.AudioInputStream audioInputStream = javax.sound.sampled.AudioSystem
+                                .getAudioInputStream(new java.io.File("src/main/resources/Hinatsuru/Callio.wav"));
                         javax.sound.sampled.Clip clip = javax.sound.sampled.AudioSystem.getClip();
                         clip.open(audioInputStream);
                         clip.start();
@@ -378,7 +379,7 @@ public class GameFrame {
                     messageLabel.setDefault();
                 } else {
                     messageLabel.setMessage("欢迎来到中国象棋游戏");
-                    Thread.sleep(1500);
+                    Thread.sleep(2000);
                     messageLabel.setDefault();
                 }
             } catch (InterruptedException e) {

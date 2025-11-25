@@ -81,7 +81,6 @@ public class DoGame {
         SideIcon sideIcon = new SideIcon(
                 (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(InGameObjects.plate));
         while (true) {
-            InGameObjects.messageLabel.setDefault();
             if (board.getSide()) {
                 sideIcon.setBlackSideIcon();
             } else {
@@ -98,6 +97,7 @@ public class DoGame {
                 break;
             }
             Move move = getMove();
+            InGameObjects.messageLabel.setDefault();
             animateCapture(removetool, move);
             board.doMove(move);
             // UI animation
@@ -108,7 +108,6 @@ public class DoGame {
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
             InGameObjects.countdownTimer.changeSide();
-            
             if (Legal.isInCheck(board)) {
                 InGameObjects.messageLabel.setCheck();
             }
@@ -144,6 +143,7 @@ public class DoGame {
             } else {
                 move = getMove();
             }
+            InGameObjects.messageLabel.setDefault();
             animateCapture(removetool, move);
             board.doMove(move);
             // UI animation
