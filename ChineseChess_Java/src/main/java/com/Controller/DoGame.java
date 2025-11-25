@@ -81,6 +81,7 @@ public class DoGame {
         SideIcon sideIcon = new SideIcon(
                 (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(InGameObjects.plate));
         while (true) {
+            InGameObjects.messageLabel.setDefault();
             if (board.getSide()) {
                 sideIcon.setBlackSideIcon();
             } else {
@@ -107,12 +108,17 @@ public class DoGame {
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
             InGameObjects.countdownTimer.changeSide();
+            
+            if (Legal.isInCheck(board)) {
+                InGameObjects.messageLabel.setCheck();
+            }
         }
     }
 
     public void gameWithAI() {
         //
         System.out.println("Single Game started!");
+        InGameObjects.messageLabel.setDefault();
         //
         MovePiece movetool = new MovePiece(InGameObjects.plate, InGameObjects.piecesSession);
         RemovePiece removetool = new RemovePiece(InGameObjects.piecesSession);
@@ -148,6 +154,9 @@ public class DoGame {
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
             InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
             InGameObjects.countdownTimer.changeSide();
+            if (Legal.isInCheck(board)) {
+                InGameObjects.messageLabel.setCheck();
+            }
         }
     }
 }
