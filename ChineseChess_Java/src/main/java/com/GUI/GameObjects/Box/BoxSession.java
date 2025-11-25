@@ -49,5 +49,15 @@ public class BoxSession {
         }
         return null;
     }
-    
+
+    public void clearAllRedBoxes() {
+        for (int i = 1; i <= 10; i++) {
+            for (int j = 1; j <= 9; j++) {
+                if (redBoxArray[i][j] != null) {
+                    redBoxArray[i][j] = null;
+                }
+            }
+        }
+        InGameObjects.plate.repaint();
+    }
 }

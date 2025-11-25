@@ -44,7 +44,7 @@ public class MessageLabel {
 
     public void setCheck() {
         String side;
-        if(InGameObjects.board.getSide()) {
+        if(!InGameObjects.board.getSide()) {
             side = "黑方";
         } else {
             side = "红方";

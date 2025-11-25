@@ -34,10 +34,13 @@ public class PieceProtect {
     }
 
     public static boolean isAttacked(Board board, int x, int y) {
+        return isAttacked(board, x, y, board.getSide());
+    }
+
+    public static boolean isAttacked(Board board, int x, int y, boolean attacker) {
         // We dont consider the king facing attack here
         if (x < 1 || x > 10 || y < 1 || y > 9)
             return false;
-        boolean attacker = board.getSide();
         // pawn attacks
         if (!attacker) {
             if (x > 1 && board.getPiece(x - 1, y) == 'P')

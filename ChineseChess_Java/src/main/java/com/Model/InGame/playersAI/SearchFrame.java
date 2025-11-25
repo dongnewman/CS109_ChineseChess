@@ -38,7 +38,7 @@ public class SearchFrame {
         board.doMove(move);
         boolean side = board.getSide();
         int[] kingPos = PieceProtect.findKingPos(board, side);
-        boolean isCheck = PieceProtect.isAttacked(board, kingPos[0], kingPos[1]);
+        boolean isCheck = PieceProtect.isAttacked(board, kingPos[0], kingPos[1], !side);
         boolean isAtePiece = (originalPiece != '.');
         History.add(new checkMove(move, isCheck, isAtePiece));
         board.undoMove(move, originalPiece);

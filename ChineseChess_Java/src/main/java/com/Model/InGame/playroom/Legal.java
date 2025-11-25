@@ -48,14 +48,14 @@ public final class Legal extends PieceProtect {
         char originalPiece = board.getPiece(move.getxf(), move.getyf());
         board.doMove(move);
         int[] kingPos = findKingPos(board, side);
-        boolean attacked = (isAttacked(board, kingPos[0], kingPos[1]) || kingFacing(board));
+        boolean attacked = (isAttacked(board, kingPos[0], kingPos[1], board.getSide()) || kingFacing(board));
         board.undoMove(move, originalPiece);
         return !attacked;
     }
 
     public static boolean isInCheck(Board board) {
         int[] kingPos = findKingPos(board, board.getSide());
-        return isAttacked(board, kingPos[0], kingPos[1]);
+        return isAttacked(board, kingPos[0], kingPos[1], !board.getSide());
         // In check dont need to check kingfacing
     }
 }

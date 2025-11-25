@@ -17,6 +17,17 @@ public class DoGame {
         board = initialBoard;
     }
 
+    private void showLegalMoves(int boardRow, int boardCol) {
+        java.util.ArrayList<Move> moves = board.getAllLegalMoves();
+        for (Move m : moves) {
+            if (m.getxi() == boardRow && m.getyi() == boardCol) {
+                int uiRow = 11 - m.getxf();
+                int uiCol = m.getyf();
+                InGameObjects.redBoxSession.setRedBox(uiRow, uiCol);
+            }
+        }
+    }
+
     private Move getMove() {
         //
         System.out.println("In DoGame: Waiting for player move...");
@@ -37,19 +48,24 @@ public class DoGame {
                 move.setyi(posi[1]);
                 //
                 InGameObjects.blueBoxSession.setBlueBox(posi[0], posi[1]);
+                showLegalMoves(11 - posi[0], posi[1]);
                 while (true) {
                     int[] posf = gameclick.waitForClick();
                     if (posf[0] == 0 && posf[1] == 0) {
                         InGameObjects.blueBoxSession.removeBlueBox(posi[0], posi[1]);
+                        InGameObjects.redBoxSession.clearAllRedBoxes();
                         break;
                     } else {
                         // playroom definition coordination
                         move.setxf(11 - posf[0]);
                         move.setyf(posf[1]);
                         if (board.isLegalMove(move)) {
+                            InGameObjects.redBoxSession.clearAllRedBoxes();
+                            InGameObjects.redBoxSession.setRedBox(11 - move.getxf(), move.getyf());
                             return move;
                         } else {
                             InGameObjects.blueBoxSession.removeBlueBox(posi[0], posi[1]);
+                            InGameObjects.redBoxSession.clearAllRedBoxes();
                             break;
                         }
                     }
@@ -105,8 +121,13 @@ public class DoGame {
             move.setxi(11 - move.getxi());
             move.setxf(11 - move.getxf());
             movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
+            try {
+                Thread.sleep(550);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
-            InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
+            InGameObjects.redBoxSession.clearAllRedBoxes();
             InGameObjects.countdownTimer.changeSide();
             if (Legal.isInCheck(board)) {
                 InGameObjects.messageLabel.setCheck();
@@ -140,6 +161,8 @@ public class DoGame {
             Move move;
             if (board.getSide()) {
                 move = AI.makeMove(board);
+                InGameObjects.blueBoxSession.setBlueBox(11 - move.getxi(), move.getyi());
+                InGameObjects.redBoxSession.setRedBox(11 - move.getxf(), move.getyf());
             } else {
                 move = getMove();
             }
@@ -151,8 +174,13 @@ public class DoGame {
             move.setxi(11 - move.getxi());
             move.setxf(11 - move.getxf());
             movetool.move(move.getxi(), move.getyi(), move.getxf(), move.getyf());
+            try {
+                Thread.sleep(550);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             InGameObjects.blueBoxSession.removeBlueBox(move.getxi(), move.getyi());
-            InGameObjects.redBoxSession.removeRedBox(move.getxi(), move.getyi());
+            InGameObjects.redBoxSession.clearAllRedBoxes();
             InGameObjects.countdownTimer.changeSide();
             if (Legal.isInCheck(board)) {
                 InGameObjects.messageLabel.setCheck();
