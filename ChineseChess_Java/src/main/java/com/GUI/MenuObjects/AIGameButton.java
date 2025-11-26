@@ -15,22 +15,23 @@ import java.awt.image.BufferedImage;
 import com.Controller.HistoryGame.HistoryPrompt;
 
 public class AIGameButton {
-    final String file_path = "src\\main\\resources\\Buttons\\AIGamebutton.png";
+    final String fsPath = "src\\main\\resources\\Buttons\\AIGameButton.png";
+    final String resPath = "/Buttons/AIGameButton.png";
 
     public AIGameButton(JButton aiGameButton, JFrame parentFrame) {
         BufferedImage image = null;
-        try {
-            File f = new File(file_path);
-            if (f.exists()) {
-                image = ImageIO.read(f);
+        try (java.io.InputStream in = getClass().getResourceAsStream(resPath)) {
+            if (in != null) {
+                image = ImageIO.read(in);
             }
         } catch (IOException e) {
-            // ignore, try classpath next
+            // ignore, try filesystem next
         }
         if (image == null) {
-            try (java.io.InputStream in = MenuBackgroundInit.class.getResourceAsStream("/Menu.png")) {
-                if (in != null) {
-                    image = ImageIO.read(in);
+            try {
+                File f = new File(fsPath);
+                if (f.exists()) {
+                    image = ImageIO.read(f);
                 }
             } catch (IOException e) {
                 // ignore

@@ -1,4 +1,4 @@
-    package com.GUI.GameObjects.Box;
+package com.GUI.GameObjects.Box;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -9,19 +9,21 @@ import javax.imageio.ImageIO;
 public class BlueBox extends Box {
     public BlueBox(int col, int row) {
         super();
-        this.file_path = "src\\main\\resources\\Box\\BlueBox.png";
-        try {
-            File f = new File(file_path);
-            if (f.exists()) {
-                this.image = ImageIO.read(f);
+        final String fsPath = "src\\main\\resources\\Box\\BlueBox.png"; // 开发时文件系统路径
+        final String resPath = "/Box/BlueBox.png"; // 类路径资源路径（用于 jar）
+
+        try (java.io.InputStream in = getClass().getResourceAsStream(resPath)) {
+            if (in != null) {
+                this.image = ImageIO.read(in);
             }
         } catch (IOException e) {
-            // ignore, try classpath next
+            // ignore, try filesystem next
         }
         if (this.image == null) {
-            try (java.io.InputStream in = getClass().getResourceAsStream(file_path)) {
-                if (in != null) {
-                    this.image = ImageIO.read(in);
+            try {
+                File f = new File(fsPath);
+                if (f.exists()) {
+                    this.image = ImageIO.read(f);
                 }
             } catch (IOException e) {
                 // ignore
@@ -54,26 +56,31 @@ public class BlueBox extends Box {
         setBoardPositionInternal(col, row);
     }
 
-    public int getCenterX() { 
-        return centerX; 
+    public int getCenterX() {
+        return centerX;
     }
-    public int getCenterY() { 
-        return centerY; 
+
+    public int getCenterY() {
+        return centerY;
     }
-    public int getWidth() { 
-        return width; 
+
+    public int getWidth() {
+        return width;
     }
-    public int getHeight() { 
-        return height; 
+
+    public int getHeight() {
+        return height;
     }
-    public BufferedImage getImage() { 
-        return image; 
+
+    public BufferedImage getImage() {
+        return image;
     }
 
     private void updateDrawCoordinates() {
         this.drawX = centerX - width / 2;
         this.drawY = centerY - height / 2;
     }
+
     private void setBoardPositionInternal(int col, int row) {
         this.centerX = columnToX(col);
         this.centerY = rowToY(row);
@@ -83,6 +90,7 @@ public class BlueBox extends Box {
     public static int columnToX(int column) {
         return (column - 1) * CELL_SIZE + OFFSET_X;
     }
+
     public static int rowToY(int row) {
         return (row - 1) * CELL_SIZE + OFFSET_Y;
     }

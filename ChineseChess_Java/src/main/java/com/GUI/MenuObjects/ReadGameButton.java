@@ -13,22 +13,24 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 public class ReadGameButton {
-    final String file_path = "src\\main\\resources\\Buttons\\Readgamebutton.png";
+    final String fsPath = "src\\main\\resources\\Buttons\\Readgamebutton.png";
+    final String resPath = "/Buttons/Readgamebutton.png";
 
     public ReadGameButton(JButton readGameButton, JFrame parentFrame) {
         BufferedImage image = null;
-        try {
-            File f = new File(file_path);
-            if (f.exists()) {
-                image = ImageIO.read(f);
+        // 优先使用类路径（jar 可用），回退到开发时文件系统路径
+        try (java.io.InputStream in = getClass().getResourceAsStream(resPath)) {
+            if (in != null) {
+                image = ImageIO.read(in);
             }
         } catch (IOException e) {
-            // ignore, try classpath next
+            // ignore, try filesystem next
         }
         if (image == null) {
-            try (java.io.InputStream in = MenuBackgroundInit.class.getResourceAsStream("/Menu.png")) {
-                if (in != null) {
-                    image = ImageIO.read(in);
+            try {
+                File f = new File(fsPath);
+                if (f.exists()) {
+                    image = ImageIO.read(f);
                 }
             } catch (IOException e) {
                 // ignore
