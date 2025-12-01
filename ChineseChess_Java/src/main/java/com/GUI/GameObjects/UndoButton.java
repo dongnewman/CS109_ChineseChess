@@ -12,22 +12,33 @@ import javax.swing.JOptionPane;
 import com.GUI.Menu;
 
 public class UndoButton {
-    private String file_path = "src\\main\\resources\\InGameIcons\\Undo.png";
     private JFrame parentFrame;
+
     public UndoButton(JFrame parentFrame) {
         this.parentFrame = parentFrame;
         JButton undobutton = new JButton();
         BufferedImage image = null;
-        try {
-            File f = new File(file_path);
-            if (f.exists()) {
-                image = ImageIO.read(f);
+        final String resPath = "/InGameIcons/Undo.png";
+        final String fsPath = "src\\main\\resources\\InGameIcons\\Undo.png";
+        try (java.io.InputStream in = getClass().getResourceAsStream(resPath)) {
+            if (in != null) {
+                image = ImageIO.read(in);
             }
         } catch (IOException e) {
-            System.out.println("Failed to load surrender button image: " + e.getMessage());
+            System.out.println("Failed to load undo button image from classpath: " + e.getMessage());
+        }
+        if (image == null) {
+            try {
+                File f = new File(fsPath);
+                if (f.exists()) {
+                    image = ImageIO.read(f);
+                }
+            } catch (IOException e) {
+                System.out.println("Failed to load undo button image from file system: " + e.getMessage());
+            }
         }
 
-        if(image != null) {
+        if (image != null) {
             undobutton.setBorderPainted(false);
             undobutton.setContentAreaFilled(false);
             undobutton.setFocusPainted(false);
@@ -79,15 +90,15 @@ public class UndoButton {
     private void Surrender() {
         // 检查是否可以Undo
         if (com.Controller.InGameObjects.undoMove == null || !com.Controller.InGameObjects.undoMove.isCanUndo()) {
-            JOptionPane.showMessageDialog(parentFrame, 
-                "无法悔棋：只能悔棋一次或尚未走棋。", 
-                "提示", 
-                JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(parentFrame,
+                    "无法悔棋：只能悔棋一次或尚未走棋。",
+                    "提示",
+                    JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         // 弹出确认对话框
-        String[] options = {"取消", "确认"};
+        String[] options = { "取消", "确认" };
         int choice = JOptionPane.showOptionDialog(null,
                 "你确定要Undo吗？\n(注意：每步棋只能悔棋一次)",
                 "Undo确认",

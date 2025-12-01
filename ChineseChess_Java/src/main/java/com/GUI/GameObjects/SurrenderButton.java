@@ -13,22 +13,35 @@ import com.GUI.Menu;
 import com.chinesechess.Main;
 
 public class SurrenderButton {
-    private String file_path = "src\\main\\resources\\InGameIcons\\surrender.png";
     private JFrame parentFrame;
+
     public SurrenderButton(JFrame parentFrame) {
         this.parentFrame = parentFrame;
         JButton surrenderbutton = new JButton();
         BufferedImage image = null;
-        try {
-            File f = new File(file_path);
-            if (f.exists()) {
-                image = ImageIO.read(f);
+        final String resPath = "/InGameIcons/surrender.png";
+        final String fsPath = "src\\main\\resources\\InGameIcons\\surrender.png";
+        // 先尝试类路径（jar 内）
+        try (java.io.InputStream in = getClass().getResourceAsStream(resPath)) {
+            if (in != null) {
+                image = ImageIO.read(in);
             }
         } catch (IOException e) {
-            System.out.println("Failed to load surrender button image: " + e.getMessage());
+            System.out.println("Failed to load surrender button image from classpath: " + e.getMessage());
+        }
+        // 回退到源码文件系统路径
+        if (image == null) {
+            try {
+                File f = new File(fsPath);
+                if (f.exists()) {
+                    image = ImageIO.read(f);
+                }
+            } catch (IOException e) {
+                System.out.println("Failed to load surrender button image from file system: " + e.getMessage());
+            }
         }
 
-        if(image != null) {
+        if (image != null) {
             surrenderbutton.setBorderPainted(false);
             surrenderbutton.setContentAreaFilled(false);
             surrenderbutton.setFocusPainted(false);
@@ -78,7 +91,7 @@ public class SurrenderButton {
     }
 
     private void Surrender() {
-        if(Main.settingsSession.isDisableSurrender()) {
+        if (Main.settingsSession.isDisableSurrender()) {
             JOptionPane.showMessageDialog(null,
                     "投降功能已被禁用！",
                     "无法投降",
@@ -86,7 +99,7 @@ public class SurrenderButton {
             return;
         }
         // 弹出确认对话框
-        String[] options = {"再战一会", "我要投降"};
+        String[] options = { "再战一会", "我要投降" };
         int choice = JOptionPane.showOptionDialog(null,
                 "你确定要投降吗？",
                 "投降确认",
@@ -99,12 +112,12 @@ public class SurrenderButton {
         if (choice == 1) { // "我要投降"
             if (parentFrame != null) {
                 parentFrame.dispose();
-                
+
                 new EndGameDialog("黑方", parentFrame);
             }
             // 显示菜单界面
-            Menu.frame.setVisible(true); 
-            if(Menu.musicButton.isPlaying == true){
+            Menu.frame.setVisible(true);
+            if (Menu.musicButton.isPlaying == true) {
                 Menu.musicButton.doPlayMusic(); // 播放菜单音乐
             }
         }

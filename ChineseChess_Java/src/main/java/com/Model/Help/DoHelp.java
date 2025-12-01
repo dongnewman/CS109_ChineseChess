@@ -9,26 +9,25 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-
 /**
  * 显示帮助的图片。
  *
  * 使用示例:
- *   new DoHelp();
+ * new DoHelp();
  */
 
 public class DoHelp {
-    public DoHelp(){
-        SwingUtilities.invokeLater(new Runnable () {
+    public DoHelp() {
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 showWindow();
             }
         });
-        
+
     }
 
-    private void showWindow(){
+    private void showWindow() {
         JFrame helpFrame = new JFrame("帮助");
         helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         helpFrame.setSize(1000, 600);
@@ -37,15 +36,27 @@ public class DoHelp {
         // 尝试从 classpath 加载名为 tutorial.png 的图片（常见放置位置：src/main/resources/tutorial.png）
         BufferedImage img = null;
         try {
-            URL res = DoHelp.class.getResource("/tutorial.png");
+            // 尝试几种常见的资源名（大小写不敏感的备选）
+            String[] candidates = { "/tutorial.png", "/Tutorial.png", "/Tutorial1.png" };
+            URL res = null;
+            for (String c : candidates) {
+                res = DoHelp.class.getResource(c);
+                if (res != null)
+                    break;
+            }
             if (res != null) {
                 img = ImageIO.read(res);
             } else {
-                // 尝试若干常见文件位置（项目根、src/main/resources）
-                File f1 = new File("tutorial.png");
-                File f2 = new File("src/main/resources/tutorial.png");
-                if (f1.exists()) img = ImageIO.read(f1);
-                else if (f2.exists()) img = ImageIO.read(f2);
+                // 尝试若干常见文件位置（项目根、src/main/resources），同时尝试大小写变体
+                String[] fsCandidates = { "tutorial.png", "Tutorial.png", "src/main/resources/tutorial.png",
+                        "src/main/resources/Tutorial.png" };
+                for (String p : fsCandidates) {
+                    File f = new File(p);
+                    if (f.exists()) {
+                        img = ImageIO.read(f);
+                        break;
+                    }
+                }
             }
         } catch (IOException e) {
             img = null;
@@ -72,7 +83,7 @@ public class DoHelp {
             }
 
             JLabel picLabel = new JLabel(new ImageIcon(displayImg));
-            picLabel.setBorder(new EmptyBorder(8,8,8,8));
+            picLabel.setBorder(new EmptyBorder(8, 8, 8, 8));
 
             // 放入 JScrollPane，使之可上下滚动；水平一般不需要
             JScrollPane scroll = new JScrollPane(picLabel,
@@ -88,7 +99,7 @@ public class DoHelp {
             ta.setWrapStyleWord(true);
             ta.setText("未能找到 tutorial.png。请把教程图片放在项目根目录或 src/main/resources 下，文件名为 tutorial.png。\n\n" +
                     "如果你希望显示多张图片，可以把它们命名为 tutorial1.png, tutorial2.png 等，然后扩展此类以创建多张标签。\n");
-            ta.setBorder(new EmptyBorder(12,12,12,12));
+            ta.setBorder(new EmptyBorder(12, 12, 12, 12));
             JScrollPane scroll = new JScrollPane(ta,
                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

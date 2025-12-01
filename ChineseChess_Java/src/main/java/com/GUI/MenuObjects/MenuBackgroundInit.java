@@ -9,21 +9,23 @@ import javax.swing.JLabel;
 import java.awt.image.BufferedImage;
 
 public class MenuBackgroundInit {
-    public static void initMenuBackground (JFrame frame) {
-        final String file_path = "src\\main\\resources\\Menu.png";
+    public static void initMenuBackground(JFrame frame) {
+        final String fsPath = "src\\main\\resources\\Menu.png";
+        final String resPath = "/Menu.png";
         BufferedImage image = null;
-        try {
-            File f = new File(file_path);
-            if (f.exists()) {
-                image = ImageIO.read(f);
+        // 优先类路径
+        try (java.io.InputStream in = MenuBackgroundInit.class.getResourceAsStream(resPath)) {
+            if (in != null) {
+                image = ImageIO.read(in);
             }
         } catch (IOException e) {
-            // ignore, try classpath next
+            // ignore, try filesystem next
         }
         if (image == null) {
-            try (java.io.InputStream in = MenuBackgroundInit.class.getResourceAsStream("/Menu.png")) {
-                if (in != null) {
-                    image = ImageIO.read(in);
+            try {
+                File f = new File(fsPath);
+                if (f.exists()) {
+                    image = ImageIO.read(f);
                 }
             } catch (IOException e) {
                 // ignore
@@ -37,5 +39,5 @@ public class MenuBackgroundInit {
             frame.setSize(image.getWidth(), image.getHeight());
         }
     }
-    
+
 }

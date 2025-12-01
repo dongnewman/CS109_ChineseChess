@@ -42,19 +42,29 @@ public class SideIcon {
 
     private javax.swing.ImageIcon loadIcon(String path) {
         java.awt.Image img = null;
+        // path may be a filesystem path (src/main/resources/...) or classpath-like
+        // 支持类路径优先：如果传入的是 src 路径则尝试类路径对应位置
         try {
-            File f = new File(path);
-            if (f.exists()) {
-                img = ImageIO.read(f);
+            // 尝试把 path 转换为类路径形式（去掉前缀 src/main/resources/ 并以 / 开头）
+            String possiblePrefix = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
+            String resPath = path;
+            if (path.startsWith(possiblePrefix)) {
+                resPath = "/" + path.substring(possiblePrefix.length()).replace(File.separatorChar, '/');
+            }
+            java.io.InputStream in = getClass().getResourceAsStream(resPath);
+            if (in != null) {
+                img = ImageIO.read(in);
+            } else {
+                // 回退到原始文件路径
+                File f = new File(path);
+                if (f.exists()) {
+                    img = ImageIO.read(f);
+                }
             }
         } catch (IOException e) {
             // ignore
         }
-        if (img != null) {
-            return new javax.swing.ImageIcon(img);
-        } else {
-            return null;
-        }
+        return img != null ? new javax.swing.ImageIcon(img) : null;
     }
 
     public void setBlackSideIcon() {
