@@ -15,25 +15,24 @@ import java.io.IOException;
 import java.awt.image.BufferedImage;
 
 public class HelpButton {
-    private String file_path = "src\\main\\resources\\InGameIcons\\help.png";
     public HelpButton(JFrame parentFrame) {
         BufferedImage image = null;
         JButton helpbutton = new JButton();
-        try {
-            File f = new File(file_path);
-            if (f.exists()) {
-                image = ImageIO.read(f);
-            }
+        final String resPath = "/InGameIcons/help.png";
+        final String fsPath = "src\\main\\resources\\InGameIcons\\help.png";
+        try (java.io.InputStream in = MenuBackgroundInit.class.getResourceAsStream(resPath)) {
+            if (in != null)
+                image = ImageIO.read(in);
         } catch (IOException e) {
-            // ignore, try classpath next
+            // ignore
         }
         if (image == null) {
-            try (java.io.InputStream in = MenuBackgroundInit.class.getResourceAsStream("/Menu.png")) {
-                if (in != null) {
-                    image = ImageIO.read(in);
-                }
+            try {
+                File f = new File(fsPath);
+                if (f.exists())
+                    image = ImageIO.read(f);
             } catch (IOException e) {
-                System.out.println("Failed to load help button image from classpath: " + e.getMessage());
+                System.out.println("Failed to load help button image: " + e.getMessage());
             }
         }
         if (image != null) {

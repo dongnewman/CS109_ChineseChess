@@ -15,22 +15,33 @@ import com.Controller.InitGame;
 import com.Model.InGame.playroom.Board;
 
 public class RestartButton {
-    private String file_path = "src\\main\\resources\\InGameIcons\\Restart.png";
     private JFrame parentFrame;
+
     public RestartButton(JFrame parentFrame) {
         this.parentFrame = parentFrame;
         JButton restartbutton = new JButton();
         BufferedImage image = null;
-        try {
-            File f = new File(file_path);
-            if (f.exists()) {
-                image = ImageIO.read(f);
+        final String resPath = "/InGameIcons/Restart.png";
+        final String fsPath = "src\\main\\resources\\InGameIcons\\Restart.png";
+        try (java.io.InputStream in = getClass().getResourceAsStream(resPath)) {
+            if (in != null) {
+                image = ImageIO.read(in);
             }
         } catch (IOException e) {
-            System.out.println("Failed to load surrender button image: " + e.getMessage());
+            System.out.println("Failed to load restart button image from classpath: " + e.getMessage());
+        }
+        if (image == null) {
+            try {
+                File f = new File(fsPath);
+                if (f.exists()) {
+                    image = ImageIO.read(f);
+                }
+            } catch (IOException e) {
+                System.out.println("Failed to load restart button image from file system: " + e.getMessage());
+            }
         }
 
-        if(image != null) {
+        if (image != null) {
             restartbutton.setBorderPainted(false);
             restartbutton.setContentAreaFilled(false);
             restartbutton.setFocusPainted(false);
@@ -81,7 +92,7 @@ public class RestartButton {
 
     private void Surrender() {
         // 弹出确认对话框
-        String[] options = {"再战一会", "重新开始"};
+        String[] options = { "再战一会", "重新开始" };
         int choice = JOptionPane.showOptionDialog(null,
                 "你确定要重新开始吗？",
                 "重新开始确认",

@@ -369,11 +369,28 @@ public class GameFrame {
                     messageLabel.setMessage("Ciallo~~(∠・ω< )⌒★");
                     // 播放Ciallo.mav
                     try {
-                        javax.sound.sampled.AudioInputStream audioInputStream = javax.sound.sampled.AudioSystem
-                                .getAudioInputStream(new java.io.File("src/main/resources/Hinatsuru/Callio.wav"));
-                        javax.sound.sampled.Clip clip = javax.sound.sampled.AudioSystem.getClip();
-                        clip.open(audioInputStream);
-                        clip.start();
+                        // 尝试从类路径加载音频资源，然后回退到源码文件路径
+                        final String res = "/Hinatsuru/Callio.wav";
+                        final String fs = "src" + File.separator + "main" + File.separator + "resources"
+                                + File.separator + "Hinatsuru" + File.separator + "Callio.wav";
+                        javax.sound.sampled.AudioInputStream audioInputStream = null;
+                        java.io.InputStream in = GameFrame.class.getResourceAsStream(res);
+                        if (in != null) {
+                            audioInputStream = javax.sound.sampled.AudioSystem
+                                    .getAudioInputStream(new java.io.BufferedInputStream(in));
+                        } else {
+                            java.io.File f = new java.io.File(fs);
+                            if (f.exists()) {
+                                audioInputStream = javax.sound.sampled.AudioSystem.getAudioInputStream(f);
+                            }
+                        }
+                        if (audioInputStream != null) {
+                            javax.sound.sampled.Clip clip = javax.sound.sampled.AudioSystem.getClip();
+                            clip.open(audioInputStream);
+                            clip.start();
+                        } else {
+                            System.err.println("播放音频失败: 音频文件不存在 (classpath:" + res + " or file:" + fs + ")");
+                        }
                     } catch (Exception ex) {
                         System.err.println("播放音频失败: " + ex.getMessage());
                     }
