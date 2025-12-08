@@ -10,11 +10,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import com.GUI.Menu;
+import com.Controller.InGameObjects;
 
 public class UndoButton {
     private JFrame parentFrame;
 
     public UndoButton(JFrame parentFrame) {
+        if(InGameObjects.gametype == 1) return; // 人机模式下不显示Undo按钮
         this.parentFrame = parentFrame;
         JButton undobutton = new JButton();
         BufferedImage image = null;
