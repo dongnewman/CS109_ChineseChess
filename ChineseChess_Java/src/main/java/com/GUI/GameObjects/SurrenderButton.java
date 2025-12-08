@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import com.GUI.Menu;
 import com.chinesechess.Main;
+import com.Controller.InGameObjects;
 
 public class SurrenderButton {
     private JFrame parentFrame;
@@ -112,8 +113,9 @@ public class SurrenderButton {
         if (choice == 1) { // "我要投降"
             if (parentFrame != null) {
                 parentFrame.dispose();
-
-                new EndGameDialog("黑方", parentFrame);
+                String winner = InGameObjects.board.getSide() ? "red" : "black";
+                if(InGameObjects.gametype == 1) winner = "black";
+                new EndGameDialog(winner, parentFrame);
             }
             // 显示菜单界面
             Menu.frame.setVisible(true);

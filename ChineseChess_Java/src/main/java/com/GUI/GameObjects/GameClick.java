@@ -74,7 +74,6 @@ public class GameClick {
 
     public int[] waitForClick() {
         try {
-            
             // System.out.println("Clicked at row: " + clickposition[0] + ", col: " + clickposition[1]);
             return clickQueue.take();
         } catch (InterruptedException e) {
