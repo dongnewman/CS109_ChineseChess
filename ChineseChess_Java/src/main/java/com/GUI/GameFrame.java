@@ -80,7 +80,7 @@ public class GameFrame {
                                 String newJson;
                                 boolean isGameOver = false;
                                 try {
-                                    isGameOver = InGameObjects.board != null && InGameObjects.board.gameOver();
+                                    isGameOver = (InGameObjects.board != null && InGameObjects.board.gameOver()) || InGameObjects.isSurrendered;
                                 } catch (Exception ex) {
                                     isGameOver = false;
                                 }

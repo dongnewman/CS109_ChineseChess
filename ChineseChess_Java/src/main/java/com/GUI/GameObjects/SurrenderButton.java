@@ -111,6 +111,7 @@ public class SurrenderButton {
                 options[0]);
 
         if (choice == 1) { // "我要投降"
+            InGameObjects.isSurrendered = true;
             if (parentFrame != null) {
                 parentFrame.dispose();
                 String winner = InGameObjects.board.getSide() ? "red" : "black";

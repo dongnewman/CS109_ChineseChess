@@ -23,4 +23,5 @@ public class InGameObjects {
     public static com.GUI.GameObjects.SideIcon sideIcon;
 	// 用于同步等待界面初始化
 	public static final java.util.concurrent.CountDownLatch uiReadyLatch = new java.util.concurrent.CountDownLatch(1);
+    public static boolean isSurrendered = false;
 }
