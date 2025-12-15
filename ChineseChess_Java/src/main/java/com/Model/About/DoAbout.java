@@ -33,9 +33,10 @@ public class DoAbout {
 
         // 添加关于信息标签
         JLabel jl = new JLabel();
+        jl.setHorizontalAlignment(JLabel.CENTER);
         jl.setText("<html><body style='text-align: center;'>" +
                 "<h2>中国象棋 (Chinese Chess)</h2>" +
-                "<p>版本: 1.0.0</p>" +
+                "<p>版本: 1.1.0</p>" +
                 "<p>作者: DONG Xinyu & Chen Kaian</p>" +
                 "<p>版权所有 © 2025</p>" +
                 "</body></html>");
