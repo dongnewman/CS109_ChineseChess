@@ -8,7 +8,7 @@ The main project is in the folder of `ChineseChess_Java`
 
 # Chinese Chess (Java Implementation)
 
-这是一个基于 Java Swing 开发的中国象棋游戏，没有使用课程提供的架构，主要画面架构由董心宇设计，主要对战逻辑架构由陈恺桉设计，支持双人对战 (P2P) 和人机对战 (AI) 模式，并包含账户系统和历史记录保存功能。
+这是一个基于MVC架构开发的中国象棋游戏，Controller层实现账户系统，页面初始化和历史记录读取，Viusal层使用董心宇自己开发的架构，没有使用课程提供的架构；主要对战逻辑放在Model层，由陈恺桉设计，支持双人对战 (P2P) 和人机对战 (AI) 两种模式。
 
 ## 📁 项目结构
 
